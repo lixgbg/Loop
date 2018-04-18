@@ -7,7 +7,7 @@
 
 import HealthKit
 import LoopUI
-import xDripG5
+import CGMBLEKit
 
 /// Describes the result of a CGM manager operation
 ///
@@ -38,7 +38,7 @@ protocol CGMManagerDelegate: class {
 
 
 protocol CGMManager: CustomDebugStringConvertible {
-    weak var delegate: CGMManagerDelegate? { get set }
+    var delegate: CGMManagerDelegate? { get set }
 
     /// Whether the device is capable of waking the app
     var providesBLEHeartbeat: Bool { get }

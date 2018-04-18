@@ -6,6 +6,7 @@
 //
 
 import LoopKit
+import RileyLinkBLEKit
 
 
 struct LoopSettings {
@@ -38,6 +39,12 @@ struct LoopSettings {
     
     let absorptionTimeOverrun = 1.0
 
+}
+
+
+// MARK: - Static configuration
+extension LoopSettings {
+    static let idleListeningEnabledDefaults: RileyLinkDevice.IdleListeningState = .enabled(timeout: .minutes(4), channel: 0)
 }
 
 
