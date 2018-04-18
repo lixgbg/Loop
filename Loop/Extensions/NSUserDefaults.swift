@@ -52,18 +52,6 @@ extension UserDefaults {
         case preferredInsulinDataSource = "com.loudnate.Loop.PreferredInsulinDataSource"
         case pumpSettings = "com.loopkit.Loop.PumpSettings"
         case pumpState = "com.loopkit.Loop.PumpState"
-        
-        
-        case minimumBasalRateSchedule = "com.loudnate.Loop.MinBasalRateSchedule"
-        case foodStats = "com.loopkit.Loop.foodStats"
-        case foodManagerNeedUpload = "com.loopkit.Loop.foodNeedUpload"
-        case pumpDetachedMode = "com.loopkit.Loop.pumpDetachedMode"
-        
-        case lastUploadedNightscoutProfile = "com.loopkit.Loop.lastUploadedNightscoutProfile"
-        
-        case pendingTreatments = "com.loopkit.Loop.pendingTreatments"
-        
-        case absorptionTimeMultiplier = "com.loopkit.Loop.absorptionTimeMultiplier"
     }
 
     var basalRateSchedule: BasalRateSchedule? {
@@ -341,16 +329,27 @@ extension UserDefaults {
 // PRIVATE MODIFICATIONS
 extension UserDefaults {
     
+    // Avoid polluting the original Key above.
+    fileprivate enum PrivateKey: String {
+        case minimumBasalRateSchedule = "com.loudnate.Loop.MinBasalRateSchedule"
+        case foodStats = "com.loopkit.Loop.foodStats"
+        case foodManagerNeedUpload = "com.loopkit.Loop.foodNeedUpload"
+        case pumpDetachedMode = "com.loopkit.Loop.pumpDetachedMode"
+        case lastUploadedNightscoutProfile = "com.loopkit.Loop.lastUploadedNightscoutProfile"
+        case pendingTreatments = "com.loopkit.Loop.pendingTreatments"
+        case absorptionTimeMultiplier = "com.loopkit.Loop.absorptionTimeMultiplier"
+    }
+
     var minimumBasalRateSchedule: BasalRateSchedule? {
         get {
-            if let rawValue = dictionary(forKey: Key.minimumBasalRateSchedule.rawValue) {
+            if let rawValue = dictionary(forKey: PrivateKey.minimumBasalRateSchedule.rawValue) {
                 return BasalRateSchedule(rawValue: rawValue)
             } else {
                 return nil
             }
         }
         set {
-            set(newValue?.rawValue, forKey: Key.minimumBasalRateSchedule.rawValue)
+            set(newValue?.rawValue, forKey: PrivateKey.minimumBasalRateSchedule.rawValue)
         }
     }
     
@@ -361,7 +360,7 @@ extension UserDefaults {
     
     var foodStats : [String: [String: Int]] {
         get {
-            if let rawValue = dictionary(forKey: Key.foodStats.rawValue) {
+            if let rawValue = dictionary(forKey: PrivateKey.foodStats.rawValue) {
                 var ret : [String: [String: Int]] = [:]
                 for raw in rawValue {
                     if let val = raw.value as? [String: Int] {
@@ -375,23 +374,23 @@ extension UserDefaults {
             }
         }
         set {
-            set(newValue, forKey: Key.foodStats.rawValue)
+            set(newValue, forKey: PrivateKey.foodStats.rawValue)
         }
     }
     
     var foodManagerNeedUpload : [String] {
         get {
-            return array(forKey: Key.foodManagerNeedUpload.rawValue) as? [String] ?? []
+            return array(forKey: PrivateKey.foodManagerNeedUpload.rawValue) as? [String] ?? []
         }
         set {
-            set(newValue, forKey: Key.foodManagerNeedUpload.rawValue)
+            set(newValue, forKey: PrivateKey.foodManagerNeedUpload.rawValue)
         }
     }
     
     var pendingTreatments: [(type: Int, date: Date, note: String)] {
         get {
             var ret : [(type: Int, date: Date, note: String)] = []
-            for element in array(forKey: Key.pendingTreatments.rawValue) as? [[String:Any]] ?? [] {
+            for element in array(forKey: PrivateKey.pendingTreatments.rawValue) as? [[String:Any]] ?? [] {
                 guard let type = element["type"] as? Int, let date = element["date"] as? Date, let note = element["note"] as? String else {
                     print("Cannot parse stored pendingTreatment", element)
                     continue
@@ -409,13 +408,13 @@ extension UserDefaults {
                     "note": value.note
                 ])
             }
-            set(raw, forKey: Key.pendingTreatments.rawValue)
+            set(raw, forKey: PrivateKey.pendingTreatments.rawValue)
         }
     }
     
     var pumpDetachedMode: Date? {
         get {
-            let value = double(forKey: Key.pumpDetachedMode.rawValue)
+            let value = double(forKey: PrivateKey.pumpDetachedMode.rawValue)
             if value > 0 {
                 return Date(timeIntervalSinceReferenceDate: value)
             } else {
@@ -424,16 +423,16 @@ extension UserDefaults {
         }
         set {
             if newValue == nil {
-                removeObject(forKey: Key.pumpDetachedMode.rawValue)
+                removeObject(forKey: PrivateKey.pumpDetachedMode.rawValue)
             } else {
-                set(newValue?.timeIntervalSinceReferenceDate, forKey: Key.pumpDetachedMode.rawValue)
+                set(newValue?.timeIntervalSinceReferenceDate, forKey: PrivateKey.pumpDetachedMode.rawValue)
             }
         }
     }
     
     var absorptionTimeMultiplier : Double {
         get {
-            let value = double(forKey: Key.absorptionTimeMultiplier.rawValue)
+            let value = double(forKey: PrivateKey.absorptionTimeMultiplier.rawValue)
             // default
             if value <= 0.0 {
                 return 0.8
@@ -441,17 +440,17 @@ extension UserDefaults {
             return value
         }
         set {
-            set(newValue, forKey: Key.absorptionTimeMultiplier.rawValue)
+            set(newValue, forKey: PrivateKey.absorptionTimeMultiplier.rawValue)
         }
     }
 
 
     var lastUploadedNightscoutProfile: String {
         get {
-            return string(forKey: Key.lastUploadedNightscoutProfile.rawValue) ?? "{}"
+            return string(forKey: PrivateKey.lastUploadedNightscoutProfile.rawValue) ?? "{}"
         }
         set {
-            set(newValue, forKey: Key.lastUploadedNightscoutProfile.rawValue)
+            set(newValue, forKey: PrivateKey.lastUploadedNightscoutProfile.rawValue)
         }
     }
     

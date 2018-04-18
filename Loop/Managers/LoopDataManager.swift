@@ -49,7 +49,7 @@ final class LoopDataManager {
         delegate: LoopDataManagerDelegate,
         lastLoopCompleted: Date?,
         lastTempBasal: DoseEntry?,
-        minimumBasalRateSchedule: BasalRateSchedule? = UserDefaults.appGroup.minimumBasalRateSchedule,
+        minimumBasalRateSchedule: BasalRateSchedule? = UserDefaults.standard.minimumBasalRateSchedule,
         basalRateSchedule: BasalRateSchedule? = UserDefaults.appGroup.basalRateSchedule,
         carbRatioSchedule: CarbRatioSchedule? = UserDefaults.appGroup.carbRatioSchedule,
         insulinModelSettings: InsulinModelSettings? = UserDefaults.appGroup.insulinModelSettings,
