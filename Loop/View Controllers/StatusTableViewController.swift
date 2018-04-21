@@ -195,10 +195,11 @@ final class StatusTableViewController: ChartsTableViewController, MealTableViewC
             
             let undoPossibleDate = endDate.addingTimeInterval(TimeInterval(minutes: -15))
             updateGroup.enter()
-            carbStore.getCarbEntries(start: mealDate) { (result) in
-                switch(result) {
-                case .success(let values):
-                
+            //carbStore.getCarbEntries(start: mealDate) { (result) in
+            //    switch(result) {
+            //    case .success(let values):
+            carbStore.getCachedCarbEntries(start: mealDate) { (values) in
+
                 var mealStart = endDate
                 var mealEnd = mealDate
                 var carbs : Double = 0
@@ -228,9 +229,9 @@ final class StatusTableViewController: ChartsTableViewController, MealTableViewC
                                         start: mealStart, end: mealEnd, carbs: carbs, undoPossible: undoPossible)
                 
                 print("updateMealInformation - ", self.mealInformation as Any)
-                case .failure(let error):
-                    print("updateMealInformation - error - ", error as Any)
-                }
+                //case .failure(let error):
+                //    print("updateMealInformation - error - ", error as Any)
+                //}
                 updateGroup.leave()
             }
         }
