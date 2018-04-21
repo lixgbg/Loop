@@ -1534,8 +1534,6 @@ final class LoopDataManager {
     }
     
     // FOOD PICKS
-    typealias MealInformation = (date: Date, lastCarbEntry: CarbEntry?, picks: FoodPicks?, start: Date?, end: Date?, carbs: Double?, undoPossible: Bool)
-
     private var manualGlucoseEntered = false  // TODO switch to false
     
     public func removeCarbEntry(carbEntry: CarbEntry, _ completion: @escaping (_ error: Error?) -> Void) {

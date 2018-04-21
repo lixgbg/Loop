@@ -195,10 +195,11 @@ final class StatusTableViewController: ChartsTableViewController, MealTableViewC
             
             let undoPossibleDate = endDate.addingTimeInterval(TimeInterval(minutes: -15))
             updateGroup.enter()
-            carbStore.getCarbEntries(start: mealDate) { (result) in
-                switch(result) {
-                case .success(let values):
-                
+            //carbStore.getCarbEntries(start: mealDate) { (result) in
+            //    switch(result) {
+            //    case .success(let values):
+            carbStore.getCachedCarbEntries(start: mealDate) { (values) in
+
                 var mealStart = endDate
                 var mealEnd = mealDate
                 var carbs : Double = 0
@@ -228,9 +229,9 @@ final class StatusTableViewController: ChartsTableViewController, MealTableViewC
                                         start: mealStart, end: mealEnd, carbs: carbs, undoPossible: undoPossible)
                 
                 print("updateMealInformation - ", self.mealInformation as Any)
-                case .failure(let error):
-                    print("updateMealInformation - error - ", error as Any)
-                }
+                //case .failure(let error):
+                //    print("updateMealInformation - error - ", error as Any)
+                //}
                 updateGroup.leave()
             }
         }
@@ -1300,7 +1301,6 @@ final class StatusTableViewController: ChartsTableViewController, MealTableViewC
             vc.foodManager = foodManager
         case let vc as QuickCarbEntryViewController:
             vc.carbStore = deviceManager.loopManager.carbStore
-            vc.mealInformation = self.mealInformation
             vc.preferredGlucoseUnit = self.charts.glucoseUnit
             vc.shouldShowGlucose = self.validGlucose == nil
             vc.automatedBolusEnabled = deviceManager.loopManager.settings.bolusEnabled
@@ -1608,7 +1608,8 @@ final class StatusTableViewController: ChartsTableViewController, MealTableViewC
     private var foodRecentCollectionViewDataSource = FoodRecentCollectionViewDataSource()
     private var displayMeal : Bool = true
     weak var foodManager: FoodManager!
-    private var mealInformation : LoopDataManager.MealInformation?
+    typealias MealInformation = (date: Date, lastCarbEntry: CarbEntry?, picks: FoodPicks?, start: Date?, end: Date?, carbs: Double?, undoPossible: Bool)
+    private var mealInformation : MealInformation?
     
     func mealTableViewCellTap(_ sender : MealTableViewCell) {
         //        performSegue(withIdentifier: FoodPickerViewController.className, sender: sender)

@@ -25,7 +25,6 @@ final class QuickCarbEntryViewController: UITableViewController, IdentifiableCla
     @IBOutlet weak var saveButton: UIButton!
     
     var carbStore: CarbStore?
-    var mealInformation: LoopDataManager.MealInformation?
     
     // private var absorptionTime : Int = 180
     var carbs : CarbEntry? = nil
