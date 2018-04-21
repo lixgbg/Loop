@@ -269,12 +269,12 @@ extension Collection where Iterator.Element == GlucoseValue {
             guard validDateRange.contains(prediction.startDate) else {
                 continue
             }
-
+            
             // If any predicted value is below the suspend threshold, return immediately
-            guard prediction.quantity >= suspendThreshold else {
-                return .suspend(min: prediction)
-            }
-
+            //guard prediction.quantity >= suspendThreshold else {
+                // return .suspend(min: prediction)
+            //}
+ 
             // Update range statistics
             if minGlucose == nil || prediction.quantity < minGlucose!.quantity {
                 minGlucose = prediction
@@ -339,7 +339,12 @@ extension Collection where Iterator.Element == GlucoseValue {
             ) else {
                 return nil
             }
-
+            
+            // If belowRange is predicted, but we are below the suspendThreshold -> suspend.
+            if min.quantity < suspendThreshold {
+                return .suspend(min: min)
+            }
+            
             return .entirelyBelowRange(
                 correcting: min,
                 minTarget: HKQuantity(unit: unit, doubleValue: minGlucoseTargets.minValue),
@@ -348,6 +353,19 @@ extension Collection where Iterator.Element == GlucoseValue {
         } else if eventualGlucoseValue > eventualGlucoseTargets.maxValue,
             let minCorrectionUnits = minCorrectionUnits, let correctingGlucose = correctingGlucose
         {
+            // If we are going above range, but cross through some values below suspendThreshold -
+            // give some insulin in any case.  The reasoning is that this is typical for correcting
+            // a low and if we don't give anything, we risk overshooting afterwards.  Having a
+            // prediction above means usually we are looking at a series with carbs in it.
+            if min.quantity < suspendThreshold {
+                return .aboveRange(
+                    min: min,
+                    correcting: correctingGlucose,
+                    minTarget: HKQuantity(unit: unit, doubleValue: eventualGlucoseTargets.minValue),
+                    units: minCorrectionUnits * 0.6
+                )
+            }
+            
             return .aboveRange(
                 min: min,
                 correcting: correctingGlucose,
@@ -355,6 +373,11 @@ extension Collection where Iterator.Element == GlucoseValue {
                 units: minCorrectionUnits
             )
         } else {
+            // If inRange is predicted, but we are below the suspendThreshold -> suspend.
+            if min.quantity < suspendThreshold {
+                return .suspend(min: min)
+            }
+            
             return .inRange
         }
     }
