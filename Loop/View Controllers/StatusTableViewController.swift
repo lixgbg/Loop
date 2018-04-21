@@ -1300,7 +1300,6 @@ final class StatusTableViewController: ChartsTableViewController, MealTableViewC
             vc.foodManager = foodManager
         case let vc as QuickCarbEntryViewController:
             vc.carbStore = deviceManager.loopManager.carbStore
-            vc.mealInformation = self.mealInformation
             vc.preferredGlucoseUnit = self.charts.glucoseUnit
             vc.shouldShowGlucose = self.validGlucose == nil
             vc.automatedBolusEnabled = deviceManager.loopManager.settings.bolusEnabled
@@ -1608,7 +1607,8 @@ final class StatusTableViewController: ChartsTableViewController, MealTableViewC
     private var foodRecentCollectionViewDataSource = FoodRecentCollectionViewDataSource()
     private var displayMeal : Bool = true
     weak var foodManager: FoodManager!
-    private var mealInformation : LoopDataManager.MealInformation?
+    typealias MealInformation = (date: Date, lastCarbEntry: CarbEntry?, picks: FoodPicks?, start: Date?, end: Date?, carbs: Double?, undoPossible: Bool)
+    private var mealInformation : MealInformation?
     
     func mealTableViewCellTap(_ sender : MealTableViewCell) {
         //        performSegue(withIdentifier: FoodPickerViewController.className, sender: sender)
