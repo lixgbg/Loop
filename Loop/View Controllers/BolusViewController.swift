@@ -187,33 +187,33 @@ final class BolusViewController: UITableViewController, IdentifiableClass, UITex
         bolusAmountTextField.resignFirstResponder()
 
         guard let text = bolusAmountTextField?.text, let bolus = bolusUnitsFormatter.number(from: text)?.doubleValue else {
-            print("BolusViewController - empty")
+            NSLog("BolusViewController - empty")
             return
         }
         
         let rounded = roundedBolus(bolus)
         guard rounded == bolus else {
-            print("BolusViewController - rounded")
+            NSLog("BolusViewController - rounded")
             bolusAmountTextField?.text = "\(rounded)"
             presentAlertController(withTitle: NSLocalizedString("Rounded Bolus", comment: "The title of the alert describing a rounded bolus validation error"), message: String(format: NSLocalizedString("The bolus amount has to be a multiple of 0.1, please try again.", comment: "Body of the alert describing a rounding bolus validation error.")))
             return
         }
         
         guard bolus <= maxBolus else {
-            print("BolusViewController - maxBolus")
+            NSLog("BolusViewController - maxBolus")
             presentAlertController(withTitle: NSLocalizedString("Exceeds Maximum Bolus", comment: "The title of the alert describing a maximum bolus validation error"), message: String(format: NSLocalizedString("The maximum bolus amount is %@ Units", comment: "Body of the alert describing a maximum bolus validation error. (1: The localized max bolus value)"), bolusUnitsFormatter.string(from: NSNumber(value: maxBolus)) ?? ""))
             return
         }
         
         guard bolus >= 0 else {
-            print("BolusViewController - negative")
+            NSLog("BolusViewController - negative")
             presentAlertController(withTitle: NSLocalizedString("Negative Bolus", comment: "The title of the alert describing a negative bolus validation error"), message: String(format: NSLocalizedString("The bolus amount is negative", comment: "Body of the alert describing a negative bolus validation error.")))
             return
         }
         
         if let maxIOB = maximumInsulinOnBoard, maxIOB > 0 {
             guard bolus + (activeInsulin ?? 0) <= maxIOB else {
-                print("BolusViewController - maxIOB")
+                NSLog("BolusViewController - maxIOB")
                 presentAlertController(withTitle: NSLocalizedString("Would exceed Maximum Insulin on Board", comment: "The title of the alert describing a maximum insulin on board validation error"), message: String(format: NSLocalizedString("The insulin on board amount is %@ Units", comment: "Body of the alert describing a maximum iob validation error. (1: The localized max iob value)"),
                                                                                                                                                                                                                         bolusUnitsFormatter.string(from: NSNumber(value: maxIOB)) ?? ""))
                 return
@@ -222,7 +222,7 @@ final class BolusViewController: UITableViewController, IdentifiableClass, UITex
         
         let recommendation = bolusRecommendation?.amount ?? 0
         guard bolus <= recommendation else {
-            print("BolusViewController - exceeds")
+            NSLog("BolusViewController - exceeds")
             
             //1. Create the alert controller.
             let alert = UIAlertController(title: "Exceeds Recommended Bolus", message: "The bolus amount of \(bolus) U is higher than the recommended amount of \(recommendation) U. Please re-enter the amount to confirm.", preferredStyle: .alert)

@@ -215,7 +215,7 @@ struct FoodPicks {
             
             return String(data: data, encoding: .utf8)
         } catch let error {
-            print("JSON representation", error)
+            NSLog("FoodPicks JSON representation error \(error)")
             return nil
         }
     }
@@ -231,7 +231,7 @@ struct FoodPicks {
                 picks.append(FoodPick(rawValues: rawValue as! [String : Any]))
             }
         } catch let error {
-            print(error)
+            NSLog("FoodPicks fromJSON error \(error)")
         }
 
     }
@@ -291,7 +291,7 @@ final class FoodManager {
         } else {
             stats[key] = [name: 1]
         }
-        print("foodStats", stats)
+        NSLog("FoodManager record stats \(stats)")
         UserDefaults.standard.foodStats = stats
     }
     
@@ -328,7 +328,7 @@ final class FoodManager {
             newList.append(item)
             if newList.count > 4 { break }
         }
-        print("foodStats updatePopular", newList)
+        NSLog("FoodManager updatePopular \(newList)")
         categories[popKey] = newList
     }
     
@@ -359,7 +359,7 @@ final class FoodManager {
         fileManager.createFile(atPath: pathName as String, contents: imageData, attributes: nil)
         
         UserDefaults.standard.foodManagerNeedUpload.append(fileName)
-        print("FoodManager Upload Backlog", UserDefaults.standard.foodManagerNeedUpload)
+        NSLog("FoodManager Upload Backlog \(UserDefaults.standard.foodManagerNeedUpload)")
         return fileName
     }
     
@@ -382,20 +382,20 @@ final class FoodManager {
         do {
 
         guard let url = Bundle.main.url(forResource: "FoodCatalog/catalog", withExtension: "json") else {
-            print("Cannot find catalog file")
+            NSLog("FoodCatalog Cannot find catalog file")
             return
         }
         //let jsonData = try NSData(contentsOfFile: path, options: .mappedIfSafe)
         let jsonData = try Data(contentsOf: url)
             
         guard let json = try JSONSerialization.jsonObject(with: jsonData, options: JSONSerialization.ReadingOptions()) as? [String:Any] else {
-            print("Cannot read json file at url", url)
+            NSLog("FoodCatalog Cannot read json file at url \(url)")
             return
         }
             
         for raw in json {
             guard let value = raw.value as? [String: Any] else {
-                print("FoodManager ignoring malformed entry", raw)
+                NSLog("FoodManager ignoring malformed entry \(raw)")
                 continue
             }
                // picks.append(FoodPick(rawValues: rawValue as! [String : Any]))
@@ -420,13 +420,13 @@ final class FoodManager {
                 meta[item.title] = FoodMetadata(value)
                 itemByTitle[item.title.lowercased()] = item
             } else {
-                print("FoodManager ignoring malformed entry", raw)
+                NSLog("FoodManager ignoring malformed entry \(raw)")
             }
         }
-            print("Food Categories", categories)
+            NSLog("FoFoodManager Categories \(categories)")
 
         } catch let error {
-            print("FoodCatalog Read Error", error)
+            NSLog("FoodManager FoodCatalog Read Error \(error)")
         }
         sections = categories.keys.sorted()
         if let pop = sections.index(of: popKey) {
@@ -434,7 +434,7 @@ final class FoodManager {
         }
         sections.insert(popKey, at: 0)
         stats = UserDefaults.standard.foodStats
-        print("foodStats loaded:", stats)
+        NSLog("FoodManager stats loaded: \(stats)")
     }
 
 

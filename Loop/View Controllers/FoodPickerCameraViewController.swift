@@ -26,25 +26,25 @@ class FoodPickerCameraViewController: UIViewController, AVCaptureVideoDataOutput
         
         switch cameraPermissionStatus {
         case .authorized:
-            print("Already Authorized")
+            NSLog("Already Authorized")
         case .denied:
-            print("denied")
+            NSLog("denied")
         case .restricted:
-            print("restricted")
+            NSLog("restricted")
         default:
             AVCaptureDevice.requestAccess(for: AVMediaType.video, completionHandler: {
                // [weak self]
                 (granted :Bool) -> Void in
-                print("granted", granted)
+                NSLog("granted", granted)
             });
         }
         
         let session = AVCaptureDevice.DiscoverySession(deviceTypes: [AVCaptureDevice.DeviceType.builtInWideAngleCamera], mediaType: AVMediaType.video, position: AVCaptureDevice.Position.back)
         // Loop through all the capture devices on this phone
         captureDevice = session.devices.first
-        print("captureDevice", captureDevice as Any, session.devices as Any)
+        NSLog("captureDevice \(String(describing: captureDevice)) \(session.devices)")
         captureQueue.async {
-            print("async beginSession")
+            NSLog("async beginSession")
             self.beginSession()
         }
     }
@@ -68,7 +68,7 @@ class FoodPickerCameraViewController: UIViewController, AVCaptureVideoDataOutput
                 
                 device.unlockForConfiguration()
             } catch let error {
-                print("lockForConfiguration Failed", error)
+                NSLog("lockForConfiguration Failed \(error)")
             }
         }
         
@@ -123,7 +123,7 @@ class FoodPickerCameraViewController: UIViewController, AVCaptureVideoDataOutput
         if captureVideoFrame {
             captureVideoFrame = false
             let image = imageFromSampleBuffer(sampleBuffer: sampleBuffer)
-            print("capture sampleBuffer")
+            NSLog("capture sampleBuffer")
             imageOutput = image
             performSegue(withIdentifier: "close", sender: self)
         }
@@ -135,7 +135,7 @@ class FoodPickerCameraViewController: UIViewController, AVCaptureVideoDataOutput
         }
         
         let error = AVError(_nsError: errorValue)
-        print("Capture session runtime error: \(error)")
+        NSLog("Capture session runtime error: \(error)")
     }
     
     func beginSession() {
@@ -150,14 +150,14 @@ class FoodPickerCameraViewController: UIViewController, AVCaptureVideoDataOutput
                try captureSession.addInput(AVCaptureDeviceInput(device: device))
             }
         } catch let error {
-            print("addInput Failed", error)
+            NSLog("addInput Failed \(error)")
             captureSession.commitConfiguration()
             return
         }
         if captureSession.canAddOutput(output) {
             captureSession.addOutput(output)
         } else {
-            print("Cannot add Output")
+            NSLog("Cannot add Output")
             captureSession.commitConfiguration()
             return
         }
@@ -181,14 +181,14 @@ class FoodPickerCameraViewController: UIViewController, AVCaptureVideoDataOutput
                 previewLayer.frame = CGRect(x: 0, y: 0, width: 500, height: 500)
                 previewLayer.bounds = previewLayer.frame
 
-                print("preview layer frame", previewLayer.frame, self.previewView.bounds, self.previewView.layer.frame)
+                NSLog("preview layer frame \(previewLayer.frame), \(self.previewView.bounds), \(self.previewView.layer.frame)")
                 self.previewView.layer.addSublayer(previewLayer)
             }
             NotificationCenter.default.addObserver(self, selector: #selector(sessionRuntimeError), name: .AVCaptureSessionRuntimeError, object: captureSession)
 
             captureSession.startRunning()
             if !captureSession.isRunning {
-                print("Cannot start capture session for some reason.")
+                NSLog("Cannot start capture session for some reason.")
             }
         
         
@@ -214,7 +214,7 @@ class FoodPickerCameraViewController: UIViewController, AVCaptureVideoDataOutput
     
     //MARK: - Add image to Library
     @objc func image(_ image: UIImage, didFinishSavingWithError error: Error?, contextInfo: UnsafeRawPointer) {
-        print("Successfully saved image to camera roll")
+        NSLog("Successfully saved image to camera roll")
     }
     
     func crop(image: UIImage, withWidth width: Double, andHeight height: Double) -> UIImage? {
@@ -263,38 +263,54 @@ class FoodPickerCameraViewController: UIViewController, AVCaptureVideoDataOutput
         return nil
     }
     
+    func photoOutput(_ output: AVCapturePhotoOutput,
+                     didFinishProcessingPhoto photo: AVCapturePhoto,
+                     error: Error?) {
+        if let error = error {
+            NSLog("capture error \(error.localizedDescription)")
+            return
+        }
+        
+        if let data = photo.fileDataRepresentation() {
+            if let image = UIImage(data: data) {
+                saveImageCallback(image)
+            }
+        }
+    }
+    /*
     func photoOutput(_ captureOutput: AVCapturePhotoOutput, didFinishProcessingPhoto photoSampleBuffer: CMSampleBuffer?, previewPhoto previewPhotoSampleBuffer: CMSampleBuffer?, resolvedSettings: AVCaptureResolvedPhotoSettings, bracketSettings: AVCaptureBracketedStillImageSettings?, error: Error?) {
         
         if let error = error {
-            print("capture error", error.localizedDescription)
+            NSLog("capture error \(error.localizedDescription)")
+            return
         }
-        
-
-        
-        
         
         if let sampleBuffer = photoSampleBuffer, let previewBuffer = previewPhotoSampleBuffer, let dataImage = AVCapturePhotoOutput.jpegPhotoDataRepresentation(forJPEGSampleBuffer: sampleBuffer, previewPhotoSampleBuffer: previewBuffer), let image = UIImage(data: dataImage) {
             
-            print(image.size)
+            saveImageCallback(image)
+        }
+    }
+    */
+    
+    func saveImageCallback(_ image: UIImage) {
+            NSLog("Image Size \(image.size)")
             let newWidth = 1024.0
             let newHeight = 1024.0
             let newSize = CGSize(width: newWidth, height: newHeight)
             let renderer = UIGraphicsImageRenderer(size: newSize)
-
+            
             let croppedImage : UIImage? = self.crop(image: image, withWidth: 1024, andHeight: 1024)
-
+            
             let newImage = renderer.image{_ in
                 croppedImage?.draw(in: CGRect.init(origin: CGPoint.zero, size: newSize))
             }
             
             // until we can upload the images, just save them to the camera roll.
             UIImageWriteToSavedPhotosAlbum(newImage, self, #selector(image(_:didFinishSavingWithError:contextInfo:)), nil)
-
+            
             imageOutput = newImage
             
             performSegue(withIdentifier: "close", sender: self)
-        }
-        
     }
     
 }

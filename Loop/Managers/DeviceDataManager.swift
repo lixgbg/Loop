@@ -450,7 +450,7 @@ final class DeviceDataManager {
                     let startDate = min(
                         self.loopManager.doseStore.pumpEventQueryAfterDate,
                         self.lastPumpHistorySuccess)
-                    print("Fetching history since", startDate)
+                    NSLog("fetchPumpHistory: since \(startDate)")
                     
                     let (events, model) = try session.getHistoryEvents(since: startDate)
                     self.loopManager.addPumpEvents(events, from: model) { (error) in
@@ -468,7 +468,7 @@ final class DeviceDataManager {
                         case let bg as BGReceivedPumpEvent:
                             let mgdl = bg.amount
                             let glucose = HKQuantity(unit: HKUnit.milligramsPerDeciliter(), doubleValue: Double(mgdl))
-                            print("Got BG event from pump, adding to glucosestore, but only if no other glucose was recently entered.", mgdl, glucose)
+                            NSLog("Got BG event from pump, adding to glucosestore, but only if no other glucose was recently entered \(mgdl) \(glucose)")
                             self.loopManager.glucoseStore?.getGlucoseValues(start: Date().addingTimeInterval(TimeInterval(minutes: -30)), completion: { (result) in
                                 switch(result) {
                                 case .success(let values):
@@ -480,7 +480,7 @@ final class DeviceDataManager {
                                 }
                                 
                                 self.loopManager.glucoseStore?.addGlucose(glucose, date: event.date, isDisplayOnly: false, device: nil) { (success, _, error) in
-                                    print("Added BG from pump", success, error as Any)
+                                    NSLog("Added BG from pump \(success), \(String(describing: error))")
                                 }
                             })
                             
@@ -500,9 +500,9 @@ final class DeviceDataManager {
 
     private var needPumpDataRead : Bool = false
     public func triggerPumpDataRead() {
-                needPumpDataRead = true
-                    loggingPrint("triggerPumpDataRead")
-                    assertCurrentPumpData()
+        needPumpDataRead = true
+        NSLog("triggerPumpDataRead")
+        assertCurrentPumpData()
     }
     
     /// TODO: Isolate to queue
@@ -972,7 +972,7 @@ final class DeviceDataManager {
             return
         }
         if btMagicDate.timeIntervalSinceNow > TimeInterval(minutes: -30) {
-            print("maybeToggleBluetooth - \(source) - tried recently ", btMagicDate)
+            NSLog("maybeToggleBluetooth - \(source) - tried recently \(btMagicDate)")
             return
         }
         loopManager.addInternalNote("maybeToggleBluetooth - \(source) - Reason \(reason) - Restarting Bluetooth, no data for 30 minutes (could also be out of range)")
@@ -1013,7 +1013,7 @@ final class DeviceDataManager {
 //            loopManager.updateCgmCalibrationState(cgmCalibrated)
 //            return
 //        }
-//        print("G5 Latest Reading", glucose)
+//        NSLog("G5 Latest Reading", glucose)
 //        if glucose.state == .ok {
 //            lastG5CalibrationOkay = glucose.readDate
 //            if let need = lastG5NeedsCalibration, need.timeIntervalSinceNow < TimeInterval(minutes: -15) {
@@ -1195,7 +1195,7 @@ extension DeviceDataManager: LoopDataManagerDelegate {
             case .failure(let error):
                 let logger = DiagnosticLogger.shared!.forCategory("NightscoutUploader")
                 logger.error(error)
-                print("UPLOADING delegate failed", error as Any)
+                NSLog("UPLOADING delegate failed \(error)")
                 completion(.failure(error))
 
             }

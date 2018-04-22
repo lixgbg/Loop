@@ -24,7 +24,6 @@ final class FoodRecentPickerFlowLayout: UICollectionViewFlowLayout {
         }
         get {
             let itemHeight = self.collectionView!.frame.height
-            print("itemHeight", itemHeight)
             return CGSize(width: itemHeight, height: itemHeight)
         }
     }

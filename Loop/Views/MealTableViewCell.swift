@@ -31,7 +31,7 @@ class MealTableViewCell: UITableViewCell {
         let location = sender.location(in: self)
         let width = self.frame.width
         
-        print("tapCell", location.x, location.y, width)
+        NSLog("tapCell \(location.x) \(location.y) \(width)")
         
         if location.y > 60 {
             return

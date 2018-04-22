@@ -75,11 +75,11 @@ public class NightscoutProfile {
             dict["startDate"] = "<blanked>"
             let data = try JSONSerialization.data(withJSONObject: dict, options: [.prettyPrinted, .sortedKeys])
             if let encodedData = String(data: data, encoding: .utf8) {
-                print("NightscoutProfile string", encodedData)
+                NSLog("NightscoutProfile encodedData: \(encodedData)")
                 return encodedData
             }
         } catch (let error) {
-            print("NightscoutProfile encoding to json error", error)
+            NSLog("NightscoutProfile encoding to json error: \(error)")
         }
         return nil
     }

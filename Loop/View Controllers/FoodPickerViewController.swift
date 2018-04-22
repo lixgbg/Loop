@@ -63,13 +63,12 @@ final class NewFoodPickerViewController: UIViewController, UICollectionViewDataS
     @IBOutlet weak var saveButtonItem: UIBarButtonItem!
     
     @IBAction func saveButton(_ sender: Any) {
-        print("save", sender)
         if let selected = self.selected, let item = foodItemForPath(selected) {
             var imageIdentifier : String? = nil
             if item.title == "Photo" {
                 imageIdentifier = previewFileName
             }
-            print("save image", imageIdentifier as Any)
+            NSLog("NewFoodPickerViewController saveButtone image \(imageIdentifier as Any)")
             let pick = FoodPick(item: item, ratio: ratio, date: Date(), imageIdentifier: imageIdentifier)
             foodPick = pick
             foodManager?.record(pick)
@@ -86,7 +85,7 @@ final class NewFoodPickerViewController: UIViewController, UICollectionViewDataS
         guard let source = sender.source as? FoodPickerCameraViewController else {
             return
         }
-        print("we are back!")
+        NSLog("unwindToFoodPicker we are back!")
 
         previewImage = source.imageOutput
         selected = source.selectedPath
@@ -95,7 +94,7 @@ final class NewFoodPickerViewController: UIViewController, UICollectionViewDataS
             previewFileName = foodManager.saveCustomImage(image)
         }
         
-        print("filename", previewFileName ?? "nil", "selected", selected ?? "nil")
+        NSLog("unwindToFoodPicker filename \(String(describing: previewFileName)) selected \(String(describing: selected))")
         
         if let indexPath = selected {
             saveButtonItem.isEnabled = true
@@ -240,7 +239,6 @@ final class NewFoodPickerViewController: UIViewController, UICollectionViewDataS
         }
         switch targetViewController {
         case let vc as FoodPickerCameraViewController:
-            print("prep view", selected as Any)
             vc.selectedPath = selected
         default:
             break

@@ -187,7 +187,6 @@ final class StatusTableViewController: ChartsTableViewController, MealTableViewC
     }
     
     private func updateMealInformation(_ updateGroup: DispatchGroup, _ carbStore: CarbStore?) {
-        print("updateMealInformation")
         //dispatchPrecondition(condition: .onQueue(dataAccessQueue))
         if let carbStore = carbStore {
             let endDate = Date()
@@ -205,21 +204,21 @@ final class StatusTableViewController: ChartsTableViewController, MealTableViewC
                 var carbs : Double = 0
                 var allPicks = FoodPicks()
                 for value in values {
-                    print("  updateMealInformation - v - ", value)
+                    // NSLog("  updateMealInformation - v - \(value)")
                     mealStart = min(mealStart, value.startDate)
                     mealEnd = max(value.startDate, mealStart)
                     let picks = value.foodPicks()
                     for pick in picks.picks {
                         allPicks.append(pick)
                     }
-                    print("  updateMealInformation - p - ", picks)
+                    // NSLog("  updateMealInformation - p - \(picks)")
                     if let lastpick = picks.last {
                         mealEnd = max(lastpick.date, mealEnd)
                     }
                     carbs = carbs + picks.carbs
                     
                 }
-                print("  updateMealInformation - carbs - ", carbs)
+                // NSLog("  updateMealInformation - carbs - \(carbs)")
                 //var undoPossible = false
                 //if let undoPossibleDate = undoPossibleDate {
                 let undoPossible = undoPossibleDate <= mealEnd
@@ -228,9 +227,9 @@ final class StatusTableViewController: ChartsTableViewController, MealTableViewC
                                         picks: allPicks,
                                         start: mealStart, end: mealEnd, carbs: carbs, undoPossible: undoPossible)
                 
-                print("updateMealInformation - ", self.mealInformation as Any)
+                NSLog("updateMealInformation - \(self.mealInformation as Any)")
                 //case .failure(let error):
-                //    print("updateMealInformation - error - ", error as Any)
+                //    NSLog("updateMealInformation - error - ", error as Any)
                 //}
                 updateGroup.leave()
             }
@@ -1506,16 +1505,14 @@ final class StatusTableViewController: ChartsTableViewController, MealTableViewC
         let location = sender.location(in: toolbar)
         let width = toolbar.frame.width
         
-        print("toggleExpertMode", expertMode, sender, location.x, width)
         if location.x > width/5 {
             if sender.state == .began {
                 settingsTouchTime = Date()
             }
             if sender.state == .ended, let duration = settingsTouchTime?.timeIntervalSinceNow  {
-                print("Touch Duration", duration)
                 if abs(duration) > TimeInterval(2) {
-                    print("Longpress")
                     expertMode = !expertMode
+                    deviceManager.loopManager.addInternalNote("toggleExpertMode \(expertMode)")
                     toolbarItems![8].isEnabled = expertMode
                     if expertMode {
                         DispatchQueue.main.asyncAfter(deadline: .now() + TimeInterval(minutes: 30)) {
@@ -1567,11 +1564,11 @@ final class StatusTableViewController: ChartsTableViewController, MealTableViewC
                 glucoseStore.addGlucose(glucoseEntry, date: Date(), isDisplayOnly: false, device: nil) { (success, _, error) in
                     
                     if error != nil {
-                        print("addGlucose error", error as Any)
+                        NSLog("handleFoodPick: addGlucose error \(error as Any)")
                     }
                 }
                 let g = Int(glucoseEntry.doubleValue(for: HKUnit.milligramsPerDeciliter()))
-                print("Adding glucose to Nightscout", g)
+                NSLog("handleFoodPick: Adding glucose to Nightscout \(g) mg/dl")
                 deviceManager.loopManager.addBGReceived(bloodGlucose: g, comment: "Manually Entered")
             } else {
                 // no glucose entry given
@@ -1581,23 +1578,8 @@ final class StatusTableViewController: ChartsTableViewController, MealTableViewC
     
     @IBAction func unwindFromNewFoodPickerViewController(_ segue: UIStoryboardSegue) {
         if let controller = segue.source as? NewFoodPickerViewController, let pick = controller.foodPick {
-            //print(pick)
-            
-            //let note = pick.description
             handleFoodPick(pick, nil)
-            print("unwindFromFoodCollectionViewController", pick, pick.description)
-            
-//            deviceManager.loopManager.addCarbEntryAndRecommendBolus(pick, nil, note) { (_, error) -> Void in
-//                DispatchQueue.main.async {
-//                    if let error = error {
-//                        print("unwindFromFoodCollectionViewController addCarbEntryAndRecommendBolus error", error)
-//                        self.dataManager.logger.addError(error, fromSource: "unwindFromFoodCollectionViewController")
-//                    }
-//                   // self.needsRefresh = true
-//                    self.reloadData()
-//                }
-//            }
-            
+
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                 // self.needsRefresh = true
                 self.reloadData()
@@ -1623,10 +1605,10 @@ final class StatusTableViewController: ChartsTableViewController, MealTableViewC
             
             
             alert.addAction(UIAlertAction(title: "Remove", style: .default, handler: { [weak alert] (_) in
-                print("Alert", alert as Any)
+                NSLog("removeLastFoodPick Alert \(alert as Any)")
                 self.deviceManager.loopManager.removeCarbEntry(carbEntry: lastCarbEntry) { (error) in
                     if let err = error {
-                        print("removeLastFoodPick Error", err as Any)
+                        NSLog("removeLastFoodPick Error \(err as Any)")
                         self.presentAlertController(with: err)
                     }
                     self.reloadData()

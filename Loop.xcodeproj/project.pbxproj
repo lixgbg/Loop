@@ -185,7 +185,6 @@
 		493BDE2020136733004967E4 /* MealTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 493BDE1F20136733004967E4 /* MealTableViewCell.swift */; };
 		493BDE222013676E004967E4 /* FoodCatalog in Resources */ = {isa = PBXBuildFile; fileRef = 493BDE212013676D004967E4 /* FoodCatalog */; };
 		493BDE2420137179004967E4 /* CarbEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 493BDE2320137178004967E4 /* CarbEntry.swift */; };
-		493BDE262013719F004967E4 /* LoggingPrint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 493BDE252013719F004967E4 /* LoggingPrint.swift */; };
 		493BDE282013A6D5004967E4 /* TreatmentInformation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 493BDE272013A6D5004967E4 /* TreatmentInformation.swift */; };
 		493BDE2F201A8B58004967E4 /* BluetoothManagerHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 493BDE2D201A8B57004967E4 /* BluetoothManagerHandler.m */; };
 		4988FFDC201A98C9007967AC /* NightscoutUploader+Profile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4988FFDB201A98C9007967AC /* NightscoutUploader+Profile.swift */; };
@@ -600,7 +599,6 @@
 		493BDE1F20136733004967E4 /* MealTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MealTableViewCell.swift; sourceTree = "<group>"; };
 		493BDE212013676D004967E4 /* FoodCatalog */ = {isa = PBXFileReference; lastKnownFileType = folder; path = FoodCatalog; sourceTree = "<group>"; };
 		493BDE2320137178004967E4 /* CarbEntry.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CarbEntry.swift; sourceTree = "<group>"; };
-		493BDE252013719F004967E4 /* LoggingPrint.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoggingPrint.swift; sourceTree = "<group>"; };
 		493BDE272013A6D5004967E4 /* TreatmentInformation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TreatmentInformation.swift; sourceTree = "<group>"; };
 		493BDE2A201A8B52004967E4 /* Loop2-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Loop2-Bridging-Header.h"; sourceTree = "<group>"; };
 		493BDE2B201A8B56004967E4 /* Bluetooth-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Bluetooth-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -1006,12 +1004,10 @@
 				43CE7CDD1CA8B63E003CC1B0 /* Data.swift */,
 				4302F4E41D4EA75100F0FCAF /* DoseStore.swift */,
 				43C513181E864C4E001547C7 /* GlucoseRangeSchedule.swift */,
-				493BDE252013719F004967E4 /* LoggingPrint.swift */,
 				C15713811DAC6983005BC4D2 /* MealBolusNightscoutTreatment.swift */,
 				438172D81F4E9E37003C3328 /* NewPumpEvent.swift */,
 				43CEE6E51E56AFD400CB9116 /* NightscoutUploader.swift */,
 				4988FFDB201A98C9007967AC /* NightscoutUploader+Profile.swift */,
-				4398973A1CD2FC2000223065 /* NSDateFormatter.swift */,
 				43E344A31B9E1B1C00C85C07 /* NSUserDefaults.swift */,
 				43441A9F1EDB4D390087958C /* OSLog.swift */,
 				4381D2251F3C0FDD004ACCF9 /* RileyLinkDevice.swift */,
@@ -1804,7 +1800,6 @@
 				43D2E8231F00425400AE5CBF /* BolusViewController+LoopDataManager.swift in Sources */,
 				434F545F1D288345002A9274 /* ShareService.swift in Sources */,
 				43441AA01EDB4D390087958C /* OSLog.swift in Sources */,
-				493BDE262013719F004967E4 /* LoggingPrint.swift in Sources */,
 				43CEE6E61E56AFD400CB9116 /* NightscoutUploader.swift in Sources */,
 				4328E0331CFC091100E199AA /* WatchContext+LoopKit.swift in Sources */,
 				4F526D611DF8D9A900A04910 /* NetBasal.swift in Sources */,

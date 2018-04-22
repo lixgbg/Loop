@@ -200,24 +200,25 @@ extension LoopDataManager {
         dispatchPrecondition(condition: .onQueue(PendingTreatmentsQueueManager.shared.queue))
         let pendingTreatments = PendingTreatmentsQueueManager.shared.pending
         PendingTreatmentsQueueManager.shared.pending = []
-        // print("UPLOADING", pendingTreatments.count)
+        // NSLog("UPLOADING", pendingTreatments.count)
         let uploadGroup = DispatchGroup()
         
         uploadGroup.enter()
         let uploadTreatments = pendingTreatments
         self.delegate.loopDataManager(self, uploadTreatments: uploadTreatments) { (result) in
             switch(result) {
-            case .success(let ids):
-                for (treatment, id) in zip(uploadTreatments, ids) {
+            case .success:
+                // for (treatment, id) in zip(uploadTreatments, ids) {
                     // NSLog("UPLOADING SUCCESS", id, treatment.dictionaryRepresentation)
-                }
+                // }
+                _ = 1
             case .failure(let error):
                 switch(error) {
                 case LoopError.configurationError:
                     NSLog("UPLOADING ERROR Nightscout not configured")
                 default:
                     for treatment in uploadTreatments {
-                        // print("UPLOADING ERROR", error, treatment.dictionaryRepresentation)
+                        // NSLog("UPLOADING ERROR", error, treatment.dictionaryRepresentation)
                         PendingTreatmentsQueueManager.shared.pending.append(treatment)
                         PendingTreatmentsQueueManager.shared.recordFailure()
                     }
@@ -230,17 +231,17 @@ extension LoopDataManager {
     }
     
     public func addNote(_ text: String) {
-        print("addNote: ", text)
+        NSLog("addNote: \(text)")
         addFakeEvent(.note, text)
     }
     
     public func addInternalNote(_ text: String) {
-        print("INTERNAL \(text)")
+        NSLog("addInternalNote: \(text)")
         addFakeEvent(.debug, "INTERNAL \(text)")
     }
     
     public func addDebugNote(_ text: String) {
-        print("DEBUG \(text)")
+        NSLog("addDebugNote: \(text)")
         addFakeEvent(.debug, "DEBUG \(text)")
     }
     

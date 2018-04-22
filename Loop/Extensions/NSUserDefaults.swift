@@ -392,7 +392,7 @@ extension UserDefaults {
             var ret : [(type: Int, date: Date, note: String)] = []
             for element in array(forKey: PrivateKey.pendingTreatments.rawValue) as? [[String:Any]] ?? [] {
                 guard let type = element["type"] as? Int, let date = element["date"] as? Date, let note = element["note"] as? String else {
-                    print("Cannot parse stored pendingTreatment", element)
+                    NSLog("Cannot parse stored pendingTreatment \(element)")
                     continue
                 }
                 ret.append((type: type, date: date, note: note))
@@ -492,7 +492,7 @@ extension UserDefaults {
             uploader.uploadProfile(profile) { (result) in
                 switch result {
                 case .failure(let error):
-                    print("uploadProfile failed, try \(retry)", error as Any)
+                    NSLog("uploadProfile failed, try \(retry): \(error)")
                     // Try again with linear backoff
                     let retries = retry + 1
                     DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + Double(300 * retries) ) {

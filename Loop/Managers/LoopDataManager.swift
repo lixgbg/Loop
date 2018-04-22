@@ -555,7 +555,7 @@ final class LoopDataManager {
                     }
                 }
                 momentumInterval = last.timeIntervalSince(first)
-                print("momentumInterval", first as Any, last as Any, momentumInterval as Any)
+                NSLog("momentumInterval \(first) \(last) \(String(describing: momentumInterval))")
             }
             
             updateGroup.leave()
@@ -628,21 +628,18 @@ final class LoopDataManager {
         }
         
         if insulinOnBoard == nil {
-            print("insulinOnBoard - update")
             updateGroup.enter()
             let now = Date()
             doseStore.getInsulinOnBoardValues(start: retrospectiveStart, end: now) { (result) in
                 switch result {
                 case .success(let value):
                     if let recentValue = value.closestPriorToDate(now) {
-                        print("getInsulinOnBoardValues - success - recent", recentValue)
                         self.insulinOnBoard = recentValue
                     } else {
-                        print("getInsulinOnBoardValues - success - empty using 0.0")
                         self.insulinOnBoard = InsulinValue(startDate: now, value: 0.0)
                     }
                 case .failure(let error):
-                    print("getInsulinOnBoardValues - error", error)
+                    NSLog("getInsulinOnBoardValues - error: \(error)")
                     self.logger.error(error)
                     self.insulinOnBoard = nil
                 }
@@ -1134,7 +1131,7 @@ final class LoopDataManager {
     ///     - LoopError.pumpDataTooOld
     private func updatePredictedGlucoseAndRecommendedBasal() throws {
         dispatchPrecondition(condition: .onQueue(dataAccessQueue))
-        print("updatePredictedGlucoseAndRecommendedBasal")
+        // NSLog("updatePredictedGlucoseAndRecommendedBasal")
         guard let glucose = glucoseStore.latestGlucose else {
             self.predictedGlucose = nil
             throw LoopError.missingDataError(details: "Glucose", recovery: "Check your CGM data source")
@@ -1205,7 +1202,7 @@ final class LoopDataManager {
         if let temp = tempBasal, lastRequestedBolus == nil/*, (temp.duration == 0 || temp.duration >= TimeInterval(minutes: 5))*/  {
             recommendedTempBasal = (recommendation: temp, date: Date())
         } else {
-            print("updatePredictedGlucoseAndRecommendedBasal - Bolus or !tempBasal")
+            NSLog("updatePredictedGlucoseAndRecommendedBasal - Bolus or !tempBasal")
             recommendedTempBasal = nil
         }
         
@@ -1214,16 +1211,16 @@ final class LoopDataManager {
         } catch let error {
             // TODO(Erik): Surface error
             _ = error
-            print("updatePredictedGlucoseAndRecommendedBasal - Bolus error", error)
+            NSLog("updatePredictedGlucoseAndRecommendedBasal - Bolus error: \(error)")
             recommendedBolus = nil
         }
         if lastRequestedBolus != nil {
-            print("updatePredictedGlucoseAndRecommendedBasal - Bolus ongoing")
+            NSLog("updatePredictedGlucoseAndRecommendedBasal - Bolus ongoing")
             recommendedBolus = nil
         }
         
         if let remaining = pumpDetachedRemaining() {
-            print("updatePredictedGlucoseAndRecommendedBasal - Pump Detached!")
+            NSLog("updatePredictedGlucoseAndRecommendedBasal - Pump Detached!")
             recommendedTempBasal = (recommendation: TempBasalRecommendation(unitsPerHour: 0.025, duration: remaining), date: Date())
             recommendedBolus = nil
         }
@@ -1322,14 +1319,14 @@ final class LoopDataManager {
         
         guard let recommendedBolus = self.recommendedBolus else {
             completion(nil)
-            print("setAutomatedBolus - recommendation not available")
+            NSLog("setAutomatedBolus - recommendation not available")
             return
         }
         
         let safeAmount = roundInsulinUnits(recommendedBolus.recommendation.amount * settings.automatedBolusRatio)
         if safeAmount < settings.automatedBolusThreshold {
             completion(nil)
-            print("setAutomatedBolus - recommendation below threshold")
+            NSLog("setAutomatedBolus - recommendation below threshold")
             return
         }
         
@@ -1553,8 +1550,8 @@ final class LoopDataManager {
             }
             if success {
                 completion(nil)
-            } else if error != nil {
-                print("removeCarbEntry deleteCarbEntry error", error as Any)
+            } else if let err = error {
+                NSLog("removeCarbEntry deleteCarbEntry error: \(err)")
                 completion(error)
             }
         }
