@@ -648,7 +648,8 @@ final class DeviceDataManager {
         if loopManager.doseStore.lastReservoirVolumeDrop < 0 {
             notify(LoopError.invalidData(details: "Last Reservoir drop negative."))
             shouldReadReservoir = true
-        } else if let reservoir = loopManager.doseStore.lastReservoirValue {
+        } else if let reservoir = loopManager.doseStore.lastReservoirValue, reservoir.startDate.timeIntervalSinceNow <=
+            -loopManager.recencyInterval {
             notify(LoopError.pumpDataTooOld(date: reservoir.startDate))
             shouldReadReservoir = true
         } else {
@@ -943,10 +944,10 @@ final class DeviceDataManager {
     func maybeToggleBluetooth(_ source: String, force: Bool = false) {
 
         var restartReason : String? = nil
-        if let reservoir = loopManager.doseStore.lastReservoirValue,
+        if let reservoir = loopManager?.doseStore.lastReservoirValue,
             reservoir.startDate.timeIntervalSinceNow <= TimeInterval(minutes: -30) {
             restartReason = "pump"
-        } else if let glucose = loopManager.glucoseStore.latestGlucose,
+        } else if let glucose = loopManager?.glucoseStore?.latestGlucose,
             glucose.startDate.timeIntervalSinceNow <= TimeInterval(minutes: -30) {
             restartReason = "cgm"
         }
