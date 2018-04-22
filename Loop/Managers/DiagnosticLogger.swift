@@ -112,7 +112,8 @@ final class CategoryLogger {
     
     private func loopLog(_ type: OSLogType, message: String) {
         if let loop = self.logger.loopManager {
-            if message.range(of: "NightscoutUploader") != nil {
+            if category == "NightscoutUploader" {
+                NSLog("NightscoutUploader \(type.tagName) \(message)")
                 return
             }
             if message.range(of: "NSURLErrorDomain") != nil {

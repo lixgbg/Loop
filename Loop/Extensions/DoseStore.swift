@@ -189,7 +189,6 @@ extension LoopDataManager {
         guard let finalTreatment = treatment else {
             return
         }
-        print("UPLOADING finalTreatment", finalTreatment.dictionaryRepresentation)
         PendingTreatmentsQueueManager.shared.queue.async {
             PendingTreatmentsQueueManager.shared.pending.append(finalTreatment)
             // UserDefaults.standard.pendingTreatments.append(event)
@@ -201,7 +200,7 @@ extension LoopDataManager {
         dispatchPrecondition(condition: .onQueue(PendingTreatmentsQueueManager.shared.queue))
         let pendingTreatments = PendingTreatmentsQueueManager.shared.pending
         PendingTreatmentsQueueManager.shared.pending = []
-        print("UPLOADING", pendingTreatments.count)
+        // print("UPLOADING", pendingTreatments.count)
         let uploadGroup = DispatchGroup()
         
         uploadGroup.enter()
@@ -210,13 +209,18 @@ extension LoopDataManager {
             switch(result) {
             case .success(let ids):
                 for (treatment, id) in zip(uploadTreatments, ids) {
-                    print("UPLOADING SUCCESS", id, treatment.dictionaryRepresentation)
+                    // NSLog("UPLOADING SUCCESS", id, treatment.dictionaryRepresentation)
                 }
             case .failure(let error):
-                for treatment in uploadTreatments {
-                    print("UPLOADING ERROR", error, treatment.dictionaryRepresentation)
-                    PendingTreatmentsQueueManager.shared.pending.append(treatment)
-                    PendingTreatmentsQueueManager.shared.recordFailure()
+                switch(error) {
+                case LoopError.configurationError:
+                    NSLog("UPLOADING ERROR Nightscout not configured")
+                default:
+                    for treatment in uploadTreatments {
+                        // print("UPLOADING ERROR", error, treatment.dictionaryRepresentation)
+                        PendingTreatmentsQueueManager.shared.pending.append(treatment)
+                        PendingTreatmentsQueueManager.shared.recordFailure()
+                    }
                 }
             }
             uploadGroup.leave()
