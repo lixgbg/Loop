@@ -589,7 +589,6 @@ final class DeviceDataManager {
 
                     nsPumpStatus = NightscoutUploadKit.PumpStatus(clock: date, pumpID: status.pumpID, iob: nil, battery: battery, suspended: status.suspended, bolusing: status.bolusing, reservoir: status.reservoir)
                 } catch let error {
-                    self.logger.addError("Failed to fetch pump status: \(error)", fromSource: "RileyLink")
                     if attempt < 3 {
                         let nextAttempt = attempt + 1
                         // Too noisy
@@ -599,6 +598,7 @@ final class DeviceDataManager {
                         self.assertCurrentPumpData(attempt: nextAttempt)
                         return
                     }
+                    self.logger.addError("Failed to fetch pump status: \(error)", fromSource: "assertCurrentPumpData")
                     self.setLastError(error: error)
                     self.troubleshootPumpComms(using: device)
                     self.nightscoutDataManager.uploadLoopStatus(loopError: error)
@@ -676,7 +676,7 @@ final class DeviceDataManager {
                 do {
                     let reservoir = try session.getRemainingInsulin()
                     if !self.assertPumpDate(reservoir.clock.date!) {
-                        self.logger.addError("Pump clock is deviating too much, need to fix first.", fromSource: "RileyLink")
+                        self.logger.addError("Pump clock is deviating too much, need to fix first.", fromSource: "enactBolus")
                         let error = PumpOpsError.rfCommsFailure("Pump clock is deviating too much.")
                         notify(SetBolusError.certain(error))
                         return
@@ -693,11 +693,11 @@ final class DeviceDataManager {
                         }
                     }
                 } catch let error as PumpOpsError {
-                    self.logger.addError("Failed to fetch pump status: \(error)", fromSource: "RileyLink")
+                    self.logger.addError("Failed to fetch pump status: \(error)", fromSource: "enactBolus")
                     notify(SetBolusError.certain(error))
                     return
                 } catch let error as PumpCommandError {
-                    self.logger.addError("Failed to fetch pump status: \(error)", fromSource: "RileyLink")
+                    self.logger.addError("Failed to fetch pump status: \(error)", fromSource: "enactBolus")
                     switch error {
                     case .arguments(let error):
                         notify(SetBolusError.certain(error))
