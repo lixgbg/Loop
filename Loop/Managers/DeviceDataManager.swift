@@ -538,6 +538,9 @@ final class DeviceDataManager {
         rileyLinkManager.assertIdleListening(forcingRestart: true)
 
         guard isPumpDataStale() else {
+            if attempt > 0 {
+                self.pumpDataReadInProgress = false
+            }
             return
         }
 
@@ -546,17 +549,23 @@ final class DeviceDataManager {
                 let error = LoopError.connectionError
                 self.logger.addError("Failed to fetch pump status: \(error)", fromSource: "RileyLink")
                 self.setLastError(error: error)
+                if attempt > 0 {
+                    self.pumpDataReadInProgress = false
+                }
                 return
             }
 
             guard let ops = self.pumpOps else {
                 let error = LoopError.configurationError("Pump ID")
                 self.setLastError(error: error)
+                if attempt > 0 {
+                    self.pumpDataReadInProgress = false
+                }
                 return
             }
             
             if self.pumpDataReadInProgress && attempt == 0 {
-                print("readAndProcessPumpData: Previous pump read still in progress, dropping this request.")
+                NSLog("readAndProcessPumpData: Previous pump read still in progress, dropping this request.")
                 return
             } else {
                 self.pumpDataReadInProgress = true
@@ -585,7 +594,7 @@ final class DeviceDataManager {
                         let nextAttempt = attempt + 1
                         // Too noisy
                         // self.loopManager.addDebugNote("readAndProcessPumpData, attempt \(nextAttempt).")
-                        print("readAndProcessPumpData, attempt \(nextAttempt).")
+                        NSLog("readAndProcessPumpData, attempt \(nextAttempt).")
             
                         self.assertCurrentPumpData(attempt: nextAttempt)
                         return
@@ -652,7 +661,7 @@ final class DeviceDataManager {
             -loopManager.recencyInterval {
             notify(LoopError.pumpDataTooOld(date: reservoir.startDate))
             shouldReadReservoir = true
-        } else {
+        } else if loopManager.doseStore.lastReservoirValue == nil {
             notify(LoopError.missingDataError(details: "Reservoir Value missing", recovery: "Keep phone close."))
             shouldReadReservoir = true
         }
