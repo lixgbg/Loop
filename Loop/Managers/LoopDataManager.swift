@@ -97,6 +97,7 @@ final class LoopDataManager {
             object: nil,
             queue: nil
         ) { (note) -> Void in
+            self.addInternalNote("carbEntriesDidUpdate")
             self.dataAccessQueue.async {
                 self.carbEffect = nil
                 self.carbsOnBoard = nil
