@@ -298,7 +298,9 @@ final class LoopDataManager {
     ///   - completion: A closure called once upon completion
     ///   - result: The bolus recommendation
     func addCarbEntryAndRecommendBolus(_ carbEntry: CarbEntry, replacing replacingEntry: CarbEntry? = nil, completion: @escaping (_ result: Result<BolusRecommendation?>) -> Void) {
-        let addCompletion: (Bool, CarbEntry?, CarbStore.CarbStoreError?) -> Void = { (success, _, error) in
+        self.addInternalNote("addCarbEntryAndRecommendBolus: \(carbEntry) \(String(describing: replacingEntry))")
+
+        let addCompletion: (Bool, CarbEntry?, CarbStore.CarbStoreError?) -> Void = { (success, entry, error) in
             self.dataAccessQueue.async {
                 if success {
                     // Remove the active pre-meal target override
@@ -307,23 +309,30 @@ final class LoopDataManager {
                     self.carbEffect = nil
                     self.carbsOnBoard = nil
                     defer {
+                        self.addInternalNote("addCarbEntryAndRecommendBolus notify carbs: \(String(describing: entry))")
                         self.notify(forChange: .carbs)
                     }
 
                     do {
                         try self.update()
                         if let bolus = self.recommendedBolus {
+                            self.addInternalNote("addCarbEntryAndRecommendBolus bolus recommendation: \(bolus))")
                             completion(.success(bolus.recommendation))
                         } else {
                             // TODO(Erik) Surface the real error here
                             throw LoopError.missingDataError(details: "Cannot recommend Bolus", recovery: "Check your data")
                         }
                     } catch let error {
+                        self.addInternalNote("addCarbEntryAndRecommendBolus bolus recommendation error: \(error))")
                         completion(.failure(error))
                     }
                 } else if let error = error {
+                    self.addInternalNote("addCarbEntryAndRecommendBolus error: \(error))")
+
                     completion(.failure(error))
                 } else {
+                    self.addInternalNote("addCarbEntryAndRecommendBolus no success and no error")
+
                     completion(.success(nil))
                 }
             }
