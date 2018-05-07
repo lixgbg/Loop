@@ -40,7 +40,7 @@ final class LoopDataManager {
     
     var minimumBasalRateSchedule : BasalRateSchedule? {
         didSet {
-            UserDefaults.standard.minimumBasalRateSchedule = minimumBasalRateSchedule
+            UserDefaults.appGroup.minimumBasalRateSchedule = minimumBasalRateSchedule
             notify(forChange: .preferences)
         }
     }
@@ -49,7 +49,7 @@ final class LoopDataManager {
         delegate: LoopDataManagerDelegate,
         lastLoopCompleted: Date?,
         lastTempBasal: DoseEntry?,
-        minimumBasalRateSchedule: BasalRateSchedule? = UserDefaults.standard.minimumBasalRateSchedule,
+        minimumBasalRateSchedule: BasalRateSchedule? = UserDefaults.appGroup.minimumBasalRateSchedule,
         basalRateSchedule: BasalRateSchedule? = UserDefaults.appGroup.basalRateSchedule,
         carbRatioSchedule: CarbRatioSchedule? = UserDefaults.appGroup.carbRatioSchedule,
         insulinModelSettings: InsulinModelSettings? = UserDefaults.appGroup.insulinModelSettings,
@@ -64,7 +64,7 @@ final class LoopDataManager {
         self.lastTempBasal = lastTempBasal
         self.settings = settings
         self.minimumBasalRateSchedule = minimumBasalRateSchedule
-        self.pumpDetachedMode = UserDefaults.standard.pumpDetachedMode
+        self.pumpDetachedMode = UserDefaults.appGroup.pumpDetachedMode
         
         let healthStore = HKHealthStore()
 
@@ -315,7 +315,7 @@ final class LoopDataManager {
                     }
 
                     do {
-                        try self.update()
+                        try self.update("addCarbEntryAndRecommendBolus")
                         if let bolus = self.recommendedBolus {
                             self.addInternalNote("addCarbEntryAndRecommendBolus bolus recommendation: \(bolus))")
                             completion(.success(bolus.recommendation))
@@ -387,7 +387,7 @@ final class LoopDataManager {
 
                 self.notify(forChange: .bolus)
                 do {
-                    try self.update()
+                    try self.update("addConfirmedBolus")
                 } catch let error {
                     self.addDebugNote("Update after confirmed bolus failed \(error)")
                 }
@@ -482,7 +482,7 @@ final class LoopDataManager {
             self.lastLoopError = nil
 
             do {
-                try self.update()
+                try self.update("loop")
 
                 do {
                     try self.maybeSendFutureLowNotification()
@@ -538,7 +538,8 @@ final class LoopDataManager {
     ///     - LoopError.glucoseTooOld
     ///     - LoopError.missingDataError
     ///     - LoopError.pumpDataTooOld
-    fileprivate func update() throws {
+    fileprivate func update(_ reason: String) throws {
+        NSLog("update - \(reason)")
         dispatchPrecondition(condition: .onQueue(dataAccessQueue))
         let updateGroup = DispatchGroup()
 
@@ -1501,7 +1502,7 @@ final class LoopDataManager {
     // PUMP DETACH MODE
     fileprivate var pumpDetachedMode : Date? {
         didSet {
-            UserDefaults.standard.pumpDetachedMode = pumpDetachedMode
+            UserDefaults.appGroup.pumpDetachedMode = pumpDetachedMode
             
             notify(forChange: .preferences)
         }
@@ -1904,7 +1905,7 @@ extension LoopDataManager {
             var updateError: Error?
 
             do {
-                try self.update()
+                try self.update("getLoopState")
             } catch let error {
                 updateError = error
             }
