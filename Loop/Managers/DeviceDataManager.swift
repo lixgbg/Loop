@@ -736,7 +736,7 @@ final class DeviceDataManager {
                     
                     switch(error) {
                     case SetBolusError.certain(_):
-                        if str.contains("bolusInProgress") {
+                        if str.contains("bolusInProgress") ||  str.contains("Bolus in progress") {
                             self.loopManager.addConfirmedBolus(units: units, at: Date()) {
                                 self.loopManager.addInternalNote("retryBolus - already in progress, confirming.")
                                 self.triggerPumpDataRead()
@@ -1142,9 +1142,10 @@ extension DeviceDataManager: LoopDataManagerDelegate {
                 )))
 
             } catch let error {
-                notify(.failure(error))
+//                notify(.failure(error))
+                let str = "\(error)"
 
-                if attempt < 6 {
+                if attempt < 6, !str.contains("Bolus in progress") {
                     // typically sequence might be:
                     // Error: unexpectedResponse(PumpMessage(carelink, getPumpModel, 355347, 0903373534000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000), PumpMessage(carelink, powerOn, 355347, 00)),
                     // Error: rileyLinkTimeout, attempt 2
