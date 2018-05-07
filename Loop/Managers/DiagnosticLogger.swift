@@ -116,6 +116,10 @@ final class CategoryLogger {
                 NSLog("NightscoutUploader \(type.tagName) \(message)")
                 return
             }
+            if category == "NightscoutService" {
+                NSLog("NightscoutService \(type.tagName) \(message)")
+                return
+            }
             if category == "GlucoseStore" && message.range(of: "Protected health data is inaccessible") != nil {
                 return
             }
