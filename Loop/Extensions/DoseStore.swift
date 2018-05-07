@@ -16,6 +16,7 @@ public enum FakeEventTypes: UInt8 {
     case insulinChange = 0xfc
     case bgReceived = 0xfb
     case debug = 0xfa
+    case batteryChange = 0xf9
 }
 
 final class PendingTreatmentsQueueManager: IdentifiableClass {
@@ -172,6 +173,8 @@ extension LoopDataManager {
                 treatment = NightscoutTreatment(timestamp: date, enteredBy: author, notes:  "Automatically added: \(note) \(uid)", eventType: "Insulin Change")
             case .siteChange:
                 treatment = NightscoutTreatment(timestamp: date, enteredBy: author, notes:  "Automatically added: \(note) \(uid)", eventType: "Site Change")
+            case .batteryChange:
+                treatment = NightscoutTreatment(timestamp: date, enteredBy: author, notes:  "Automatically added: \(note) \(uid)", eventType: "Battery Change")
             case .bgReceived:
                 let parts = note.split(separator: " ", maxSplits: 1)
                 let amount = Int(parts[0]) ?? 0
@@ -255,5 +258,9 @@ extension LoopDataManager {
     
     public func addBGReceived(bloodGlucose: Int, comment: String = "") {
         addFakeEvent(.bgReceived, "\(bloodGlucose) \(comment)")
+    }
+    
+    public func addBatteryChange(_ text: String) {
+        addFakeEvent(.batteryChange, text)
     }
 }

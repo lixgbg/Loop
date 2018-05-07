@@ -79,6 +79,7 @@ final class DeviceDataManager {
 
             if let oldVal = oldVal, newVal - oldVal >= 0.5 {
                 AnalyticsManager.shared.pumpBatteryWasReplaced()
+                self.loopManager.addBatteryChange("Old: \(oldVal), New: \(newVal)")
             }
         }
     }
