@@ -67,7 +67,7 @@ final class SettingsTableViewController: UITableViewController, DailyValueSchedu
         rssiFetchTimer = nil
     
         if let uploader = dataManager.remoteDataManager.nightscoutService.uploader {
-            UserDefaults.standard.uploadProfile(uploader: uploader)
+            UserDefaults.appGroup.uploadProfile(uploader: uploader)
         }
     }
 
