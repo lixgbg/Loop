@@ -29,9 +29,9 @@ struct LoopSettings {
     var retrospectiveCorrectionEnabled = true
     
     // Not configurable through UI
-    let automatedBolusThreshold: Double = 0.2
-    let automatedBolusRatio: Double = 0.7
-    let automaticBolusInterval: TimeInterval = TimeInterval(minutes: 3)
+    let automatedBolusThreshold: Double = 0.1
+    let automatedBolusRatio: Double = 1.0
+    let automaticBolusInterval: TimeInterval = TimeInterval(minutes: 6)
     let absorptionRate: Double = 20
     
     let minimumRecommendedBolus: Double = 0.2
