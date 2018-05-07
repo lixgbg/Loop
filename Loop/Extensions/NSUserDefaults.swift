@@ -455,16 +455,19 @@ extension UserDefaults {
     }
     
     func uploadProfile(uploader: NightscoutUploader, retry: Int = 0) {
-        // TODO(Erik): Check last upload date, and only upload on demand.
+        NSLog("uploadProfile")
         guard let glucoseTargetRangeSchedule = loopSettings?.glucoseTargetRangeSchedule,
             let insulinSensitivitySchedule = insulinSensitivitySchedule,
             let carbRatioSchedule = carbRatioSchedule,
             let basalRateSchedule = basalRateSchedule
             
             else {
+                NSLog("uploadProfile - missing data")
+
             return
         }
         if retry > 5 {
+            NSLog("uploadProfile - too many retries")
             return
         }
         var settings = loopSettings?.rawValue ?? [:]
@@ -488,22 +491,31 @@ extension UserDefaults {
           dia : (insulinModelSettings?.model.effectDuration ?? 0) / 3600,
           settings : settings
         )
-        if profile.json != lastUploadedNightscoutProfile {
+        guard let json = profile.json else {
+            NSLog("uploadProfile - could not generate json!")
+            return
+        }
+        print("+++++++++")
+        print(json)
+        print("+++++++++")
+        if json != lastUploadedNightscoutProfile {
             uploader.uploadProfile(profile) { (result) in
                 switch result {
                 case .failure(let error):
                     NSLog("uploadProfile failed, try \(retry): \(error)")
-                    // Try again with linear backoff
+                    // Try again with linear backoff, this is not great as updates afterwards
+                    // can potentially be overwritten.
                     let retries = retry + 1
                     DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + Double(300 * retries) ) {
                         self.uploadProfile(uploader: uploader, retry: retries)
                     }
                 case .success(_):
-                    if let json = profile.json {
-                        self.lastUploadedNightscoutProfile = json
-                    }
+                    NSLog("uploadProfile - success")
+                    self.lastUploadedNightscoutProfile = json
                 }
             }
+        } else {
+            NSLog("uploadProfile - no change!")
         }
     }
     
