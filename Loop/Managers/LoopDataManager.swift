@@ -355,7 +355,7 @@ final class LoopDataManager {
     ///   - date: The date the bolus was requested
     func addRequestedBolus(units: Double, at date: Date, completion: (() -> Void)?) {
         dataAccessQueue.async {
-            self.addInternalNote("Bolus Requested: \(units) \(date)")
+            NSLog("Bolus Requested: \(units) \(date)")
             self.recommendedBolus = nil
             self.lastPendingBolus = nil
             self.lastFailedBolus = nil
@@ -373,7 +373,7 @@ final class LoopDataManager {
     ///   - date: The date the bolus was enacted
     func addConfirmedBolus(units: Double, at date: Date, completion: (() -> Void)?) {
         let event = NewPumpEvent.enactedBolus(units: units, at: date)
-        self.addInternalNote("Bolus Confirmed: \(units) \(date)")
+        NSLog("Bolus Confirmed: \(units) \(date)")
         self.doseStore.addPendingPumpEvent(event) {
             self.dataAccessQueue.async {
                 let requestDate = self.lastRequestedBolus?.date ?? date
@@ -398,7 +398,7 @@ final class LoopDataManager {
 
     func addFailedBolus(units: Double, at date: Date, error: Error, completion: (() -> Void)?) {
         dataAccessQueue.async {
-            self.addInternalNote("Bolus Failed: \(units) \(date) \(error)")
+            NSLog("Bolus Failed: \(units) \(date) \(error)")
             self.lastFailedBolus = (units: units, date: date, error: error)
             self.lastPendingBolus = nil
             self.recommendedBolus = nil
@@ -494,9 +494,7 @@ final class LoopDataManager {
                     self.setRecommendedTempBasal { (error) -> Void in
                         self.lastLoopError = error
 
-                        if let error = error {
-                            self.logger.error(error)
-                        } else {
+                        if error == nil {
                             if self.settings.bolusEnabled {
                                 // Have to do a bolus first.
                                 self.setAutomatedBolus { (error) -> Void in
@@ -521,9 +519,6 @@ final class LoopDataManager {
                 }
             } catch let error {
                 self.lastLoopError = error
-            }
-            if let error = self.lastLoopError {
-                self.addDebugNote("Loop Error: \(error.localizedDescription)")
             }
             self.notify(forChange: .tempBasal)
         }
@@ -618,7 +613,7 @@ final class LoopDataManager {
                 }
             } else {
                 let error = LoopError.missingDataError(details: "Not enough history for momentum calculation, interval only \(String(describing: momentumInterval))", recovery: "Wait")
-                self.logger.error(error)
+                NSLog("\(error)")
             }
         }
 
@@ -1377,8 +1372,7 @@ final class LoopDataManager {
                 case .success(let bolus):
                     // TODO(Erik) Do we need to do something with the bolus here?
                     // self.lastTempBasal = basal
-                    _ = bolus
-                    self.addInternalNote("AutomatedBolus - success: \(bolus)")
+                    self.addInternalNote("AutomatedBolus - success: \(bolus.units) U")
                     self.recommendedBolus = nil
                     
                     completion(nil)
