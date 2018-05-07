@@ -75,7 +75,6 @@ public class NightscoutProfile {
             dict["startDate"] = "<blanked>"
             let data = try JSONSerialization.data(withJSONObject: dict, options: [.prettyPrinted, .sortedKeys])
             if let encodedData = String(data: data, encoding: .utf8) {
-                NSLog("NightscoutProfile encodedData: \(encodedData)")
                 return encodedData
             }
         } catch (let error) {
