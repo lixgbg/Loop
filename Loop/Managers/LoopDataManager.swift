@@ -907,7 +907,8 @@ final class LoopDataManager {
             persistentDiscrepancyGain = 5.0 // low-frequency RC gain for persistent errors, must be >= discrepancyGain
             correctionTimeConstant = 90.0 // correction filter time constant in minutes
             // TODO Erik changed this to 15, now back to 30
-            carbEffectLimit = 30.0 // reset integral RC if carbEffect over past 30 min is greater than carbEffectLimit expressed in mg/dL
+            // 20180507 back to 15, 30 was too aggressive
+            carbEffectLimit = 15.0 // reset integral RC if carbEffect over past 30 min is greater than carbEffectLimit expressed in mg/dL
             let sampleTime: Double = 5.0 // sample time = 5 min
             integralForget = exp( -sampleTime / correctionTimeConstant ) // must be between 0 and 1
             integralGain = ((1 - integralForget) / integralForget) *
