@@ -29,6 +29,7 @@ final class StatisticsManager: IdentifiableClass {
     }
     
     public func inc(_ name: String) {
+        // This should use a queue.
         if let i = stats[name] {
             stats[name] = i + 1
         } else {
@@ -37,8 +38,9 @@ final class StatisticsManager: IdentifiableClass {
         NSLog(str())
         if lastLog.timeIntervalSinceNow < TimeInterval(hours: -1) {
             if let loop = self.loopManager {
-                lastLog = Date()
                 loop.addInternalNote(str())
+                lastLog = Date()
+                stats = [:]
             }
         }
     }
