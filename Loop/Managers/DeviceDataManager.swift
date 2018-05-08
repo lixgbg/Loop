@@ -212,7 +212,7 @@ final class DeviceDataManager {
         }
 
         // How long we should wait before we re-tune the RileyLink
-        let tuneTolerance = TimeInterval(minutes: 24)
+        let tuneTolerance = TimeInterval(minutes: 55)
 
         let deviceState = deviceStates[device.peripheralIdentifier, default: DeviceState()]
         let lastTuned = deviceState.lastTuned ?? .distantPast
@@ -500,6 +500,7 @@ final class DeviceDataManager {
                     }
                 } catch let error {
                     self.troubleshootPumpComms(using: device)
+                    StatisticsManager.shared.inc("fetchPumpHistory error")
                     self.logger.addError("Failed to fetch history: \(error)", fromSource: "RileyLink")
 
                     completion(error)
@@ -665,15 +666,16 @@ final class DeviceDataManager {
         
         // If we don't have recent pump data, or the pump was recently rewound, read new pump data before bolusing.
         var shouldReadReservoir = isReservoirDataOlderThan(timeIntervalSinceNow: .minutes(-10))
+        var reservoirError : Error? = nil
         if loopManager.doseStore.lastReservoirVolumeDrop < 0 {
-            notify(LoopError.invalidData(details: "Last Reservoir drop negative."))
+            reservoirError = LoopError.invalidData(details: "Last Reservoir drop negative.")
             shouldReadReservoir = true
         } else if let reservoir = loopManager.doseStore.lastReservoirValue, reservoir.startDate.timeIntervalSinceNow <=
             -loopManager.recencyInterval {
-            notify(LoopError.pumpDataTooOld(date: reservoir.startDate))
+            reservoirError = LoopError.pumpDataTooOld(date: reservoir.startDate)
             shouldReadReservoir = true
         } else if loopManager.doseStore.lastReservoirValue == nil {
-            notify(LoopError.missingDataError(details: "Reservoir Value missing", recovery: "Keep phone close."))
+            reservoirError = LoopError.missingDataError(details: "Reservoir Value missing", recovery: "Keep phone close.")
             shouldReadReservoir = true
         }
 
@@ -686,6 +688,7 @@ final class DeviceDataManager {
 
             if shouldReadReservoir {
                 do {
+                    StatisticsManager.shared.inc("Bolus Read Reservoir")
                     let reservoir = try session.getRemainingInsulin()
                     if !self.assertPumpDate(reservoir.clock.date!) {
                         self.logger.addError("Pump clock is deviating too much, need to fix first.", fromSource: "enactBolus")
@@ -700,7 +703,7 @@ final class DeviceDataManager {
                             self.logger.addError(error, fromSource: "Bolus")
                         case .success:
                             //break
-                            notify(nil)
+                            notify(reservoirError)
                             return
                         }
                     }
@@ -734,13 +737,14 @@ final class DeviceDataManager {
             var attempt = 1
             while retry {
                 do {
+                    StatisticsManager.shared.inc("Bolus setNormalBolus")
                     try session.setNormalBolus(units: units)
                     self.loopManager.addConfirmedBolus(units: units, at: Date()) {
                         self.triggerPumpDataRead()
                         notify(nil)
                     }
-                    retry = false
-                    break
+                    // retry = false
+                    return
                 } catch let error {
                     self.logger.addError(error, fromSource: "Bolus")
 
@@ -754,8 +758,8 @@ final class DeviceDataManager {
                                 self.triggerPumpDataRead()
                                 notify(nil)
                             }
-                            retry = false
-                            break
+                            // retry = false
+                            return
                         }
                     case  SetBolusError.uncertain(_):
                         if (str.contains("noResponse(") || str.contains("unknownResponse(")) && str.contains("powerOn") {
@@ -764,7 +768,7 @@ final class DeviceDataManager {
                             retry = false
                         }
                     default:
-                        self.loopManager.addInternalNote("enactBolus unknown Error.")
+                        // self.loopManager.addInternalNote("enactBolus unknown Error.")
                         retry = false
                     }
                     if retry && attempt < 5 {
