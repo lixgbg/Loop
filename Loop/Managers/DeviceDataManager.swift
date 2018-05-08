@@ -218,6 +218,13 @@ final class DeviceDataManager {
         let lastTuned = deviceState.lastTuned ?? .distantPast
 
         if lastTuned.timeIntervalSinceNow <= -tuneTolerance {
+            // Assume 1 device and don't tune if we had a successful comm. in the last 55
+            // minutes.
+            // TODO track the last successful communication attempt in RileyLink
+            if let reservoir = loopManager?.doseStore.lastReservoirValue,
+                reservoir.startDate.timeIntervalSinceNow > TimeInterval(minutes: -55) {
+                return
+            }
             pumpOps.runSession(withName: "Tune pump", using: device) { (session) in
                 StatisticsManager.shared.inc("Tune pump")
                 do {
@@ -381,6 +388,7 @@ final class DeviceDataManager {
      - parameter timeLeft: The approximate time before the reservoir is empty
      */
     private func updateReservoirVolume(_ units: Double, at date: Date, withTimeLeft timeLeft: TimeInterval?) {
+        StatisticsManager.shared.inc("updateReservoirVolume")
         loopManager.addReservoirValue(units, at: date) { (result) in
             /// TODO: Isolate to queue
 
@@ -577,6 +585,7 @@ final class DeviceDataManager {
             
             if self.pumpDataReadInProgress && attempt == 0 {
                 NSLog("readAndProcessPumpData: Previous pump read still in progress, dropping this request.")
+                self.needPumpDataRead = false
                 return
             } else {
                 self.pumpDataReadInProgress = true
@@ -600,6 +609,8 @@ final class DeviceDataManager {
                     let battery = BatteryStatus(voltage: status.batteryVolts, status: BatteryIndicator(batteryStatus: status.batteryStatus))
 
                     nsPumpStatus = NightscoutUploadKit.PumpStatus(clock: date, pumpID: status.pumpID, iob: nil, battery: battery, suspended: status.suspended, bolusing: status.bolusing, reservoir: status.reservoir)
+                    
+                    self.needPumpDataRead = false
                 } catch let error {
                     if attempt < 3 {
                         let nextAttempt = attempt + 1
@@ -740,7 +751,7 @@ final class DeviceDataManager {
                     StatisticsManager.shared.inc("Bolus setNormalBolus")
                     try session.setNormalBolus(units: units)
                     self.loopManager.addConfirmedBolus(units: units, at: Date()) {
-                        self.triggerPumpDataRead()
+                        // self.triggerPumpDataRead()
                         notify(nil)
                     }
                     // retry = false
@@ -755,7 +766,7 @@ final class DeviceDataManager {
                         if str.contains("bolusInProgress") ||  str.contains("Bolus in progress") {
                             self.loopManager.addConfirmedBolus(units: units, at: Date()) {
                                 self.loopManager.addInternalNote("retryBolus - already in progress, confirming.")
-                                self.triggerPumpDataRead()
+                                // self.triggerPumpDataRead()
                                 notify(nil)
                             }
                             // retry = false
@@ -776,7 +787,7 @@ final class DeviceDataManager {
                         self.loopManager.addInternalNote("Bolus failed: \(error.localizedDescription), retrying attempt \(attempt)")
                     } else {
                         self.loopManager.addFailedBolus(units: units, at: Date(), error: error) {
-                            self.triggerPumpDataRead()
+                            // self.triggerPumpDataRead()
                             self.loopManager.addInternalNote("Bolus failed: \(error.localizedDescription)")
                             notify(error)
                         }
