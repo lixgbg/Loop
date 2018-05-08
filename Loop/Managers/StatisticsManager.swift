@@ -13,10 +13,9 @@ final class StatisticsManager: IdentifiableClass {
     
     var stats : [String:Int]
     var lastLog : Date
-    var start : Date
+
     init() {
         stats = [:]
-        start = Date()
         lastLog = Date()
     }
     
@@ -25,7 +24,7 @@ final class StatisticsManager: IdentifiableClass {
     public var loopManager : LoopDataManager? = nil
     
     private func str() -> String {
-        return "Stats since \(start): \(stats)"
+        return "Stats since \(lastLog): \(stats)"
     }
     
     public func inc(_ name: String) {
