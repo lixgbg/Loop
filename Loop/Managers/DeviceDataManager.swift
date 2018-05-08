@@ -212,19 +212,21 @@ final class DeviceDataManager {
         }
 
         // How long we should wait before we re-tune the RileyLink
-        let tuneTolerance = TimeInterval(minutes: 55)
+        let tuneTolerance = TimeInterval(minutes: 14)
 
         let deviceState = deviceStates[device.peripheralIdentifier, default: DeviceState()]
         let lastTuned = deviceState.lastTuned ?? .distantPast
 
         if lastTuned.timeIntervalSinceNow <= -tuneTolerance {
+            
             // Assume 1 device and don't tune if we had a successful comm. in the last 55
             // minutes.
             // TODO track the last successful communication attempt in RileyLink
             if let reservoir = loopManager?.doseStore.lastReservoirValue,
-                reservoir.startDate.timeIntervalSinceNow > TimeInterval(minutes: -55) {
+                reservoir.startDate.timeIntervalSinceNow > TimeInterval(minutes: -24) {
                 return
             }
+            
             pumpOps.runSession(withName: "Tune pump", using: device) { (session) in
                 StatisticsManager.shared.inc("Tune pump")
                 do {
@@ -616,7 +618,7 @@ final class DeviceDataManager {
                         let nextAttempt = attempt + 1
                         // Too noisy
                         // self.loopManager.addDebugNote("readAndProcessPumpData, attempt \(nextAttempt).")
-                        NSLog("readAndProcessPumpData, attempt \(nextAttempt).")
+                        NSLog("readAndProcessPumpData, attempt \(nextAttempt), error \(error)")
             
                         self.assertCurrentPumpData(attempt: nextAttempt)
                         return
@@ -654,6 +656,7 @@ final class DeviceDataManager {
                     NotificationManager.sendBolusFailureNotification(for: error, units: units, at: startDate)
                 }
             }
+            NSLog("enactBolus notify \(startDate) \(units) --\(String(describing: error))--")
             self.bolusInProgress = false
             completion(error)
         }
