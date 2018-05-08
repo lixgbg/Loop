@@ -196,6 +196,7 @@
 		4988FFEB20274F23007967AC /* beep2.wav in Resources */ = {isa = PBXBuildFile; fileRef = 4988FFE720274F21007967AC /* beep2.wav */; };
 		4988FFEC20274F23007967AC /* beep1.wav in Resources */ = {isa = PBXBuildFile; fileRef = 4988FFE820274F22007967AC /* beep1.wav */; };
 		4988FFED20274F23007967AC /* error.wav in Resources */ = {isa = PBXBuildFile; fileRef = 4988FFE920274F23007967AC /* error.wav */; };
+		49F4C5B220A22CC500E42156 /* StatisticsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49F4C5B120A22CC500E42156 /* StatisticsManager.swift */; };
 		4D3B40041D4A9E1A00BC6334 /* G4ShareSpy.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4D3B40021D4A9DFE00BC6334 /* G4ShareSpy.framework */; };
 		4D5B7A4B1D457CCA00796CA9 /* GlucoseG4.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D5B7A4A1D457CCA00796CA9 /* GlucoseG4.swift */; };
 		4F08DE8F1E7BB871006741EA /* CollectionType+Loop.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F08DE8E1E7BB871006741EA /* CollectionType+Loop.swift */; };
@@ -614,6 +615,7 @@
 		4988FFE720274F21007967AC /* beep2.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = beep2.wav; sourceTree = "<group>"; };
 		4988FFE820274F22007967AC /* beep1.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = beep1.wav; sourceTree = "<group>"; };
 		4988FFE920274F23007967AC /* error.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = error.wav; sourceTree = "<group>"; };
+		49F4C5B120A22CC500E42156 /* StatisticsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticsManager.swift; sourceTree = "<group>"; };
 		4D3B40021D4A9DFE00BC6334 /* G4ShareSpy.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = G4ShareSpy.framework; path = Carthage/Build/iOS/G4ShareSpy.framework; sourceTree = SOURCE_ROOT; };
 		4D5B7A4A1D457CCA00796CA9 /* GlucoseG4.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GlucoseG4.swift; path = Loop/Models/GlucoseG4.swift; sourceTree = SOURCE_ROOT; };
 		4F08DE7C1E7BB6E5006741EA /* ChartAxisValueDoubleLog.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChartAxisValueDoubleLog.swift; sourceTree = "<group>"; };
@@ -1092,6 +1094,7 @@
 				43C094491CACCC73001F6403 /* NotificationManager.swift */,
 				432E73CA1D24B3D6009AD15D /* RemoteDataManager.swift */,
 				43045E571F25AC1700FD9CE1 /* RileyLinkDeviceManager.swift */,
+				49F4C5B120A22CC500E42156 /* StatisticsManager.swift */,
 				430C1ABC1E5568A80067F1AE /* StatusChartsManager+LoopKit.swift */,
 				4F70C20F1DE8FAC5006380B7 /* StatusExtensionDataManager.swift */,
 				4328E0341CFC0AE100E199AA /* WatchDataManager.swift */,
@@ -1715,6 +1718,7 @@
 				493BDE1D20136724004967E4 /* FoodRecentCollectionView.swift in Sources */,
 				493BDE282013A6D5004967E4 /* TreatmentInformation.swift in Sources */,
 				43441A9C1EDB34810087958C /* StatusExtensionContext+LoopKit.swift in Sources */,
+				49F4C5B220A22CC500E42156 /* StatisticsManager.swift in Sources */,
 				4FF4D1001E18374700846527 /* WatchContext.swift in Sources */,
 				4381D2261F3C0FDD004ACCF9 /* RileyLinkDevice.swift in Sources */,
 				4315D28A1CA5F45E00589052 /* DiagnosticLogger+LoopKit.swift in Sources */,

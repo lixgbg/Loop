@@ -33,6 +33,8 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
         AnalyticsManager.shared.application(application, didFinishLaunchingWithOptions: launchOptions)
         AnalyticsManager.shared.loopManager = deviceManager.loopManager
         
+        StatisticsManager.shared.loopManager = deviceManager.loopManager
+
         if  let navVC = window?.rootViewController as? UINavigationController,
             let statusVC = navVC.viewControllers.first as? StatusTableViewController {
             statusVC.deviceManager = deviceManager
