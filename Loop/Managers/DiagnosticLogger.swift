@@ -123,6 +123,10 @@ final class CategoryLogger {
             if category == "GlucoseStore" && message.range(of: "Protected health data is inaccessible") != nil {
                 return
             }
+            if category == "RileyLink" {
+                NSLog("RileyLink \(type.tagName) \(message)")
+                return
+            }
             if message.range(of: "NSURLErrorDomain") != nil {
                 return
             }
