@@ -174,7 +174,7 @@ extension LoopDataManager {
             case .siteChange:
                 treatment = NightscoutTreatment(timestamp: date, enteredBy: author, notes:  "Automatically added: \(note) \(uid)", eventType: "Site Change")
             case .batteryChange:
-                treatment = NightscoutTreatment(timestamp: date, enteredBy: author, notes:  "Automatically added: \(note) \(uid)", eventType: "Battery Change")
+                treatment = NightscoutTreatment(timestamp: date, enteredBy: author, notes:  "Automatically added: \(note) \(uid)", eventType: "Pump Battery Change")
             case .bgReceived:
                 let parts = note.split(separator: " ", maxSplits: 1)
                 let amount = Int(parts[0]) ?? 0
