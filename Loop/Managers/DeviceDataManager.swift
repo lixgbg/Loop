@@ -219,6 +219,7 @@ final class DeviceDataManager {
 
         if lastTuned.timeIntervalSinceNow <= -tuneTolerance {
             pumpOps.runSession(withName: "Tune pump", using: device) { (session) in
+                StatisticsManager.shared.inc("Tune pump")
                 do {
                     let scanResult = try session.tuneRadio(current: deviceState.lastValidFrequency)
                     self.logger.addError("Device \(device.name ?? "") auto-tuned to \(scanResult.bestFrequency) MHz", fromSource: "RileyLink")
@@ -260,6 +261,7 @@ final class DeviceDataManager {
                 }
                 // TODO use a session
                 pumpOps.runSession(withName: "Sync Pump Time", using: device) { (session) in
+                    StatisticsManager.shared.inc("Sync Pump Time")
                     do {
                         try session.setTime { () -> DateComponents in
                             let calendar = Calendar(identifier: .gregorian)
@@ -446,6 +448,7 @@ final class DeviceDataManager {
 
 
             ops.runSession(withName: "Fetch Pump History", using: device) { (session) in
+                StatisticsManager.shared.inc("Fetch Pump History")
                 do {
                     // TODO: This should isn't safe to access synchronously
                     let startDate = min(
@@ -573,6 +576,7 @@ final class DeviceDataManager {
             }
 
             ops.runSession(withName: "Get Pump Status", using: device) { (session) in
+                StatisticsManager.shared.inc("Get Pump Status")
                 let nsPumpStatus: NightscoutUploadKit.PumpStatus?
                 do {
                     let status = try session.getCurrentPumpStatus()
@@ -668,6 +672,7 @@ final class DeviceDataManager {
         }
 
         ops.runSession(withName: "Bolus", using: rileyLinkManager.firstConnectedDevice) { (session) in
+            StatisticsManager.shared.inc("Bolus")
             guard let session = session else {
                 notify(LoopError.connectionError)
                 return
@@ -1123,6 +1128,7 @@ extension DeviceDataManager: LoopDataManagerDelegate {
         }
 
         pumpOps.runSession(withName: "Set Temp Basal", using: rileyLinkManager.firstConnectedDevice) { (session) in
+            StatisticsManager.shared.inc("Set Temp Basal")
             guard let session = session else {
                 completion(.failure(LoopError.connectionError))
                 return
