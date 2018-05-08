@@ -1344,7 +1344,8 @@ final class LoopDataManager {
         }
         
         if let lastAutomaticBolus = self.lastAutomaticBolus, abs(lastAutomaticBolus.timeIntervalSinceNow) < settings.automaticBolusInterval {
-            addInternalNote("setAutomatedBolus - last automatic bolus too close")
+            NSLog("setAutomatedBolus - last automatic bolus too close")
+            StatisticsManager.shared.inc("AutomatedBolus TooClose")
             completion(nil)
             return
         }
@@ -1358,7 +1359,12 @@ final class LoopDataManager {
         }
         // TODO lastPendingBolus is never cleared, thus we need to check for the date here.
         if lastRequestedBolus != nil {
-            addInternalNote("setAutomatedBolus - lastRequestedBolus or lastPendingBolus still in progress \(String(describing: lastRequestedBolus)) \(String(describing: lastPendingBolus))")
+            addInternalNote("setAutomatedBolus - lastRequestedBolus still in progress \(String(describing: lastRequestedBolus))")
+            completion(nil)
+            return
+        }
+        if let lastPendingBolus = lastPendingBolus, let dose = lastPendingBolus.event.dose, dose.endDate.timeIntervalSinceNow > TimeInterval(minutes: 0) {
+            addInternalNote("setAutomatedBolus - lastPendingBolus still in progress \(String(describing: lastPendingBolus))")
             completion(nil)
             return
         }
