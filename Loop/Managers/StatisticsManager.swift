@@ -35,9 +35,9 @@ final class StatisticsManager: IdentifiableClass {
             stats[name] = 1
         }
         NSLog(str())
-        if lastLog.timeIntervalSinceNow > TimeInterval(hours: 1) {
-            lastLog = Date()
+        if lastLog.timeIntervalSinceNow < TimeInterval(hours: -1) {
             if let loop = self.loopManager {
+                lastLog = Date()
                 loop.addInternalNote(str())
             }
         }
