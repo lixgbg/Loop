@@ -244,7 +244,13 @@ final class DeviceDataManager {
     // MARK: Pump data
 
     /// TODO: Isolate to queue
-    fileprivate var latestPumpStatusFromMySentry: MySentryPumpStatusMessageBody?
+    fileprivate var latestPumpStatusFromMySentry: MySentryPumpStatusMessageBody? {
+        didSet {
+            if let manager = cgmManager as? EnliteCGMManager {
+                manager.sensorState = latestPumpStatusFromMySentry
+            }
+        }
+    }
 
     /** Check if pump date is current and otherwise update it.
      * TODO this should get a device name probably.
@@ -804,7 +810,7 @@ final class DeviceDataManager {
     }
 
     var sensorInfo: SensorDisplayable? {
-        return cgmManager?.sensorState ?? latestPumpStatusFromMySentry
+        return cgmManager?.sensorState
     }
 
     // MARK: - Configuration

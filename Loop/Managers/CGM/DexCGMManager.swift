@@ -71,7 +71,7 @@ final class ShareClientManager: CGMManager {
 
     let managedDataInterval: TimeInterval? = nil
 
-    private var latestBackfill: ShareGlucose?
+    fileprivate var latestBackfill: ShareGlucose?
 
     func fetchNewDataIfNeeded(with deviceManager: DeviceDataManager, _ completion: @escaping (CGMResult) -> Void) {
         guard let shareClient = deviceManager.remoteDataManager.shareService.client else {
@@ -144,7 +144,14 @@ final class G5CGMManager: DexCGMManager, TransmitterDelegate {
     }
 
     override var sensorState: SensorDisplayable? {
-        return latestReading ?? super.sensorState
+        let transmitterDate = latestReading?.readDate ?? .distantPast
+        let shareDate = shareManager?.latestBackfill?.startDate ?? .distantPast
+
+        if transmitterDate > shareDate {
+            return latestReading
+        } else {
+            return super.sensorState
+        }
     }
 
     override var latestG5Reading: Glucose? { return latestReading }
@@ -195,6 +202,7 @@ final class G5CGMManager: DexCGMManager, TransmitterDelegate {
             "## G5CGMManager",
             "latestReading: \(String(describing: latestReading))",
             "transmitter: \(String(describing: transmitter))",
+            "providesBLEHeartbeat: \(providesBLEHeartbeat)",
             super.debugDescription,
             ""
         ].joined(separator: "\n")
@@ -298,6 +306,7 @@ final class G4CGMManager: DexCGMManager, ReceiverDelegate {
             "## G4CGMManager",
             "latestReading: \(String(describing: latestReading))",
             "receiver: \(receiver)",
+            "providesBLEHeartbeat: \(providesBLEHeartbeat)",
             super.debugDescription,
             ""
         ].joined(separator: "\n")
@@ -329,7 +338,7 @@ final class G4CGMManager: DexCGMManager, ReceiverDelegate {
 
     func receiver(_ receiver: Receiver, didLogBluetoothEvent event: String) {
         // Uncomment to debug communication
-        // NSLog(["event": "\(event)", "collectedAt": NSDateFormatter.ISO8601StrictDateFormatter().stringFromDate(NSDate())])
+        // NSLog("\(#function): \(event)")
     }
 }
 
