@@ -630,6 +630,9 @@ final class DeviceDataManager {
                     nsPumpStatus = nil
                 }
                 self.pumpDataReadInProgress = false
+                
+                // Technically not true, but otherwise we create a big fast loop of unsuccessful attempts.
+                self.needPumpDataRead = false
 
                 device.getStatus { (status) in
                     self.queue.async {
