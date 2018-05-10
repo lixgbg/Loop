@@ -790,11 +790,11 @@ final class DeviceDataManager {
                     }
                     if retry && attempt < 5 {
                         attempt += 1
-                        self.loopManager.addInternalNote("Bolus failed: \(error.localizedDescription), retrying attempt \(attempt)")
+                        self.logger.addError("Bolus failed: \(error.localizedDescription), retrying attempt \(attempt)", fromSource: "enactBolus")
                     } else {
                         self.loopManager.addFailedBolus(units: units, at: Date(), error: error) {
                             // self.triggerPumpDataRead()
-                            self.loopManager.addInternalNote("Bolus failed: \(error.localizedDescription)")
+                            self.logger.addError("Bolus failed: \(error.localizedDescription)", fromSource: "enactBolus")
                             notify(error)
                         }
                     }
@@ -1008,18 +1008,18 @@ final class DeviceDataManager {
             NSLog("maybeToggleBluetooth - \(source) - tried recently \(btMagicDate)")
             return
         }
-        loopManager.addInternalNote("maybeToggleBluetooth - \(source) - Reason \(reason) - Restarting Bluetooth, no data for 30 minutes (could also be out of range)")
+        self.logger.addError("\(source) - Reason \(reason) - Restarting Bluetooth, no data for 30 minutes (could also be out of range)", fromSource: "maybeToggleBluetooth")
         if let bluetoothManagerHandler = BluetoothManagerHandler.sharedInstance() {
-            loopManager.addInternalNote("maybeToggleBluetooth - disable")
+            self.logger.addError("disable", fromSource: "maybeToggleBluetooth")
             bluetoothManagerHandler.disable()
             bluetoothManagerHandler.setPower(false)
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.25, execute: {
-                self.loopManager.addInternalNote("maybeToggleBluetooth - enable")
+                self.logger.addError("ensable", fromSource: "maybeToggleBluetooth")
                 bluetoothManagerHandler.setPower(true)
                 bluetoothManagerHandler.enable()
             })
         } else {
-            loopManager.addInternalNote("maybeToggleBluetooth - BluetoothManagerHandler not available")
+            self.logger.addError("BluetoothManagerHandler not available", fromSource: "maybeToggleBluetooth")
         }
         btMagicDate = Date()
     }
@@ -1188,7 +1188,7 @@ extension DeviceDataManager: LoopDataManagerDelegate {
                     
 
                     let nextAttempt = attempt + 1
-                    self.loopManager.addDebugNote("internalSetTempBasal Error: \(error), attempt \(nextAttempt)")
+                    self.logger.addError("\(error), attempt \(nextAttempt)", fromSource: "internalSetTempBasal")
                     self.internalSetTempBasal(manager, basal, attempt: nextAttempt, completion: completion)
                 } else {
                     notify(.failure(error))
