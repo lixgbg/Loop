@@ -243,6 +243,7 @@ extension LoopDataManager {
         addFakeEvent(.debug, "INTERNAL \(text)")
     }
     
+    // Do not use directly, use logger instead
     public func addDebugNote(_ text: String) {
         NSLog("addDebugNote: \(text)")
         addFakeEvent(.debug, "DEBUG \(text)")
