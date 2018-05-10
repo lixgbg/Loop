@@ -435,7 +435,7 @@ extension UserDefaults {
             let value = double(forKey: PrivateKey.absorptionTimeMultiplier.rawValue)
             // default
             if value <= 0.0 {
-                return 0.8
+                return 0.9
             }
             return value
         }
@@ -443,7 +443,6 @@ extension UserDefaults {
             set(newValue, forKey: PrivateKey.absorptionTimeMultiplier.rawValue)
         }
     }
-
 
     var lastUploadedNightscoutProfile: String {
         get {
