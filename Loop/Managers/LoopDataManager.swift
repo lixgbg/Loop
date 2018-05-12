@@ -783,10 +783,16 @@ final class LoopDataManager {
         if inputs.contains(.momentum), let momentumEffect = self.glucoseMomentumEffect {
             momentum = momentumEffect
         }
-
+        
         if inputs.contains(.retrospection) {
             effects.append(self.retrospectiveGlucoseEffect)
         }
+        
+        // DISABLE while in trial
+        //updateHighGlucoseBoost()
+        //if let effect = highGlucoseEffect {
+        //    effects.append(effect)
+        //}
 
         var prediction = LoopMath.predictGlucose(glucose, momentum: momentum, effects: effects)
 
@@ -1746,6 +1752,40 @@ final class LoopDataManager {
                 self.lastLowNotification = nil
             }
         }
+    }
+    
+    var highGlucoseEffect : [GlucoseEffect]?
+    /// An an effects for lower insulin action for high glucose values.
+    ///
+    ///
+    /// - Throws: LoopError.missingDataError if effect data isn't available
+    private func updateHighGlucoseBoost() {
+        dispatchPrecondition(condition: .onQueue(dataAccessQueue))
+        
+        guard let change = lastGlucoseChange else {
+            highGlucoseEffect = nil
+            return  // Expected case for calibrations
+        }
+        
+        // Predict high glucose insensitivity
+        // let startDate = change.end.startDate
+        let duration = TimeInterval(minutes: 30)
+
+        let glucoseUnit = HKUnit.milligramsPerDeciliter()
+        let currentGlucose = change.end.quantity.doubleValue(for: glucoseUnit)
+
+        let velocityUnit = glucoseUnit.unitDivided(by: HKUnit.second())
+        let boostStart = 220.0
+        let boostScale = 0.5
+        let boost = (currentGlucose - boostStart) * boostScale
+        
+        let averageVelocity = HKQuantity(unit: velocityUnit, doubleValue: boost / duration)
+        //let velocity = GlucoseEffectVelocity(startDate: startDate, endDate: startDate.addingTimeInterval(duration), quantity: averageVelocity)
+        let type = HKQuantityType.quantityType(forIdentifier: HKQuantityTypeIdentifier.bloodGlucose)!
+        let glucose = HKQuantitySample(type: type, quantity: change.end.quantity, start: change.end.startDate, end: change.end.endDate)
+        let effect = LoopMath.decayEffect(from: glucose, atRate: averageVelocity, for: duration)
+        print("updateHighGlucoseBoost", currentGlucose, boost, effect)
+        highGlucoseEffect = effect
     }
     
 }
