@@ -155,6 +155,10 @@ final class DeviceDataManager {
             self.lastTimerTick = Date()
 
             self.cgmManager?.fetchNewDataIfNeeded(with: self) { (result) in
+                if case .newData = result {
+                    AnalyticsManager.shared.didFetchNewCGMData()
+                }
+
                 // TODO: Isolate to queue?
                 self.cgmManager(self.cgmManager!, didUpdateWith: result)
             }
@@ -601,6 +605,16 @@ final class DeviceDataManager {
                     guard let date = status.clock.date else {
                         assertionFailure("Could not interpret a valid date from \(status.clock) in the system calendar")
                         return
+                    }
+
+                    // Check if the clock should be reset
+                    if abs(date.timeIntervalSinceNow) > .seconds(20) {
+                        self.logger.addError("Pump clock is more than 20 seconds off. Resetting.", fromSource: "RileyLink")
+                        AnalyticsManager.shared.pumpTimeDidDrift(date.timeIntervalSinceNow)
+                        try session.setTime { () -> DateComponents in
+                            let calendar = Calendar(identifier: .gregorian)
+                            return calendar.dateComponents([.year, .month, .day, .hour, .minute, .second], from: Date())
+                        }
                     }
 
                     self.observeBatteryDuring {
@@ -1142,18 +1156,6 @@ extension DeviceDataManager: LoopDataManagerDelegate {
             return
         }
 
-        let notify = { (result: Result<DoseEntry>) -> Void in
-            // If we haven't fetched history in a while (preferredInsulinDataSource == .reservoir),
-            // let's try to do so while the pump radio is on.
-            if self.loopManager.doseStore.lastAddedPumpEvents.timeIntervalSinceNow < .minutes(-4) {
-                self.fetchPumpHistory { (_) in
-                    completion(result)
-                }
-            } else {
-                completion(result)
-            }
-        }
-
         pumpOps.runSession(withName: "Set Temp Basal", using: rileyLinkManager.firstConnectedDevice) { (session) in
             StatisticsManager.shared.inc("Set Temp Basal")
             guard let session = session else {
@@ -1167,18 +1169,18 @@ extension DeviceDataManager: LoopDataManagerDelegate {
                 let now = Date()
                 let endDate = now.addingTimeInterval(response.timeRemaining)
                 let startDate = endDate.addingTimeInterval(-basal.recommendation.duration)
-                notify(.success(DoseEntry(
+                completion(.success(DoseEntry(
                     type: .tempBasal,
                     startDate: startDate,
                     endDate: endDate,
                     value: response.rate,
                     unit: .unitsPerHour
                 )))
-
+                // Continue below
             } catch let error {
-//                notify(.failure(error))
+                //                notify(.failure(error))
                 let str = "\(error)"
-
+                
                 if attempt < 6, !str.contains("Bolus in progress") {
                     // typically sequence might be:
                     // Error: unexpectedResponse(PumpMessage(carelink, getPumpModel, 355347, 0903373534000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000), PumpMessage(carelink, powerOn, 355347, 00)),
@@ -1186,13 +1188,38 @@ extension DeviceDataManager: LoopDataManagerDelegate {
                     
                     // Error: noResponse("Sent PumpMessage(carelink, powerOn, 355347, 020101000000000000000000000000000000000000000000000000000000000000000000000 0000000000000000000000000000000000000000000000000000000)"), attempt 3
                     
-
+                    
                     let nextAttempt = attempt + 1
                     self.logger.addError("\(error), attempt \(nextAttempt)", fromSource: "internalSetTempBasal")
                     self.internalSetTempBasal(manager, basal, attempt: nextAttempt, completion: completion)
                 } else {
-                    notify(.failure(error))
+                    completion(.failure(error))
                 }
+            }
+            
+            do {
+                // If we haven't fetched history in a while, our preferredInsulinDataSource is probably .reservoir, so
+                // let's take advantage of the pump radio being on.
+                if self.loopManager.doseStore.lastAddedPumpEvents.timeIntervalSinceNow < .minutes(-4) {
+                    let clock = try session.getTime()
+                    // Check if the clock should be reset
+                    if let date = clock.date, abs(date.timeIntervalSinceNow) > .seconds(20) {
+                        self.logger.addError("Pump clock is more than 20 seconds off. Resetting.", fromSource: "RileyLink")
+                        AnalyticsManager.shared.pumpTimeDidDrift(date.timeIntervalSinceNow)
+                        try session.setTime { () -> DateComponents in
+                            let calendar = Calendar(identifier: .gregorian)
+                            return calendar.dateComponents([.year, .month, .day, .hour, .minute, .second], from: Date())
+                        }
+                    }
+                    
+                    self.fetchPumpHistory { (error) in
+                        if let error = error {
+                            self.logger.addError("Post-basal history fetch failed: \(error)", fromSource: "RileyLink")
+                        }
+                    }
+                }
+            } catch let error {
+                self.logger.addError("Post-basal time sync failed: \(error)", fromSource: "RileyLink")
             }
         }
     }
@@ -1212,7 +1239,6 @@ extension DeviceDataManager: LoopDataManagerDelegate {
                     unit: .units
                 )))
             }
-            
         }
     }
     

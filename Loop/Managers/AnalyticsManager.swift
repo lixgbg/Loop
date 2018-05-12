@@ -72,19 +72,27 @@ final class AnalyticsManager: IdentifiableClass {
     // MARK: - Config Events
 
     func didChangeRileyLinkConnectionState() {
-        logEvent("RileyLink Connection")
+        logEvent("RileyLink Connection", outOfSession: true)
     }
 
     func transmitterTimeDidDrift(_ drift: TimeInterval) {
-        logEvent("Transmitter time change", withProperties: ["value" : drift])
+        logEvent("Transmitter time change", withProperties: ["value" : drift], outOfSession: true)
+    }
+
+    func pumpTimeDidDrift(_ drift: TimeInterval) {
+        logEvent("Pump time change", withProperties: ["value": drift], outOfSession: true)
+    }
+
+    func punpTimeZoneDidChange() {
+        logEvent("Pump time zone change", outOfSession: true)
     }
 
     func pumpBatteryWasReplaced() {
-        logEvent("Pump battery replacement")
+        logEvent("Pump battery replacement", outOfSession: true)
     }
 
     func reservoirWasRewound() {
-        logEvent("Pump reservoir rewind")
+        logEvent("Pump reservoir rewind", outOfSession: true)
     }
 
     func didChangeBasalRateSchedule() {
@@ -111,8 +119,7 @@ final class AnalyticsManager: IdentifiableClass {
         if oldValue.rawValue.debugDescription == newValue.rawValue.debugDescription {
             return
         }
-        logEvent("Loop settings change \(oldValue.rawValue.debugDescription) \(newValue.rawValue.debugDescription)")
-        
+        logEvent("Loop settings change \(oldValue.rawValue.debugDescription) \(newValue.rawValue.debugDescription)", outOfSession: true)
 
         if newValue.maximumBasalRatePerHour != oldValue.maximumBasalRatePerHour {
             logEvent("Maximum basal rate change")
@@ -124,6 +131,14 @@ final class AnalyticsManager: IdentifiableClass {
 
         if newValue.suspendThreshold != oldValue.suspendThreshold {
             logEvent("Minimum BG Guard change")
+        }
+
+        if newValue.dosingEnabled != oldValue.dosingEnabled {
+            logEvent("Closed loop enabled change")
+        }
+
+        if newValue.retrospectiveCorrectionEnabled != oldValue.retrospectiveCorrectionEnabled {
+            logEvent("Retrospective correction enabled change")
         }
     }
 
@@ -139,6 +154,10 @@ final class AnalyticsManager: IdentifiableClass {
 
     func didSetBolusFromWatch(_ units: Double) {
         logEvent("Bolus set", withProperties: ["source" : "Watch"], outOfSession: true)
+    }
+
+    func didFetchNewCGMData() {
+        logEvent("CGM Fetch", outOfSession: true)
     }
 
     func loopDidSucceed() {
