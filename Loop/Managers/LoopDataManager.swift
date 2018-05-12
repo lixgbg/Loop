@@ -1088,8 +1088,12 @@ final class LoopDataManager {
         NSLog("myLoop Current discrepancy: %f", currentDiscrepancy)
         NSLog("myLoop Overall retrospective correction: %f", overallRC)
         NSLog("myLoop Correction effect duration [min]: %f", effectMinutes)
-        
+        if abs(lastIRCLog.timeIntervalSinceNow) >= TimeInterval(minutes: 30) {
+            addInternalNote("IRC: \(currentDeltaBG), \(currentInsulinEffect), \(currentCarbEffect), \(currentDiscrepancy), \(overallRC), \(effectMinutes)")
+            lastIRCLog = Date()
+        }
     }
+    private var lastIRCLog = Date.distantPast
 
     /// Measure the effects counteracting insulin observed in the CGM glucose.
     ///
