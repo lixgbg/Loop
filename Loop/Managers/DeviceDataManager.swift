@@ -811,6 +811,7 @@ final class DeviceDataManager {
                             self.logger.addError("Bolus failed: \(error.localizedDescription)", fromSource: "enactBolus")
                             notify(error)
                         }
+                        return
                     }
                 }
             }
