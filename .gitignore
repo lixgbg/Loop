@@ -77,3 +77,6 @@ RemoteSettings.plist
 
 # Framework development
 Loop.xcworkspace
+
+# Automatically updated during build phase.
+Loop/GitInfo.plist

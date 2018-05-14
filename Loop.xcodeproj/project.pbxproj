@@ -174,6 +174,8 @@
 		43F78D4D1C914197002152D1 /* GlucoseKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 43F78D491C914197002152D1 /* GlucoseKit.framework */; };
 		43F78D4F1C914197002152D1 /* LoopKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 43F78D4B1C914197002152D1 /* LoopKit.framework */; };
 		43FCBBC21E51710B00343C1B /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 43776F9A1B8022E90074EA36 /* LaunchScreen.storyboard */; };
+		492FFB2E20AA3298000A90E3 /* GitInfo.plist in Resources */ = {isa = PBXBuildFile; fileRef = 492FFB2D20AA3298000A90E3 /* GitInfo.plist */; };
+		492FFB3120AA345B000A90E3 /* GitVersionInformation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 492FFB3020AA345B000A90E3 /* GitVersionInformation.swift */; };
 		493BDE11201366B8004967E4 /* FoodPickerCameraViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 493BDE0F201366B7004967E4 /* FoodPickerCameraViewController.swift */; };
 		493BDE12201366B8004967E4 /* FoodPickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 493BDE10201366B7004967E4 /* FoodPickerViewController.swift */; };
 		493BDE14201366CC004967E4 /* FoodManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 493BDE13201366CC004967E4 /* FoodManager.swift */; };
@@ -588,6 +590,9 @@
 		43F78D491C914197002152D1 /* GlucoseKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GlucoseKit.framework; path = Carthage/Build/iOS/GlucoseKit.framework; sourceTree = "<group>"; };
 		43F78D4B1C914197002152D1 /* LoopKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = LoopKit.framework; path = Carthage/Build/iOS/LoopKit.framework; sourceTree = SOURCE_ROOT; };
 		43FBEDD71D73843700B21F22 /* LevelMaskView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LevelMaskView.swift; sourceTree = "<group>"; };
+		492FFB2D20AA3298000A90E3 /* GitInfo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = GitInfo.plist; sourceTree = "<group>"; };
+		492FFB2F20AA3361000A90E3 /* GitInfo.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = GitInfo.plist; path = Loop/GitInfo.plist; sourceTree = "<group>"; };
+		492FFB3020AA345B000A90E3 /* GitVersionInformation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GitVersionInformation.swift; sourceTree = "<group>"; };
 		493BDE0C20114DBF004967E4 /* TODO.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = TODO.md; sourceTree = "<group>"; };
 		493BDE0F201366B7004967E4 /* FoodPickerCameraViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FoodPickerCameraViewController.swift; sourceTree = "<group>"; };
 		493BDE10201366B7004967E4 /* FoodPickerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FoodPickerViewController.swift; sourceTree = "<group>"; };
@@ -821,6 +826,7 @@
 				C17824A41E1AD4D100D9D25C /* BolusRecommendation.swift */,
 				4309786D1E73DAD100BEBC82 /* CGM.swift */,
 				540DED961E14C75F002B2491 /* EnliteSensorDisplayable.swift */,
+				492FFB3020AA345B000A90E3 /* GitVersionInformation.swift */,
 				43E397A21D56B9E40028E321 /* Glucose.swift */,
 				43C2FAE01EB656A500364AFF /* GlucoseEffectVelocity.swift */,
 				4D5B7A4A1D457CCA00796CA9 /* GlucoseG4.swift */,
@@ -843,6 +849,7 @@
 		43776F831B8022E90074EA36 = {
 			isa = PBXGroup;
 			children = (
+				492FFB2F20AA3361000A90E3 /* GitInfo.plist */,
 				493BDE0C20114DBF004967E4 /* TODO.md */,
 				4FF4D0FA1E1834BD00846527 /* Common */,
 				43776F8E1B8022E90074EA36 /* Loop */,
@@ -883,6 +890,7 @@
 				4309786B1E73D2F500BEBC82 /* it.lproj */,
 				43EDEE6B1CF2E12A00393BE3 /* Loop.entitlements */,
 				43F5C2D41B92A4A6003EB13D /* Info.plist */,
+				492FFB2D20AA3298000A90E3 /* GitInfo.plist */,
 				43776F8F1B8022E90074EA36 /* AppDelegate.swift */,
 				43776F981B8022E90074EA36 /* Assets.xcassets */,
 				43776F9A1B8022E90074EA36 /* LaunchScreen.storyboard */,
@@ -1307,6 +1315,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 43776FB61B8022E90074EA36 /* Build configuration list for PBXNativeTarget "Loop2" */;
 			buildPhases = (
+				492FFB2C20AA2BD4000A90E3 /* Git Hash */,
 				43776F881B8022E90074EA36 /* Sources */,
 				43776F891B8022E90074EA36 /* Frameworks */,
 				43776F8A1B8022E90074EA36 /* Resources */,
@@ -1547,6 +1556,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				492FFB2E20AA3298000A90E3 /* GitInfo.plist in Resources */,
 				493BDE222013676E004967E4 /* FoodCatalog in Resources */,
 				4988FFE420274EAA007967AC /* ding3.wav in Resources */,
 				4988FFDF20274A6E007967AC /* future_low.wav in Resources */,
@@ -1705,6 +1715,20 @@
 			shellPath = /bin/sh;
 			shellScript = "# Rebuild using cache if we're developing in a workspace\nif [ -d $PROJECT_DIR/Loop2.xcworkspace ]; then\n    /usr/local/bin/carthage build --platform \"$PLATFORM_NAME\" --cache-builds --project-directory \"$SRCROOT\"\nfi\n\n/usr/local/bin/carthage copy-frameworks";
 		};
+		492FFB2C20AA2BD4000A90E3 /* Git Hash */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Git Hash";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "DESCRIBE=`git describe --tags`\nCOMMIT=`git rev-parse HEAD`\nBRANCH=`git symbolic-ref --short HEAD`\nrm \"${PROJECT_DIR}/Loop/GitInfo.plist\"\n/usr/libexec/PlistBuddy -c \"Add :GIT_COMMIT_HASH string ${COMMIT}\" \"${PROJECT_DIR}/Loop/GitInfo.plist\"\n/usr/libexec/PlistBuddy -c \"Add :GIT_BRANCH string ${BRANCH}\" \"${PROJECT_DIR}/Loop/GitInfo.plist\"\n/usr/libexec/PlistBuddy -c \"Add :GIT_DESCRIBE string ${DESCRIBE}\" \"${PROJECT_DIR}/Loop/GitInfo.plist\"\n/usr/libexec/PlistBuddy -c \"Add :BUILD_CURRENT_DATE string `date`\" \"${PROJECT_DIR}/Loop/GitInfo.plist\"\n\n";
+		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -1776,6 +1800,7 @@
 				4389916B1E91B689000EEF90 /* ChartSettings+Loop.swift in Sources */,
 				4315D2871CA5CC3B00589052 /* CarbEntryEditTableViewController.swift in Sources */,
 				4309786E1E73DAD100BEBC82 /* CGM.swift in Sources */,
+				492FFB3120AA345B000A90E3 /* GitVersionInformation.swift in Sources */,
 				43F5173D1D713DB0000FA422 /* RadioSelectionTableViewController.swift in Sources */,
 				C178249A1E1999FA00D9D25C /* CaseCountable.swift in Sources */,
 				493BDE16201366FC004967E4 /* NoteTableViewController.swift in Sources */,
