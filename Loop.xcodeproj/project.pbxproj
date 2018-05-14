@@ -591,7 +591,6 @@
 		43F78D4B1C914197002152D1 /* LoopKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = LoopKit.framework; path = Carthage/Build/iOS/LoopKit.framework; sourceTree = SOURCE_ROOT; };
 		43FBEDD71D73843700B21F22 /* LevelMaskView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LevelMaskView.swift; sourceTree = "<group>"; };
 		492FFB2D20AA3298000A90E3 /* GitInfo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = GitInfo.plist; sourceTree = "<group>"; };
-		492FFB2F20AA3361000A90E3 /* GitInfo.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = GitInfo.plist; path = Loop/GitInfo.plist; sourceTree = "<group>"; };
 		492FFB3020AA345B000A90E3 /* GitVersionInformation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GitVersionInformation.swift; sourceTree = "<group>"; };
 		493BDE0C20114DBF004967E4 /* TODO.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = TODO.md; sourceTree = "<group>"; };
 		493BDE0F201366B7004967E4 /* FoodPickerCameraViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FoodPickerCameraViewController.swift; sourceTree = "<group>"; };
@@ -849,7 +848,6 @@
 		43776F831B8022E90074EA36 = {
 			isa = PBXGroup;
 			children = (
-				492FFB2F20AA3361000A90E3 /* GitInfo.plist */,
 				493BDE0C20114DBF004967E4 /* TODO.md */,
 				4FF4D0FA1E1834BD00846527 /* Common */,
 				43776F8E1B8022E90074EA36 /* Loop */,
