@@ -493,7 +493,7 @@ final class LoopDataManager {
                                 // Have to do a bolus first.
                                 self.setAutomatedBolus { (error) -> Void in
                                     if let error = error {
-                                        self.logger.error(error)
+                                        self.logger.error("setAutomatedBolus \(error)")
                                     } else {
                                         self.lastLoopCompleted = Date()
                                     }
@@ -598,7 +598,7 @@ final class LoopDataManager {
                 updateGroup.enter()
                 glucoseStore.getRecentMomentumEffect { (effects, error) -> Void in
                     if let error = error, effects.count == 0 {
-                        self.logger.error(error)
+                        self.logger.error("getRecentMomentumEffect \(error)")
                         self.glucoseMomentumEffect = nil
                     } else {
                         self.glucoseMomentumEffect = effects
@@ -617,7 +617,7 @@ final class LoopDataManager {
             doseStore.getGlucoseEffects(start: retrospectiveStart) { (result) -> Void in
                 switch result {
                 case .failure(let error):
-                    self.logger.error(error)
+                    self.logger.error("getGlucoseEffects \(error)")
                     self.insulinEffect = nil
                 case .success(let effects):
                     self.insulinEffect = effects
@@ -640,7 +640,7 @@ final class LoopDataManager {
                     }
                 case .failure(let error):
                     NSLog("getInsulinOnBoardValues - error: \(error)")
-                    self.logger.error(error)
+                    self.logger.error("getInsulinOnBoardValues \(error)")
                     self.insulinOnBoard = nil
                 }
                 updateGroup.leave()
@@ -666,7 +666,7 @@ final class LoopDataManager {
             ) { (result) -> Void in
                 switch result {
                 case .failure(let error):
-                    self.logger.error(error)
+                    self.logger.error("getGlucoseEffects \(error)")
                     self.carbEffect = nil
                 case .success(let effects):
                     self.carbEffect = effects
@@ -705,7 +705,7 @@ final class LoopDataManager {
             do {
                 try updatePredictedGlucoseAndRecommendedBasal()
             } catch let error {
-                logger.error(error)
+                logger.error("updatePredicted \(reason) - \(error)")
 
                 throw error
             }
