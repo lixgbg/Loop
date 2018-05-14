@@ -21,7 +21,7 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
     private(set) lazy var foodManager = FoodManager()
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
-        _ = GitVersionInformation()
+        NSLog("GitVersionInformation \(GitVersionInformation().dict)")
 
         window?.tintColor = UIColor.tintColor
 
