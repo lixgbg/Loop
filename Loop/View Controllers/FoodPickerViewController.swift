@@ -345,6 +345,7 @@ final class NewFoodPickerViewController: UIViewController, UICollectionViewDataS
         default:
             assert(false, "Unexpected element kind")
         }
+        return UICollectionReusableView(frame: CGRect(x: 0, y: 0, width: 1, height: 1))
     }
     
     
