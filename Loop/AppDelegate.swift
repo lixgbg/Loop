@@ -25,6 +25,16 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
 
         NotificationManager.authorize(delegate: self)
 
+        // Enable local logging of NSLog for later debugging.
+        /*
+        var paths = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
+        let documentsDirectory = paths[0]
+        let fileName = "\(Date()).log"
+        let logFilePath = (documentsDirectory as NSString).appendingPathComponent(fileName)
+        // Disabled out of file size concerns for now
+        freopen(logFilePath.cString(using: String.Encoding.ascii)!, "a+", stderr)
+        */
+        
         let bundle = Bundle(for: type(of: self))
         DiagnosticLogger.shared = DiagnosticLogger(subsystem: bundle.bundleIdentifier!, version: bundle.shortVersionString)
         DiagnosticLogger.shared?.forCategory("AppDelegate").info(#function)
