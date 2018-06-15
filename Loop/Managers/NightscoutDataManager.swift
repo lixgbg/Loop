@@ -38,6 +38,7 @@ final class NightscoutDataManager {
         else {
             return
         }
+        StatisticsManager.shared.inc("loopDataUpdated")
 
         deviceDataManager.loopManager.getLoopState { (manager, state) in
             var loopError = state.error

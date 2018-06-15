@@ -41,7 +41,7 @@ final class AnalyticsManager: IdentifiableClass {
         amplitudeService.client?.logEvent(name, withEventProperties: properties, outOfSession: outOfSession)
         
         if let loop = self.loopManager {
-            if name != "Loop success" && name != "Status Screen"  {
+            if name != "Loop success" && name != "Status Screen" && name != "CGM Fetch"  {
                 loop.addInternalNote("Analytics: \(name) \(properties ?? [:])")
             }
         }

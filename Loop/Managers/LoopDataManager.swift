@@ -470,6 +470,7 @@ final class LoopDataManager {
     /// Executes an analysis of the current data, and recommends an adjustment to the current
     /// temporary basal rate.
     func loop() {
+        StatisticsManager.shared.inc("loop")
         self.dataAccessQueue.async {
             NotificationCenter.default.post(name: .LoopRunning, object: self)
 
@@ -534,6 +535,7 @@ final class LoopDataManager {
     ///     - LoopError.pumpDataTooOld
     fileprivate func update(_ reason: String) throws {
         NSLog("update - \(reason)")
+        StatisticsManager.shared.inc("update")
         dispatchPrecondition(condition: .onQueue(dataAccessQueue))
         let updateGroup = DispatchGroup()
 
@@ -1955,6 +1957,7 @@ extension LoopDataManager {
     /// - Parameter manager: The loop manager
     /// - Parameter state: The current state of the manager. This is invalid to access outside of the closure.
     func getLoopState(_ handler: @escaping (_ manager: LoopDataManager, _ state: LoopState) -> Void) {
+        StatisticsManager.shared.inc("getLoopState")
         dataAccessQueue.async {
             var updateError: Error?
 

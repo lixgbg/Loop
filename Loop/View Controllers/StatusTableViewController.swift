@@ -283,6 +283,7 @@ final class StatusTableViewController: ChartsTableViewController, MealTableViewC
 
             // TODO: Don't always assume currentContext.contains(.status)
             reloadGroup.enter()
+            StatisticsManager.shared.inc("reloadData")
             self.deviceManager.loopManager.getLoopState { (manager, state) -> Void in
                 self.charts.setPredictedGlucoseValues(state.predictedGlucose ?? [])
 
