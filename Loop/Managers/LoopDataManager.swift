@@ -705,7 +705,7 @@ final class LoopDataManager {
 
         if predictedGlucose == nil {
             do {
-                try updatePredictedGlucoseAndRecommendedBasal()
+                try updatePredictedGlucoseAndRecommendedBasalAndBolus()
             } catch let error {
                 logger.error("updatePredicted \(reason) - \(error)")
 
@@ -1151,7 +1151,7 @@ final class LoopDataManager {
     ///     - LoopError.glucoseTooOld
     ///     - LoopError.missingDataError
     ///     - LoopError.pumpDataTooOld
-    private func updatePredictedGlucoseAndRecommendedBasal() throws {
+    private func updatePredictedGlucoseAndRecommendedBasalAndBolus() throws {
         dispatchPrecondition(condition: .onQueue(dataAccessQueue))
         // NSLog("updatePredictedGlucoseAndRecommendedBasal")
         guard let glucose = glucoseStore.latestGlucose else {
@@ -1191,6 +1191,7 @@ final class LoopDataManager {
             let insulinSensitivity = insulinSensitivitySchedule,
             let minBasalRates = minimumBasalRateSchedule,
             let basalRates = basalRateSchedule,
+            let maxBolus = settings.maximumBolus,
             let model = insulinModelSettings?.model
         else {
             throw LoopError.configurationError("Check settings")
@@ -1225,77 +1226,49 @@ final class LoopDataManager {
             recommendedTempBasal = (recommendation: temp, date: Date())
         } else {
             NSLog("updatePredictedGlucoseAndRecommendedBasal - Bolus or !tempBasal")
-            recommendedTempBasal = nil
         }
-        
+
         do {
-            recommendedBolus = (recommendation: try recommendBolus(), date: Date())
+            let pendingInsulin = try self.getPendingInsulin()
+
+            let recommendation = predictedGlucose.recommendedBolus(
+                to: glucoseTargetRange,
+                suspendThreshold: settings.suspendThreshold?.quantity,
+                sensitivity: insulinSensitivity,
+                model: model,
+                pendingInsulin: pendingInsulin,
+                maxBolus: maxBolus,
+                insulinOnBoard: insulinOnBoard.value,
+                maxInsulinOnBoard: maximumInsulinOnBoard,
+                minimumProgrammableIncrementPerUnit: settings.insulinIncrementPerUnit
+            )
+            recommendedBolus = (recommendation: recommendation, date: startDate)
+            //recommendedBolus = (recommendation: try recommendBolus(), date: Date())
         } catch let error {
             // TODO(Erik): Surface error
             _ = error
             NSLog("updatePredictedGlucoseAndRecommendedBasal - Bolus error: \(error)")
             recommendedBolus = nil
         }
-        if lastRequestedBolus != nil {
-            NSLog("updatePredictedGlucoseAndRecommendedBasal - Bolus ongoing")
-            recommendedBolus = nil
-        }
-        
+
         if let remaining = pumpDetachedRemaining() {
             NSLog("updatePredictedGlucoseAndRecommendedBasal - Pump Detached!")
             recommendedTempBasal = (recommendation: TempBasalRecommendation(unitsPerHour: 0.025, duration: remaining), date: Date())
             recommendedBolus = nil
         }
-        
-    }
 
-    /// - Returns: A bolus recommendation from the current data
-    /// - Throws: 
-    ///     - LoopError.configurationError
-    ///     - LoopError.glucoseTooOld
-    ///     - LoopError.missingDataError
-    fileprivate func recommendBolus() throws -> BolusRecommendation {
-        dispatchPrecondition(condition: .onQueue(dataAccessQueue))
-
-        guard
-            let predictedGlucose = predictedGlucose,
-            let maxBolus = settings.maximumBolus,
-            let maximumInsulinOnBoard = settings.maximumInsulinOnBoard,
-            let glucoseTargetRange = settings.glucoseTargetRangeSchedule,
-            let insulinSensitivity = insulinSensitivitySchedule,
-            let model = insulinModelSettings?.model
-        else {
-            throw LoopError.configurationError("Check Settings")
-        }
-        
-        guard let insulinOnBoard = insulinOnBoard
+        guard lastRequestedBolus == nil
             else {
-                throw LoopError.missingDataError(details: "Insulin on Board not available (recommendBolus)", recovery: "Pump data up to date?")
+            NSLog("updatePredictedGlucoseAndRecommendedBasal - Bolus ongoing")
+
+            // Don't recommend changes if a bolus was just requested.
+            // Sending additional pump commands is not going to be
+            // successful in any case.
+            recommendedBolus = nil
+            recommendedTempBasal = nil
+            return
         }
-        
-        guard let glucoseDate = predictedGlucose.first?.startDate else {
-            throw LoopError.missingDataError(details: "No glucose data found", recovery: "Check your CGM source")
-        }
 
-        guard abs(glucoseDate.timeIntervalSinceNow) <= recencyInterval else {
-            throw LoopError.glucoseTooOld(date: glucoseDate)
-        }
-
-        let pendingInsulin = try self.getPendingInsulin()
-
-        let recommendation = predictedGlucose.recommendedBolus(
-            to: glucoseTargetRange,
-            suspendThreshold: settings.suspendThreshold?.quantity,
-            sensitivity: insulinSensitivity,
-            model: model,
-            pendingInsulin: pendingInsulin,
-            maxBolus: maxBolus,
-            insulinOnBoard: insulinOnBoard.value,
-            maxInsulinOnBoard: maximumInsulinOnBoard,
-            minimumProgrammableIncrementPerUnit: settings.insulinIncrementPerUnit
-        )
-
-        return recommendation
     }
 
     /// *This method should only be called from the `dataAccessQueue`*
@@ -1845,15 +1818,6 @@ protocol LoopState {
     /// - Returns: An timeline of predicted glucose values
     /// - Throws: LoopError.missingDataError if prediction cannot be computed
     func predictGlucose(using inputs: PredictionInputEffect) throws -> [GlucoseValue]
-
-    /// Calculates a recommended bolus based on predicted glucose
-    ///
-    /// - Returns: A bolus recommendation
-    /// - Throws: An error describing why a bolus couldnʼt be computed
-    ///     - LoopError.configurationError
-    ///     - LoopError.glucoseTooOld
-    ///     - LoopError.missingDataError
-    func recommendBolus() throws -> BolusRecommendation
 }
 
 
@@ -1940,13 +1904,6 @@ extension LoopDataManager {
         func predictGlucose(using inputs: PredictionInputEffect) throws -> [GlucoseValue] {
             return try loopDataManager.predictGlucose(using: inputs)
         }
-
-        func recommendBolus() throws -> BolusRecommendation {
-            if let bolus = loopDataManager.recommendedBolus {
-                return bolus.recommendation
-            }
-            throw LoopError.missingDataError(details: "Recommended Bolus data not available.", recovery: "Check you loop state.")
-        }
     }
 
     /// Executes a closure with access to the current state of the loop.
@@ -1991,7 +1948,7 @@ extension LoopDataManager {
                 "retrospectivePredictedGlucose: \(state.retrospectivePredictedGlucose ?? [])",
                 "recommendedTempBasal: \(String(describing: state.recommendedTempBasal))",
                 "recommendedBolus: \(String(describing: state.recommendedBolus))",
-                "lastRequestedBolus: \(String(describing: state.lastRequestedBolus))",
+                "lastdBolus: \(String(describing: state.lastRequestedBolus))",
                 "pumpDetachedMode: \(String(describing: state.pumpDetachedMode))",
                 "treatmentInformation: \(String(describing: state.treatmentInformation))",
                 "validGlucose: \(String(describing: state.validGlucose))",

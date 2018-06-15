@@ -20,7 +20,7 @@ extension BolusViewController {
             if let recommendation = recommendation {
                 bolusRecommendation = recommendation
             } else {
-                bolusRecommendation = try? state.recommendBolus()
+                bolusRecommendation = state.recommendedBolus?.recommendation
             }
             
             let iob = state.insulinOnBoard
