@@ -15,7 +15,7 @@ final class DiagnosticLogger {
     let subsystem: String
     let version: String
 
-    var mLabService: MLabService {
+    private var mLabService: MLabService {
         didSet {
             try! KeychainManager().setMLabDatabaseName(mLabService.databaseName, APIKey: mLabService.APIKey)
         }
@@ -38,11 +38,8 @@ final class DiagnosticLogger {
         self.version = version
         remoteLogLevel = isSimulator ? .fault : .info
 
-        if let (databaseName, APIKey) = KeychainManager().getMLabCredentials() {
-            mLabService = MLabService(databaseName: databaseName, APIKey: APIKey)
-        } else {
-            mLabService = MLabService(databaseName: nil, APIKey: nil)
-        }
+        // Delete the mLab credentials as they're no longer supported
+        mLabService = MLabService(databaseName: nil, APIKey: nil)
 
         let customerToken = KeychainManager().getLogglyCustomerToken()
         logglyService = LogglyService(customerToken: customerToken)
@@ -82,7 +79,7 @@ final class CategoryLogger {
         self.logger = logger
         self.category = category
 
-        systemLog = OSLog(subsystem: logger.subsystem, category: category)
+        systemLog = OSLog(category: category)
     }
 
     private func remoteLog(_ type: OSLogType, message: String) {
@@ -99,11 +96,6 @@ final class CategoryLogger {
         }
 
         logger.logglyService.client?.send(message, tags: [type.tagName, category])
-
-        // Legacy mLab logging. To be removed.
-        if let messageData = try? JSONSerialization.data(withJSONObject: message, options: []) {
-            logger.mLabService.uploadTaskWithData(messageData, inCollection: category)?.resume()
-        }
     }
     
     private func loopLog(_ type: OSLogType, message: [String: Any]) {

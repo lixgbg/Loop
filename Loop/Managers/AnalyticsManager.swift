@@ -111,10 +111,6 @@ final class AnalyticsManager: IdentifiableClass {
         logEvent("Insulin sensitivity change")
     }
 
-    func didChangeGlucoseTargetRangeSchedule() {
-        logEvent("Glucose target range change")
-    }
-
     func didChangeLoopSettings(from oldValue: LoopSettings, to newValue: LoopSettings) {
         if oldValue.rawValue.debugDescription == newValue.rawValue.debugDescription {
             return
@@ -139,6 +135,16 @@ final class AnalyticsManager: IdentifiableClass {
 
         if newValue.retrospectiveCorrectionEnabled != oldValue.retrospectiveCorrectionEnabled {
             logEvent("Retrospective correction enabled change")
+        }
+
+        if newValue.glucoseTargetRangeSchedule != oldValue.glucoseTargetRangeSchedule {
+            if newValue.glucoseTargetRangeSchedule?.timeZone != oldValue.glucoseTargetRangeSchedule?.timeZone {
+                self.punpTimeZoneDidChange()
+            } else if newValue.glucoseTargetRangeSchedule?.override != oldValue.glucoseTargetRangeSchedule?.override {
+                logEvent("Glucose target range override change", outOfSession: true)
+            } else {
+                logEvent("Glucose target range change")
+            }
         }
     }
 

@@ -126,7 +126,7 @@ public class NightscoutProfile {
         
         rval["defaultProfile"] = profileName
         rval["mills"] = "0" // ?
-        rval["units"] = self.rangeSchedule.unit.glucoseUnitDisplayString
+        rval["units"] = self.rangeSchedule.unit.localizedShortUnitString
         rval["startDate"] = NightscoutTimeFormat.timestampStrFromDate(timestamp)
         rval["created_at"] = NightscoutTimeFormat.timestampStrFromDate(timestamp)
         rval["enteredBy"] = "loop2"

@@ -6,7 +6,7 @@
 //  Copyright © 2016 Nathan Racklyeft. All rights reserved.
 //
 
-import InsulinKit
+import LoopKit
 import MinimedKit
 import NightscoutUploadKit
 
@@ -67,7 +67,7 @@ extension LoopDataManager {
 
         for event in pumpEvents {
             var dose: DoseEntry?
-            var eventType: InsulinKit.PumpEventType?
+            var eventType: LoopKit.PumpEventType?
 
             switch event.pumpEvent {
             case let bolus as BolusNormalPumpEvent:
@@ -209,7 +209,7 @@ extension LoopDataManager {
         
         uploadGroup.enter()
         let uploadTreatments = pendingTreatments
-        self.delegate.loopDataManager(self, uploadTreatments: uploadTreatments) { (result) in
+        self.delegate?.loopDataManager(self, uploadTreatments: uploadTreatments) { (result) in
             switch(result) {
             case .success:
                 // for (treatment, id) in zip(uploadTreatments, ids) {

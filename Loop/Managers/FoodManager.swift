@@ -7,7 +7,7 @@
 
 import Foundation
 import HealthKit
-import CarbKit
+import LoopKit
 
 enum AbsorptionSpeed {
     case ultraFast  // like glucose tabs
@@ -106,7 +106,7 @@ struct FoodPick : CustomStringConvertible {
         return HKQuantity(unit: HKUnit.gram(), doubleValue: carbs)
     }
     
-    var carbEntry : CarbEntry {
+    var carbEntry : NewCarbEntry {
         let representation : [Any] = [self.encode()]
         var foodType = item.title
         do {

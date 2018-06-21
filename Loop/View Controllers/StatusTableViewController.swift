@@ -7,13 +7,12 @@
 //
 
 import UIKit
-import CarbKit
-import GlucoseKit
 import HealthKit
-import InsulinKit
 import LoopKit
+import LoopKitUI
 import LoopUI
 import SwiftCharts
+import os.log
 
 
 /// Describes the state within the bolus setting flow
@@ -33,45 +32,44 @@ private extension RefreshContext {
 
 final class StatusTableViewController: ChartsTableViewController, MealTableViewCellDelegate {
 
+    private let log = OSLog(category: "StatusTableViewController")
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
         charts.glucoseDisplayRange = (
-            min: HKQuantity(unit: HKUnit.milligramsPerDeciliter(), doubleValue: 100),
-            max: HKQuantity(unit: HKUnit.milligramsPerDeciliter(), doubleValue: 175)
+            min: HKQuantity(unit: .milligramsPerDeciliter, doubleValue: 100),
+            max: HKQuantity(unit: .milligramsPerDeciliter, doubleValue: 175)
         )
 
         let notificationCenter = NotificationCenter.default
 
         notificationObservers += [
-            notificationCenter.addObserver(forName: .LoopDataUpdated, object: deviceManager.loopManager, queue: nil) { [unowned self] note in
-                let context = note.userInfo?[LoopDataManager.LoopUpdateContextKey] as! LoopDataManager.LoopUpdateContext.RawValue
-                let lastLoopCompleted = note.userInfo?[LoopDataManager.LastLoopCompletedKey] as? Date
+            notificationCenter.addObserver(forName: .LoopDataUpdated, object: deviceManager.loopManager, queue: nil) { [weak self] note in
+                let rawContext = note.userInfo?[LoopDataManager.LoopUpdateContextKey] as! LoopDataManager.LoopUpdateContext.RawValue
+                let context = LoopDataManager.LoopUpdateContext(rawValue: rawContext)
                 DispatchQueue.main.async {
-                    switch LoopDataManager.LoopUpdateContext(rawValue: context) {
+                    switch context {
                     case .none, .bolus?:
-                        self.refreshContext.formUnion([.status, .insulin])
+                        self?.refreshContext.formUnion([.status, .insulin])
                     case .preferences?:
-                        self.refreshContext.formUnion([.status, .targets])
+                        self?.refreshContext.formUnion([.status, .targets])
                     case .carbs?:
-                        self.refreshContext.update(with: .carbs)
+                        self?.refreshContext.update(with: .carbs)
                     case .glucose?:
-                        self.refreshContext.formUnion([.glucose, .carbs])
+                        self?.refreshContext.formUnion([.glucose, .carbs])
                     case .tempBasal?:
-                        self.refreshContext.update(with: .insulin)
-
-                        if let lastLoopCompleted = lastLoopCompleted {
-                            self.hudView?.loopCompletionHUD.lastLoopCompleted = lastLoopCompleted
-                        }
+                        self?.refreshContext.update(with: .insulin)
                     }
 
-                    self.hudView?.loopCompletionHUD.loopInProgress = false
-                    self.reloadData(animated: true)
+                    self?.hudView?.loopCompletionHUD.loopInProgress = false
+                    self?.log.debug("[reloadData] from notification with context %{public}@", String(describing: context))
+                    self?.reloadData(animated: true)
                 }
             },
-            notificationCenter.addObserver(forName: .LoopRunning, object: deviceManager.loopManager, queue: nil) { [unowned self] _ in
+            notificationCenter.addObserver(forName: .LoopRunning, object: deviceManager.loopManager, queue: nil) { [weak self] _ in
                 DispatchQueue.main.async {
-                    self.hudView?.loopCompletionHUD.loopInProgress = true
+                    self?.hudView?.loopCompletionHUD.loopInProgress = true
                 }
             }
         ]
@@ -130,6 +128,7 @@ final class StatusTableViewController: ChartsTableViewController, MealTableViewC
             if deviceManager.loopManager.authorizationRequired {
                 deviceManager.loopManager.authorize {
                     DispatchQueue.main.async {
+                        self.log.debug("[reloadData] after HealthKit authorization")
                         self.reloadData()
                     }
                 }
@@ -156,7 +155,11 @@ final class StatusTableViewController: ChartsTableViewController, MealTableViewC
     // MARK: - State
 
     override var active: Bool {
-        didSet {
+        get {
+            return super.active
+        }
+        set {
+            super.active = newValue
             hudView?.loopCompletionHUD.assertTimer(active)
         }
     }
@@ -190,7 +193,7 @@ final class StatusTableViewController: ChartsTableViewController, MealTableViewC
     private var shouldShowStatus: Bool {
         return !landscapeMode && statusRowMode.hasRow
     }
-    
+
     private func updateMealInformation(_ updateGroup: DispatchGroup, _ carbStore: CarbStore?) {
         //dispatchPrecondition(condition: .onQueue(dataAccessQueue))
         if let carbStore = carbStore {
@@ -202,7 +205,7 @@ final class StatusTableViewController: ChartsTableViewController, MealTableViewC
             //carbStore.getCarbEntries(start: mealDate) { (result) in
             //    switch(result) {
             //    case .success(let values):
-            carbStore.getCachedCarbEntries(start: mealDate) { (values) in
+            carbStore.getCachedCarbSamples(start: mealDate) { (values) in
 
                 var mealStart = endDate
                 var mealEnd = mealDate
@@ -241,141 +244,129 @@ final class StatusTableViewController: ChartsTableViewController, MealTableViewC
         }
         //mealInformationNeedsUpdate = false
     }
-    
-    
+
+    private func updateChartDateRange() {
+        let settings = deviceManager.loopManager.settings
+
+        // How far back should we show data? Use the screen size as a guide.
+        let availableWidth = (refreshContext.newSize ?? self.tableView.bounds.size).width - self.charts.fixedHorizontalMargin
+
+        let totalHours = floor(Double(availableWidth / settings.minimumChartWidthPerHour))
+        let futureHours = ceil((deviceManager.loopManager.insulinModelSettings?.model.effectDuration ?? .hours(4)).hours)
+        let historyHours = max(settings.statusChartMinimumHistoryDisplay.hours, totalHours - futureHours)
+
+        let date = Date(timeIntervalSinceNow: -TimeInterval(hours: historyHours))
+        let chartStartDate = Calendar.current.nextDate(after: date, matching: DateComponents(minute: 0), matchingPolicy: .strict, direction: .backward) ?? date
+        if charts.startDate != chartStartDate {
+            refreshContext.formUnion(RefreshContext.all)
+        }
+        charts.startDate = chartStartDate
+        charts.maxEndDate = chartStartDate.addingTimeInterval(.hours(totalHours))
+        charts.updateEndDate(charts.maxEndDate)
+    }
+
     override func reloadData(animated: Bool = false) {
-        guard active && visible && !reloading && !refreshContext.isEmpty && !deviceManager.loopManager.authorizationRequired else {
+        // This should be kept up to date immediately
+        hudView?.loopCompletionHUD.lastLoopCompleted = deviceManager.loopManager.lastLoopCompleted
+
+        guard !reloading && !deviceManager.loopManager.authorizationRequired else {
             return
         }
-        var currentContext = refreshContext
+
+        updateChartDateRange()
+        redrawCharts()
+
+        guard active && visible && !refreshContext.isEmpty else {
+            return
+        }
+
+        log.debug("Reloading data with context: %@", String(describing: refreshContext))
+
+        let currentContext = refreshContext
         var retryContext: Set<RefreshContext> = []
         self.refreshContext = []
         reloading = true
 
-        // How far back should we show data? Use the screen size as a guide.
-        let minimumSegmentWidth: CGFloat = 50
-        let availableWidth = (currentContext.newSize ?? self.tableView.bounds.size).width - self.charts.fixedHorizontalMargin
-        let totalHours = floor(Double(availableWidth / minimumSegmentWidth))
-        let futureHours = ceil((deviceManager.loopManager.insulinModelSettings?.model.effectDuration ?? .hours(4)).hours)
-        let historyHours = max(2.5, totalHours - futureHours)
-
-        var components = DateComponents()
-        components.minute = 0
-        let date = Date(timeIntervalSinceNow: -TimeInterval(hours: historyHours))
-        let chartStartDate = Calendar.current.nextDate(after: date, matching: components, matchingPolicy: .strict, direction: .backward) ?? date
-        if charts.startDate != chartStartDate {
-            currentContext.formUnion(RefreshContext.all)
-        }
-        charts.startDate = chartStartDate
-
-        charts.maxEndDate = chartStartDate.addingTimeInterval(.hours(totalHours))
-
         let reloadGroup = DispatchGroup()
         var lastReservoirValue: ReservoirValue?
         var newRecommendedTempBasal: (recommendation: TempBasalRecommendation, date: Date)?
+        var glucoseValues: [StoredGlucoseSample]?
+        var predictedGlucoseValues: [GlucoseValue]?
+        var iobValues: [InsulinValue]?
+        var doseEntries: [DoseEntry]?
+        var totalDelivery: Double?
+        var cobValues: [CarbValue]?
         let bolusState = self.bolusState
+        let startDate = charts.startDate
 
+        // TODO: Don't always assume currentContext.contains(.status)
         reloadGroup.enter()
-        deviceManager.loopManager.glucoseStore.preferredUnit { (unit, error) in
-            if let unit = unit {
-                self.charts.glucoseUnit = unit
+        self.deviceManager.loopManager.getLoopState { (manager, state) -> Void in
+            predictedGlucoseValues = state.predictedGlucose ?? []
+
+            // Retry this refresh again if predicted glucose isn't available
+            if state.predictedGlucose == nil {
+                retryContext.update(with: .status)
             }
 
-            // TODO: Don't always assume currentContext.contains(.status)
-            reloadGroup.enter()
-            StatisticsManager.shared.inc("reloadData")
-            self.deviceManager.loopManager.getLoopState { (manager, state) -> Void in
-                self.charts.setPredictedGlucoseValues(state.predictedGlucose ?? [])
+            /// Update the status HUDs immediately
+            let netBasal: NetBasal?
+            let lastLoopCompleted = manager.lastLoopCompleted
+            let lastLoopError = state.error
 
-                // Retry this refresh again if predicted glucose isn't available
-                if state.predictedGlucose == nil {
-                    retryContext.update(with: .status)
+            // Net basal rate HUD
+            let date = state.lastTempBasal?.startDate ?? Date()
+            if let scheduledBasal = manager.basalRateSchedule?.between(start: date, end: date).first {
+                netBasal = NetBasal(
+                    lastTempBasal: state.lastTempBasal,
+                    maxBasal: manager.settings.maximumBasalRatePerHour,
+                    scheduledBasal: scheduledBasal
+                )
+            } else {
+                netBasal = nil
+            }
+
+            self.pumpDetachedMode = state.pumpDetachedMode
+            self.treatmentInformation = state.treatmentInformation
+
+
+            self.validGlucose = state.validGlucose
+            if let _ = self.validGlucose {
+                self.needManualGlucose = nil
+            } else {
+                self.needManualGlucose = Date()
+            }
+
+            DispatchQueue.main.async {
+                self.hudView?.loopCompletionHUD.dosingEnabled = manager.settings.dosingEnabled
+                self.lastLoopError = lastLoopError
+
+                if let netBasal = netBasal {
+                    self.hudView?.basalRateHUD.setNetBasalRate(netBasal.rate, percent: netBasal.percent, at: netBasal.start)
                 }
 
-                /// Update the status HUDs immediately
-                let netBasal: NetBasal?
-                let lastLoopCompleted = state.lastLoopCompleted
-                let lastLoopError = state.error
-                let dosingEnabled = manager.settings.dosingEnabled
-            
-                //self.mealInformation = state.mealInformation
-                
-                
-                self.pumpDetachedMode = state.pumpDetachedMode
-                self.treatmentInformation = state.treatmentInformation
-
-                
-                self.validGlucose = state.validGlucose
-                if let _ = self.validGlucose {
-                    self.needManualGlucose = nil
+                if let ti = self.treatmentInformation {
+                    self.toolbarItems![4].isEnabled = ti.allowed
                 } else {
-                    self.needManualGlucose = Date()
+                    self.toolbarItems![4].isEnabled = false // fail closed
                 }
-                
-                // Net basal rate HUD
-                let date = state.lastTempBasal?.startDate ?? Date()
-                if let scheduledBasal = manager.basalRateSchedule?.between(start: date, end: date).first {
-                    netBasal = NetBasal(
-                        lastTempBasal: state.lastTempBasal,
-                        maxBasal: manager.settings.maximumBasalRatePerHour,
-                        scheduledBasal: scheduledBasal
-                    )
-                } else {
-                    netBasal = nil
-                }
-                
-                // if state.lastRequestedBolus != nil {
-                //     self.bolusState = .enacting
-                // }
+            }
 
-                DispatchQueue.main.async {
-                    self.hudView?.loopCompletionHUD.lastLoopCompleted = lastLoopCompleted
-                    self.hudView?.loopCompletionHUD.dosingEnabled = dosingEnabled
-                    self.lastLoopError = lastLoopError
+            // Display a recommended basal change only if we haven't completed recently, or we're in open-loop mode
+            if lastLoopCompleted == nil ||
+                lastLoopCompleted! < Date(timeIntervalSinceNow: .minutes(-6)) ||
+                !manager.settings.dosingEnabled
+            {
+                newRecommendedTempBasal = state.recommendedTempBasal
+            }
 
-                    if let netBasal = netBasal {
-                        self.hudView?.basalRateHUD.setNetBasalRate(netBasal.rate, percent: netBasal.percent, at: netBasal.start)
-                    }
-                    if let ti = self.treatmentInformation {
-                        self.toolbarItems![4].isEnabled = ti.allowed
-                    } else {
-                        self.toolbarItems![4].isEnabled = false // fail closed
-                    }
+            if currentContext.contains(.carbs) {
+                reloadGroup.enter()
+                manager.carbStore.getCarbsOnBoardValues(start: startDate, effectVelocities: manager.settings.dynamicCarbAbsorptionEnabled ? state.insulinCounteractionEffects : nil) { (values) in
+                    cobValues = values
+                    reloadGroup.leave()
                 }
-
-                // Display a recommended basal change only if we haven't completed recently, or we're in open-loop mode
-                if state.lastLoopCompleted == nil ||
-                    state.lastLoopCompleted! < Date(timeIntervalSinceNow: .minutes(-6)) ||
-                    !manager.settings.dosingEnabled
-                {
-                    newRecommendedTempBasal = state.recommendedTempBasal
-                }
-
-                if let lastPoint = self.charts.predictedGlucosePoints.last?.y {
-                    self.eventualGlucoseDescription = String(describing: lastPoint)
-                } else {
-                    self.eventualGlucoseDescription = nil
-                }
-
-                if currentContext.contains(.targets) {
-                    if let schedule = manager.settings.glucoseTargetRangeSchedule {
-                        self.charts.targetPointsCalculator = GlucoseRangeScheduleCalculator(schedule)
-                    } else {
-                        self.charts.targetPointsCalculator = nil
-                    }
-                }
-
-                if currentContext.contains(.carbs) {
-                    reloadGroup.enter()
-                    manager.carbStore.getCarbsOnBoardValues(start: chartStartDate, effectVelocities: manager.settings.dynamicCarbAbsorptionEnabled ? state.insulinCounteractionEffects : nil) { (values) in
-                        self.charts.setCOBValues(values)
-                        reloadGroup.leave()
-                    }
-                }
-                
                 self.updateMealInformation(reloadGroup, manager.carbStore)
-
-                reloadGroup.leave()
             }
 
             reloadGroup.leave()
@@ -383,43 +374,35 @@ final class StatusTableViewController: ChartsTableViewController, MealTableViewC
 
         if currentContext.contains(.glucose) {
             reloadGroup.enter()
-            self.deviceManager.loopManager.glucoseStore.getGlucoseValues(start: chartStartDate) { (result) -> Void in
-                switch result {
-                case .failure(let error):
-                    self.deviceManager.logger.addError(error, fromSource: "GlucoseStore")
-                    retryContext.update(with: .glucose)
-                    self.charts.setGlucoseValues([])
-                case .success(let values):
-                    self.charts.setGlucoseValues(values)
-                }
-
+            self.deviceManager.loopManager.glucoseStore.getCachedGlucoseSamples(start: startDate) { (values) -> Void in
+                glucoseValues = values
                 reloadGroup.leave()
             }
         }
 
         if currentContext.contains(.insulin) {
             reloadGroup.enter()
-            deviceManager.loopManager.doseStore.getInsulinOnBoardValues(start: chartStartDate) { (result) -> Void in
+            deviceManager.loopManager.doseStore.getInsulinOnBoardValues(start: startDate) { (result) -> Void in
                 switch result {
                 case .failure(let error):
                     self.deviceManager.logger.addError(error, fromSource: "DoseStore")
                     retryContext.update(with: .insulin)
-                    self.charts.setIOBValues([])
+                    iobValues = []
                 case .success(let values):
-                    self.charts.setIOBValues(values)
+                    iobValues = values
                 }
                 reloadGroup.leave()
             }
 
             reloadGroup.enter()
-            deviceManager.loopManager.doseStore.getNormalizedDoseEntries(start: chartStartDate) { (result) -> Void in
+            deviceManager.loopManager.doseStore.getNormalizedDoseEntries(start: startDate) { (result) -> Void in
                 switch result {
                 case .failure(let error):
                     self.deviceManager.logger.addError(error, fromSource: "DoseStore")
                     retryContext.update(with: .insulin)
-                    self.charts.setDoseEntries([])
+                    doseEntries = []
                 case .success(let doses):
-                    self.charts.setDoseEntries(doses)
+                    doseEntries = doses
                 }
                 reloadGroup.leave()
             }
@@ -429,16 +412,16 @@ final class StatusTableViewController: ChartsTableViewController, MealTableViewC
                 switch result {
                 case .failure:
                     retryContext.update(with: .insulin)
-                    self.totalDelivery = nil
+                    totalDelivery = nil
                 case .success(let total):
-                    self.totalDelivery = total.value
+                    totalDelivery = total.value
                 }
 
                 reloadGroup.leave()
             }
 
             reloadGroup.enter()
-            deviceManager.loopManager.doseStore.getReservoirValues(since: Date(timeIntervalSinceNow: .minutes(-30))) { (result) in
+            deviceManager.loopManager.doseStore.getReservoirValues(since: Date(timeIntervalSinceNow: .minutes(-30)), limit: 1) { (result) in
                 switch result {
                 case .success(let values):
                     lastReservoirValue = values.first
@@ -454,6 +437,52 @@ final class StatusTableViewController: ChartsTableViewController, MealTableViewC
         preMealMode = deviceManager.loopManager.settings.glucoseTargetRangeSchedule?.overrideEnabledForContext(.preMeal)
 
         reloadGroup.notify(queue: .main) {
+            /// Update the chart data
+
+            // Glucose
+            if let glucoseValues = glucoseValues {
+                self.charts.setGlucoseValues(glucoseValues)
+            }
+            if let predictedGlucoseValues = predictedGlucoseValues {
+                self.charts.setPredictedGlucoseValues(predictedGlucoseValues)
+            }
+            if let lastPoint = self.charts.predictedGlucosePoints.last?.y {
+                self.eventualGlucoseDescription = String(describing: lastPoint)
+            } else {
+                self.eventualGlucoseDescription = nil
+            }
+            if currentContext.contains(.targets) {
+                self.charts.targetGlucoseSchedule = self.deviceManager.loopManager.settings.glucoseTargetRangeSchedule
+            }
+
+            // Active Insulin
+            if let iobValues = iobValues {
+                self.charts.setIOBValues(iobValues)
+            }
+            if let index = self.charts.iobPoints.closestIndexPriorToDate(Date()) {
+                self.currentIOBDescription = String(describing: self.charts.iobPoints[index].y)
+            } else {
+                self.currentIOBDescription = nil
+            }
+
+            // Insulin Delivery
+            if let doseEntries = doseEntries {
+                self.charts.setDoseEntries(doseEntries)
+            }
+            if let totalDelivery = totalDelivery {
+                self.totalDelivery = totalDelivery
+            }
+
+            // Active Carbohydrates
+            if let cobValues = cobValues {
+                self.charts.setCOBValues(cobValues)
+            }
+            if let index = self.charts.cobPoints.closestIndexPriorToDate(Date()) {
+                self.currentCOBDescription = String(describing: self.charts.cobPoints[index].y)
+            } else {
+                self.currentCOBDescription = nil
+            }
+
             self.tableView.beginUpdates()
             if let hudView = self.hudView {
                 // Glucose HUD
@@ -478,21 +507,6 @@ final class StatusTableViewController: ChartsTableViewController, MealTableViewC
                 hudView.batteryHUD.batteryLevel = self.deviceManager.pumpBatteryChargeRemaining
             }
 
-            // Fetch the current IOB subtitle
-            if let index = self.charts.iobPoints.closestIndexPriorToDate(Date()) {
-                self.currentIOBDescription = String(describing: self.charts.iobPoints[index].y)
-            } else {
-                self.currentIOBDescription = nil
-            }
-            // Fetch the current COB subtitle
-            if let index = self.charts.cobPoints.closestIndexPriorToDate(Date()) {
-                self.currentCOBDescription = String(describing: self.charts.cobPoints[index].y)
-            } else {
-                self.currentCOBDescription = nil
-            }
-
-            self.charts.prerender()
-
             // Show/hide the table view rows
             let statusRowMode: StatusRowMode?
 
@@ -513,14 +527,8 @@ final class StatusTableViewController: ChartsTableViewController, MealTableViewC
             }
 
             self.updateHUDandStatusRows(statusRowMode: statusRowMode, newSize: currentContext.newSize, animated: animated)
+            self.redrawCharts()
 
-            for case let cell as ChartTableViewCell in self.tableView.visibleCells {
-                cell.reloadChart()
-
-                if let indexPath = self.tableView.indexPath(for: cell) {
-                    self.tableView(self.tableView, updateSubtitleFor: cell, at: indexPath)
-                }
-            }
             self.tableView.endUpdates()
 
             self.reloading = false
@@ -529,6 +537,7 @@ final class StatusTableViewController: ChartsTableViewController, MealTableViewC
 
             // Trigger a reload if new context exists.
             if reloadNow {
+                self.log.debug("[reloadData] due to context change during previous reload")
                 self.reloadData()
             }
         }
@@ -687,7 +696,7 @@ final class StatusTableViewController: ChartsTableViewController, MealTableViewC
 
                 // If the rate or date change, reload the row
                 if oldTempBasal != newTempBasal || oldDate != newDate {
-                    self.tableView.reloadRows(at: [statusIndexPath], with: animated ? .top : .none)
+                    self.tableView.reloadRows(at: [statusIndexPath], with: animated ? .fade : .none)
                 } else if let cell = tableView.cellForRow(at: statusIndexPath) {
                     // If only the enacting state changed, update the activity indicator
                     if isEnacting {
@@ -701,7 +710,7 @@ final class StatusTableViewController: ChartsTableViewController, MealTableViewC
             case (.enactingBolus, .enactingBolus):
                 break
             default:
-                self.tableView.reloadRows(at: [statusIndexPath], with: animated ? .top : .none)
+                self.tableView.reloadRows(at: [statusIndexPath], with: animated ? .fade : .none)
             }
         case (false, true):
             self.tableView.insertRows(at: [statusIndexPath], with: animated ? .top : .none)
@@ -777,6 +786,19 @@ final class StatusTableViewController: ChartsTableViewController, MealTableViewC
         tableView.endUpdates()
     }
 
+    private func redrawCharts() {
+        tableView.beginUpdates()
+        self.charts.prerender()
+        for case let cell as ChartTableViewCell in self.tableView.visibleCells {
+            cell.reloadChart()
+
+            if let indexPath = self.tableView.indexPath(for: cell) {
+                self.tableView(self.tableView, updateSubtitleFor: cell, at: indexPath)
+            }
+        }
+        tableView.endUpdates()
+    }
+
     // MARK: - Toolbar data
 
     private var preMealMode: Bool? = nil {
@@ -844,23 +866,23 @@ final class StatusTableViewController: ChartsTableViewController, MealTableViewC
 
             switch ChartRow(rawValue: indexPath.row)! {
             case .glucose:
-                cell.chartContentView.chartGenerator = { [unowned self] (frame) in
-                    return self.charts.glucoseChartWithFrame(frame)?.view
+                cell.chartContentView.chartGenerator = { [weak self] (frame) in
+                    return self?.charts.glucoseChartWithFrame(frame)?.view
                 }
                 cell.titleLabel?.text = NSLocalizedString("Glucose", comment: "The title of the glucose and prediction graph")
             case .iob:
-                cell.chartContentView.chartGenerator = { [unowned self] (frame) in
-                    return self.charts.iobChartWithFrame(frame)?.view
+                cell.chartContentView.chartGenerator = { [weak self] (frame) in
+                    return self?.charts.iobChartWithFrame(frame)?.view
                 }
                 cell.titleLabel?.text = NSLocalizedString("Active Insulin", comment: "The title of the Insulin On-Board graph")
             case .dose:
-                cell.chartContentView?.chartGenerator = { [unowned self] (frame) in
-                    return self.charts.doseChartWithFrame(frame)?.view
+                cell.chartContentView?.chartGenerator = { [weak self] (frame) in
+                    return self?.charts.doseChartWithFrame(frame)?.view
                 }
                 cell.titleLabel?.text = NSLocalizedString("Insulin Delivery", comment: "The title of the insulin delivery graph")
             case .cob:
-                cell.chartContentView?.chartGenerator = { [unowned self] (frame) in
-                    return self.charts.cobChartWithFrame(frame)?.view
+                cell.chartContentView?.chartGenerator = { [weak self] (frame) in
+                    return self?.charts.cobChartWithFrame(frame)?.view
                 }
                 cell.titleLabel?.text = NSLocalizedString("Active Carbohydrates", comment: "The title of the Carbs On-Board graph")
             }
@@ -1099,7 +1121,7 @@ final class StatusTableViewController: ChartsTableViewController, MealTableViewC
                 integerFormatter.maximumFractionDigits = 0
 
                 if  let total = totalDelivery,
-                    let totalString = integerFormatter.string(from: NSNumber(value: total)) {
+                    let totalString = integerFormatter.string(from: total) {
                     cell.subtitleLabel?.text = String(format: NSLocalizedString("%@ U Total", comment: "The subtitle format describing total insulin. (1: localized insulin total)"), totalString)
                 } else {
                     cell.subtitleLabel?.text = nil
@@ -1198,6 +1220,7 @@ final class StatusTableViewController: ChartsTableViewController, MealTableViewC
                                 self.presentAlertController(with: error)
                             } else {
                                 self.refreshContext.update(with: .status)
+                                self.log.debug("[reloadData] after manually enacting temp basal")
                                 self.reloadData()
                             }
                         }
@@ -1324,7 +1347,7 @@ final class StatusTableViewController: ChartsTableViewController, MealTableViewC
         updateCarbEntry(updatedEntry: updatedEntry)
     }
     
-    func updateCarbEntry(updatedEntry: CarbEntry) {
+    func updateCarbEntry(updatedEntry: NewCarbEntry) {
         deviceManager.loopManager.addCarbEntryAndRecommendBolus(updatedEntry) { (result) -> Void in
             DispatchQueue.main.async {
                 switch result {
@@ -1463,6 +1486,7 @@ final class StatusTableViewController: ChartsTableViewController, MealTableViewC
             hudView.batteryHUD.stateColors = .pumpStatus
 
             refreshContext.update(with: .status)
+            self.log.debug("[reloadData] after hudView loaded")
             reloadData()
         }
     }
@@ -1565,21 +1589,25 @@ final class StatusTableViewController: ChartsTableViewController, MealTableViewC
             updateCarbEntry(updatedEntry: carbEntry)
         }
         
-        if let glucoseStore = deviceManager.loopManager.glucoseStore {
+        let glucoseStore = deviceManager.loopManager.glucoseStore
             if let glucoseEntry = updatedGlucose {
-                glucoseStore.addGlucose(glucoseEntry, date: Date(), isDisplayOnly: false, device: nil) { (success, _, error) in
-                    
-                    if error != nil {
+                let sample = NewGlucoseSample(date: Date(), quantity: glucoseEntry, isDisplayOnly: false,
+                                              syncIdentifier: UUID().uuidString, device: nil )
+                glucoseStore.addGlucose(sample) { (result) in
+                    switch(result) {
+                    case .failure(let error):
                         NSLog("handleFoodPick: addGlucose error \(error as Any)")
+                    case .success(let sample):
+                        NSLog("handleFoodPick: success \(sample)")
                     }
                 }
-                let g = Int(glucoseEntry.doubleValue(for: HKUnit.milligramsPerDeciliter()))
+                let g = Int(glucoseEntry.doubleValue(for: HKUnit.milligramsPerDeciliter))
                 NSLog("handleFoodPick: Adding glucose to Nightscout \(g) mg/dl")
                 deviceManager.loopManager.addBGReceived(bloodGlucose: g, comment: "Manually Entered")
             } else {
                 // no glucose entry given
             }
-        }
+
     }
     
     @IBAction func unwindFromNewFoodPickerViewController(_ segue: UIStoryboardSegue) {
@@ -1596,7 +1624,7 @@ final class StatusTableViewController: ChartsTableViewController, MealTableViewC
     private var foodRecentCollectionViewDataSource = FoodRecentCollectionViewDataSource()
     private var displayMeal : Bool = true
     weak var foodManager: FoodManager!
-    typealias MealInformation = (date: Date, lastCarbEntry: CarbEntry?, picks: FoodPicks?, start: Date?, end: Date?, carbs: Double?, undoPossible: Bool)
+    typealias MealInformation = (date: Date, lastCarbEntry: StoredCarbEntry?, picks: FoodPicks?, start: Date?, end: Date?, carbs: Double?, undoPossible: Bool)
     private var mealInformation : MealInformation?
     
     func mealTableViewCellTap(_ sender : MealTableViewCell) {

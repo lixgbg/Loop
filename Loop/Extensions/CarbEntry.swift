@@ -6,13 +6,35 @@
 //
 
 import Foundation
-import CarbKit
+// import CarbKit
 import HealthKit
+import LoopKit
 
 extension CarbEntry {
+    /*
     func foodPicks() -> FoodPicks {
         var picks = FoodPicks()
-        
+
+        if  let foodType = self.foodType {
+            picks = FoodPicks(fromJSON: foodType)
+        }
+        if picks.last == nil {
+            // create generic entry if foodType did not parse
+            let value = quantity.doubleValue(for: HKUnit.gram())
+            // TODO(Erik) This should take selected absorption time into account
+            let foodItem = FoodItem(carbRatio: 1.0, portionSize: value, absorption: .normal, title: "CarbEntry")
+            let foodPick = FoodPick(item: foodItem, ratio: 1, date: startDate)
+            picks.append(foodPick)
+        }
+        return picks
+    }
+ */
+}
+
+extension StoredCarbEntry {
+    func foodPicks() -> FoodPicks {
+        var picks = FoodPicks()
+
         if  let foodType = self.foodType {
             picks = FoodPicks(fromJSON: foodType)
         }
@@ -27,3 +49,4 @@ extension CarbEntry {
         return picks
     }
 }
+

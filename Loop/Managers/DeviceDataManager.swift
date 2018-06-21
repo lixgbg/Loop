@@ -7,11 +7,8 @@
 //
 
 import Foundation
-import CarbKit
 import CoreData
-import GlucoseKit
 import HealthKit
-import InsulinKit
 import LoopKit
 import LoopUI
 import MinimedKit
@@ -26,6 +23,8 @@ final class DeviceDataManager {
     private let queue = DispatchQueue(label: "com.loopkit.DeviceManagerQueue", qos: .utility)
 
     let logger = DiagnosticLogger.shared!
+
+    private let log = DiagnosticLogger.shared?.forCategory("DeviceManager")
 
     /// Remember the launch date of the app for diagnostic reporting
     private let launchDate = Date()
@@ -61,7 +60,7 @@ final class DeviceDataManager {
             if let status = latestPumpStatusFromMySentry {
                 return Double(status.batteryRemainingPercent) / 100
             } else if let status = latestPumpStatus {
-                return batteryChemistry.chargeRemaining(voltage: status.batteryVolts)
+                return batteryChemistry.chargeRemaining(at: status.batteryVolts)
             } else {
                 return statusExtensionManager.context?.batteryPercentage
             }
@@ -100,7 +99,8 @@ final class DeviceDataManager {
         // Update the HKDevice to include the name, pump model, or connection status change
         rileyLinkManager.getDevices { (devices) in
             devices.firstConnected?.getStatus { (status) in
-                self.loopManager.doseStore.setDevice(status.device(settings: self.pumpSettings, pumpState: state))
+                // Don't assume loopManager has been initialized yet
+                self.loopManager?.doseStore.device = status.device(settings: self.pumpSettings, pumpState: state)
             }
         }
     }
@@ -343,29 +343,35 @@ final class DeviceDataManager {
             logger.addError("Could not interpret pump clock: \(pumpDateComponents)", fromSource: "RileyLink")
         }
 
-        device.getStatus { (status) in
+        device.getStatus { (deviceStatus) in
             // Trigger device status upload, even if something is wrong with pumpStatus
             self.queue.async {
-                self.nightscoutDataManager.uploadDeviceStatus(pumpStatus, rileylinkDevice: status, deviceState: self.deviceStates[device.peripheralIdentifier])
+                self.nightscoutDataManager.uploadDeviceStatus(pumpStatus, rileylinkDevice: deviceStatus, deviceState: self.deviceStates[device.peripheralIdentifier])
+
+                if case .active(glucose: let glucose) = status.glucose {
+                    // Enlite data is included
+                    if let date = glucoseDateComponents?.date {
+                        let sample = NewGlucoseSample(
+                            date: date,
+                            quantity: HKQuantity(unit: .milligramsPerDeciliter, doubleValue: Double(glucose)),
+                            isDisplayOnly: false,
+                            syncIdentifier: status.glucoseSyncIdentifier ?? UUID().uuidString,
+                            device: deviceStatus.device(settings: self.pumpSettings, pumpState: self.pumpState)
+                        )
+
+                        self.loopManager.addGlucose([sample])
+                    }
+                }
             }
         }
 
         switch status.glucose {
-        case .active(glucose: let glucose):
-            // Enlite data is included
-            if let date = glucoseDateComponents?.date {
-                loopManager.addGlucose([(
-                    quantity: HKQuantity(unit: HKUnit.milligramsPerDeciliter(), doubleValue: Double(glucose)),
-                    date: date,
-                    isDisplayOnly: false
-                )], from: nil)
-            }
         case .off:
             // Enlite is disabled, so assert glucose from another source
             cgmManager?.fetchNewDataIfNeeded(with: self) { (result) in
                 switch result {
                 case .newData(let values):
-                    self.loopManager.addGlucose(values, from: self.cgmManager?.device)
+                    self.loopManager.addGlucose(values)
                 case .noData:
                     break
                 case .error(let error):
@@ -476,6 +482,8 @@ final class DeviceDataManager {
                         self.lastPumpHistorySuccess)
                     NSLog("fetchPumpHistory: since \(startDate)")
                     
+//                    let startDate = self.loopManager.doseStore.pumpEventQueryAfterDate
+
                     let (events, model) = try session.getHistoryEvents(since: startDate)
                     self.loopManager.addPumpEvents(events, from: model) { (error) in
                         if let error = error {
@@ -491,9 +499,9 @@ final class DeviceDataManager {
                         switch event.pumpEvent {
                         case let bg as BGReceivedPumpEvent:
                             let mgdl = bg.amount
-                            let glucose = HKQuantity(unit: HKUnit.milligramsPerDeciliter(), doubleValue: Double(mgdl))
+                            let glucose = HKQuantity(unit: HKUnit.milligramsPerDeciliter, doubleValue: Double(mgdl))
                             NSLog("Got BG event from pump, adding to glucosestore, but only if no other glucose was recently entered \(mgdl) \(glucose)")
-                            self.loopManager.glucoseStore?.getGlucoseValues(start: Date().addingTimeInterval(TimeInterval(minutes: -30)), completion: { (result) in
+                            self.loopManager.glucoseStore.getGlucoseSamples(start: Date().addingTimeInterval(TimeInterval(minutes: -30)), completion: { (result) in
                                 switch(result) {
                                 case .success(let values):
                                     if values.count > 0 {
@@ -502,9 +510,10 @@ final class DeviceDataManager {
                                 default:
                                     break
                                 }
-                                
-                                self.loopManager.glucoseStore?.addGlucose(glucose, date: event.date, isDisplayOnly: false, device: nil) { (success, _, error) in
-                                    NSLog("Added BG from pump \(success), \(String(describing: error))")
+                                let sample = NewGlucoseSample(date: event.date, quantity: glucose, isDisplayOnly: false, syncIdentifier: bg.glucoseSyncIdentifier ?? UUID().uuidString, device: nil )
+
+                                self.loopManager.glucoseStore.addGlucose(sample) { (result) in
+                                    NSLog("Added BG from pump \(String(describing: result))")
                                 }
                             })
                             
@@ -539,7 +548,6 @@ final class DeviceDataManager {
     }
 
     private func isReservoirDataOlderThan(timeIntervalSinceNow: TimeInterval) -> Bool {
-        // TODO: lastReservoirValue isn't safe to read from any queue
         var lastReservoirDate = loopManager.doseStore.lastReservoirValue?.startDate ?? .distantPast
 
         // Look for reservoir data from MySentry that hasn't yet been written (due to 11-second imposed delay)
@@ -568,6 +576,8 @@ final class DeviceDataManager {
             }
             return
         }
+
+        self.log?.debug("Pump data is stale, fetching.")
 
         rileyLinkManager.getDevices { (devices) in
             guard let device = devices.firstConnected else {
@@ -622,7 +632,7 @@ final class DeviceDataManager {
                     }
 
                     self.updateReservoirVolume(status.reservoir, at: date, withTimeLeft: nil)
-                    let battery = BatteryStatus(voltage: status.batteryVolts, status: BatteryIndicator(batteryStatus: status.batteryStatus))
+                    let battery = NightscoutUploadKit.BatteryStatus(voltage: status.batteryVolts.value, status: BatteryIndicator(batteryStatus: status.batteryStatus))
 
                     nsPumpStatus = NightscoutUploadKit.PumpStatus(clock: date, pumpID: status.pumpID, iob: nil, battery: battery, suspended: status.suspended, bolusing: status.bolusing, reservoir: status.reservoir)
                     
@@ -698,11 +708,11 @@ final class DeviceDataManager {
         // If we don't have recent pump data, or the pump was recently rewound, read new pump data before bolusing.
         var shouldReadReservoir = isReservoirDataOlderThan(timeIntervalSinceNow: .minutes(-10))
         var reservoirError : Error? = nil
-        if loopManager.doseStore.lastReservoirVolumeDrop < 0 {
+       /* if loopManager.doseStore.lastReservoirVolumeDrop < 0 {
             reservoirError = LoopError.invalidData(details: "Last Reservoir drop negative.")
             shouldReadReservoir = true
-        } else if let reservoir = loopManager.doseStore.lastReservoirValue, reservoir.startDate.timeIntervalSinceNow <=
-            -loopManager.recencyInterval {
+        } else */if let reservoir = loopManager.doseStore.lastReservoirValue, reservoir.startDate.timeIntervalSinceNow <=
+            -loopManager.settings.recencyInterval {
             reservoirError = LoopError.pumpDataTooOld(date: reservoir.startDate)
             shouldReadReservoir = true
         } else if loopManager.doseStore.lastReservoirValue == nil {
@@ -979,13 +989,13 @@ final class DeviceDataManager {
         remoteDataManager.delegate = self
         statusExtensionManager = StatusExtensionDataManager(deviceDataManager: self)
         loopManager = LoopDataManager(
-            delegate: self,
-            lastLoopCompleted: statusExtensionManager.context?.loop?.lastCompleted,
+            lastLoopCompleted: statusExtensionManager.context?.lastLoopCompleted,
             lastTempBasal: statusExtensionManager.context?.netBasal?.tempBasal
         )
         watchManager = WatchDataManager(deviceDataManager: self)
         nightscoutDataManager = NightscoutDataManager(deviceDataManager: self)
 
+        loopManager.delegate = self
         loopManager.carbStore.syncDelegate = remoteDataManager.nightscoutService.uploader
         loopManager.doseStore.delegate = self
         // Proliferate PumpModel preferences to DoseStore
@@ -1004,7 +1014,7 @@ final class DeviceDataManager {
         if let reservoir = loopManager?.doseStore.lastReservoirValue,
             reservoir.startDate.timeIntervalSinceNow <= TimeInterval(minutes: -30) {
             restartReason = "pump"
-        } else if let glucose = loopManager?.glucoseStore?.latestGlucose,
+        } else if let glucose = loopManager?.glucoseStore.latestGlucose,
             glucose.startDate.timeIntervalSinceNow <= TimeInterval(minutes: -30) {
             restartReason = "cgm"
         }
@@ -1095,7 +1105,7 @@ extension DeviceDataManager: CGMManagerDelegate {
         /// TODO: Isolate to queue
         switch result {
         case .newData(let values):
-            loopManager.addGlucose(values, from: manager.device) { _ in
+            loopManager.addGlucose(values) { _ in
                 self.assertCurrentPumpData()
             }
         case .noData:
@@ -1110,7 +1120,6 @@ extension DeviceDataManager: CGMManagerDelegate {
     }
 
     func startDateToFilterNewData(for manager: CGMManager) -> Date? {
-        // TODO: This shouldn't be safe to access synchronously
         return loopManager.glucoseStore.latestGlucose?.startDate
     }
 }
@@ -1119,11 +1128,11 @@ extension DeviceDataManager: CGMManagerDelegate {
 extension DeviceDataManager: DoseStoreDelegate {
     func doseStore(_ doseStore: DoseStore,
         hasEventsNeedingUpload pumpEvents: [PersistedPumpEvent],
-        completion completionHandler: @escaping (_ uploadedObjects: [NSManagedObjectID]) -> Void
+        completion completionHandler: @escaping (_ uploadedObjectIDURLs: [URL]) -> Void
     ) {
         /// TODO: Isolate to queue
         guard let uploader = remoteDataManager.nightscoutService.uploader, let pumpModel = pumpState?.pumpModel else {
-            completionHandler(pumpEvents.map({ $0.objectID }))
+            completionHandler(pumpEvents.map({ $0.objectIDURL }))
             return
         }
 
@@ -1293,6 +1302,7 @@ extension DeviceDataManager: CustomDebugStringConvertible {
     var debugDescription: String {
         return [
             Bundle.main.localizedNameAndVersion,
+            "",
             "## DeviceDataManager",
             "launchDate: \(launchDate)",
             "cgm: \(String(describing: cgm))",
@@ -1307,8 +1317,11 @@ extension DeviceDataManager: CustomDebugStringConvertible {
             "pumpState: \(String(reflecting: pumpState))",
             "preferredInsulinDataSource: \(preferredInsulinDataSource)",
             "sensorInfo: \(String(reflecting: sensorInfo))",
+            "",
             cgmManager != nil ? String(reflecting: cgmManager!) : "",
+            "",
             String(reflecting: rileyLinkManager),
+            "",
             String(reflecting: statusExtensionManager!),
         ].joined(separator: "\n")
     }

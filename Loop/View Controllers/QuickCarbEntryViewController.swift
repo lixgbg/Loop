@@ -7,7 +7,7 @@
 
 import Foundation
 import UIKit
-import CarbKit
+import LoopKit
 import HealthKit
 
 
@@ -50,7 +50,7 @@ final class QuickCarbEntryViewController: UITableViewController, IdentifiableCla
     
     var noteEntered : String = ""
     
-    public var preferredGlucoseUnit: HKUnit = HKUnit.milligramsPerDeciliter()
+    public var preferredGlucoseUnit: HKUnit = HKUnit.milligramsPerDeciliter
     public var preferredUnit: HKUnit = HKUnit.gram()
 
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
