@@ -186,8 +186,8 @@ final class BolusViewController: UITableViewController, IdentifiableClass, UITex
     @IBAction func authenticateBolus(_ sender: Any) {
         bolusAmountTextField.resignFirstResponder()
 
-        guard let text = bolusAmountTextField?.text, let bolus = bolusUnitsFormatter.number(from: text)?.doubleValue,
-            let amountString = bolusUnitsFormatter.string(from: bolus) else {
+        guard let text = bolusAmountTextField?.text, let bolus = bolusUnitsFormatter.number(from: text)?.doubleValue/*,
+            let amountString = bolusUnitsFormatter.string(from: bolus)*/ else {
             NSLog("BolusViewController - empty")
             return
         }
@@ -237,7 +237,7 @@ final class BolusViewController: UITableViewController, IdentifiableClass, UITex
             // 3. Grab the value from the text field, and print it when the user clicks OK.
             alert.addAction(UIAlertAction(title: "Deliver", style: .default, handler: { [weak alert] (_) in
                 //let result = alert?.textFields![0].text // Force unwrapping because we know it exists.
-                let wanted = "\(amountString)" //"\(bolus)"
+                let wanted = "\(bolus)"
                 let result = alert?.textFields![0].text
                 if result != nil && result! == wanted {
                     self.setBolusAndClose(bolus)
