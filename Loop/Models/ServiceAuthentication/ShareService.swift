@@ -45,21 +45,21 @@ class ShareService: ServiceAuthentication {
         ]
 
         /*
-         To enable Loop to use a custom share server, change the value of customServer 
+         To enable Loop to use a custom share server, change the value of customServer
          and remove the comment markers on line 55 and 62.
-
+         
          You can find installation instructions for one such custom share server at
          https://github.com/dabear/NightscoutShareServer
          */
 
-        /*
-        let customServer = "https://REPLACEME"
-        let customServerTitle = "Custom"
+
+        let customServer = "http://127.0.0.1:1979"
+        let customServerTitle = "Spike"
 
         credentials[2].options?.append(
                 (title: NSLocalizedString(customServerTitle, comment: "Custom share server option title"),
                 value: customServer))
-        */
+        
 
         if let username = username, let password = password, let url = url {
             isAuthorized = true
