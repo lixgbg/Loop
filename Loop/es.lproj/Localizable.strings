@@ -69,7 +69,7 @@
 "Add Meal" = "Agregar Alimento";
 
 /* Title text for button to set up a new pump */
-"Add Pump" = "Add Pump";
+"Add Pump" = "Agregar Microinfusora";
 
 /* The title of the section containing algorithm settings */
 "Algorithm Settings" = "Ajustes de Algoritmo";
@@ -148,7 +148,10 @@
 "Delete Account" = "Eliminar Cuenta";
 
 /* Title text for delivery limits */
-"Delivery Limits" = "Delivery Limits";
+"Delivery Limits" = "Límites de Dosificación";
+
+/* The title of the Dexcom Share service */
+"Dexcom Share" = "Dexcom Share";
 
 /* The action hint of the workout mode toggle button when enabled */
 "Disables" = "Inhabilita";
