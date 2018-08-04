@@ -36,7 +36,7 @@
 "%1$@/min" = "%1$@/min";
 
 /* Description of the prediction input effect for glucose momentum */
-"15 min glucose regression coefficient (b₁), continued with decay over 30 min" = "15 minuten glucose regressie coëficient (b1), continue zonder afbouw over 30 min";
+"15 min glucose regression coefficient (b₁), continued with decay over 30 min" = "15 minuten glucose regressie coëfficiënt (b1), continue zonder afbouw over 30 min";
 
 /* Description of the prediction input effect for retrospective correction */
 "30 min comparison of glucose prediction vs actual, continued with decay over 60 min" = "30  min vergelijking van glucose voorspelling versus actueel, gevolgd door afbouw over 60 min";
@@ -45,7 +45,7 @@
 "A model based on the published absorption of Fiasp insulin." = "Een model gebaseerd op de gepubliceerde opname van Fiasp insuline.";
 
 /* Subtitle of Rapid-Acting – Adult preset */
-"A model based on the published absorption of Humalog, Novolog, and Apidra insulin in adults." = "Een model gebaseerd op de gepubliceerde opname van Humalog, Novolog, en Apidra insuline bij volwassenen.)";
+"A model based on the published absorption of Humalog, Novolog, and Apidra insulin in adults." = "Een model gebaseerd op de gepubliceerde opname van Humalog, Novolog (Novorapid), en Apidra insuline bij volwassenen.";
 
 /* Action to copy the recommended Bolus value to the actual Bolus Field */
 "AcceptRecommendedBolus" = "AccepteerVoorgesteldeBolus";
@@ -78,7 +78,7 @@
 "Amplitude" = "Amplitude";
 
 /* Subtitle of Rapid-Acting – Children preset */
-"An adjustment to the adult model based on empirical effects in children." = "Een aanpasing op het model voor volwassen wanneer deze door kinderen wordt gebruikt.";
+"An adjustment to the adult model based on empirical effects in children." = "Een aanpassing op het model voor volwassen wanneer deze door kinderen wordt gebruikt.";
 
 /* The title of the amplitude API key credential */
 "API Key" = "API Key";
@@ -114,10 +114,10 @@
 "Carbs Absorbed (g) ÷ Carb Ratio (g/U) × Insulin Sensitivity (%1$@/U)" = "Koolhydraten geabsorbeerd (gr) ÷ Koolhydraten per eenheid insuline (gr/E) × Insuline gevoeligheid (%1$@/E)";
 
 /* The notification alert describing a low pump battery */
-"Change the pump battery immediately" = "Vervang direct de pomp batterij";
+"Change the pump battery immediately" = "Vervang direct de batterij van de pomp";
 
 /* The notification alert describing an empty pump reservoir */
-"Change the pump reservoir now" = "Vervang direct het pomp reservoir";
+"Change the pump reservoir now" = "Vervang direct het reservoir van de pomp";
 
 /* The title text for the looping enabled switch cell */
 "Closed Loop" = "Gesloten loop";
@@ -126,17 +126,17 @@
 "Configuration" = "Configuratie";
 
 /* The error message displayed for configuration errors. (1: configuration error details) */
-"Configuration Error: %1$@" = "Configuratie Fout: %1$@";
+"Configuration Error: %1$@" = "Configuratiefout: %1$@";
 
 /* The title of the continuous glucose monitor section in settings */
 "Continuous Glucose Monitor" = "Continue Glucose Monitor";
 
 /* The title of the glucose target range schedule screen
                 The title text for the glucose target range schedule */
-"Correction Range" = "Correctie Bereik";
+"Correction Range" = "Correctiebereik";
 
 /* Message when offering bolus recommendation even though bg is below range. (1: glucose value) */
-"Current glucose of %1$@ is below correction range." = "Huidige glucose van %1$@ is lager dan het correctie bereik";
+"Current glucose of %1$@ is below correction range." = "Huidige glucose van %1$@ is lager dan het correctiebereik";
 
 /* The title of the Loggly customer token credential */
 "Customer Token" = "Gebruiker token";
@@ -148,7 +148,7 @@
 "Delete Account" = "Verwijder Account";
 
 /* Title text for delivery limits */
-"Delivery Limits" = "Delivery Limits";
+"Delivery Limits" = "Toediening Limieten";
 
 /* The title of the Dexcom Share service */
 "Dexcom Share" = "Dexcom Share";
@@ -172,7 +172,7 @@
 "Eventually %@" = "Uiteindelijk %@";
 
 /* The title of the alert describing a maximum bolus validation error */
-"Exceeds Maximum Bolus" = "Overschrijdt Maximum Bolus";
+"Exceeds Maximum Bolus" = "Overschrijdt Maximale Bolus";
 
 /* Title of insulin model preset */
 "Fiasp" = "Fiasp";
@@ -199,7 +199,7 @@
 "Glucose Momentum" = "Glucose Momentum";
 
 /* The placeholder text for the nightscout site URL credential */
-"https://mysite.herokuapp.com" = "https://mysite.herokuapp.com";
+"https://mysite.azurewebsites.net" = "https://mysite.azurewebsites.net";
 
 /* The title of a target alert action specifying an indefinitely long workout targets duration */
 "Indefinitely" = "Oneindig";
@@ -272,7 +272,7 @@
 "Outside US" = "Buiten US";
 
 /* The title of the Dexcom share password credential */
-"Password" = "Paswoord";
+"Password" = "Wachtwoord";
 
 /* The label of the pre-meal mode toggle button */
 "Pre-Meal Targets" = "Pre-Maaltijd Doelen";
@@ -287,25 +287,25 @@
 "Pump" = "Pomp";
 
 /* The notification title for a low pump battery */
-"Pump Battery Low" = "Pomp Batterij Laag";
+"Pump Battery Low" = "Batterij Pomp Laag";
 
 /* The error message when pump data is too old to be used. (1: pump data age in minutes) */
-"Pump data is %1$@ old" = "Pomp gegevens is %1$@ oud";
+"Pump data is %1$@ old" = "Pompgegevens zijn %1$@ oud";
 
 /* The notification title for an empty pump reservoir */
-"Pump Reservoir Empty" = "Pomp Reservoir Leeg";
+"Pump Reservoir Empty" = "Reservoir Pomp Leeg";
 
 /* The notification title for a low pump reservoir */
-"Pump Reservoir Low" = "Pomp Reservoir Laag";
+"Pump Reservoir Low" = "Reservoir Pomp Laag";
 
 /* Format string for combining localized numeric value and unit. (1: numeric value)(2: unit) */
 "QUANTITY_VALUE_AND_UNIT" = "%1$@ %2$@";
 
 /* Title of insulin model preset */
-"Rapid-Acting – Adults" = "Snelwerkende - volwassenen";
+"Rapid-Acting – Adults" = "Snelwerkend - volwassenen";
 
 /* Title of insulin model preset */
-"Rapid-Acting – Children" = "Snelwerkende - kinderen";
+"Rapid-Acting – Children" = "Snelwerkend - kinderen";
 
 /* The error message when a recommendation has expired. (1: age of recommendation in minutes) */
 "Recommendation expired: %1$@ old" = "Aanbeveling verlopen: %1$@ oud";
@@ -326,10 +326,10 @@
 "Retry" = "Opnieuw proberen";
 
 /* The description of sensor calibration state when sensor calibration is ok. */
-"Sensor calibration is OK" = "Sensor callibratie is geslaagd";
+"Sensor calibration is OK" = "Kalibratie sensor is geslaagd";
 
 /* The description of sensor calibration state when raw value is unknown. (1: missing data details) */
-"Sensor is in unknown state %1$d" = "Senor is in onbekende status %1$d";
+"Sensor is in unknown state %1$d" = "Sensor heeft onbekende status %1$d";
 
 /* The description of sensor calibration state when sensor sensor is stopped. */
 "Sensor is stopped" = "Sensor is gestopt";
@@ -338,7 +338,7 @@
 "Sensor is warming up" = "Sensor is aan het opwarmen";
 
 /* The description of sensor calibration state when sensor needs calibration. */
-"Sensor needs calibration" = "Sensor heeft callibratie nodig";
+"Sensor needs calibration" = "Sensor moet gekalibreerd worden";
 
 /* The title of the Dexcom share server URL credential */
 "Server" = "Server";
@@ -356,7 +356,7 @@
 "since %@" = "na %@";
 
 /* The title of the nightscout site URL credential */
-"Site URL" = "Webpagina URL";
+"Site URL" = "URL Webpagina";
 
 /* The title text for the Medtronic sensor switch cell */
 "Sof-Sensor / Enlite" = "Sof-Sensor / Enlite";
@@ -371,7 +371,7 @@
 "The legacy model used by Loop, allowing customization of action duration." = "Het oude model dat door Loop wordt gebruikt, waardoor de actieduur kan worden aangepast.";
 
 /* Body of the alert describing a maximum bolus validation error. (1: The localized max bolus value) */
-"The maximum bolus amount is %@ Units" = "De maximale bolushoeveelheid is %@ Eenheden";
+"The maximum bolus amount is %@ Units" = "De maximale bolus hoeveelheid is %@ Eenheden";
 
 /* Instructions on where to find the transmitter ID */
 "The transmitter ID can be found printed on the back of the device, on the side of the box it came in, and from within the settings menus of the receiver and mobile app." = "De zender-ID staat afgedrukt op de achterkant van het apparaat, aan de zijkant van de doos waarin deze is geplaatst en in de instellingenmenu's van de G5/G6-ontvanger en de mobiele app.";
@@ -404,5 +404,5 @@
 "When current or forecasted glucose is below the suspend threshold, Loop will not recommend a bolus, and will always recommend a temporary basal rate of 0 units per hour." = "Wanneer de huidige of voorspelde glucose onder de drempel voor onderbreken ligt, zal Loop geen bolus aanbevelen en zal altijd een tijdelijke basaal van 0 eenheden per uur aanbevelen.";
 
 /* The label of the workout mode toggle button */
-"Workout Targets" = "Trainings doel waardes";
+"Workout Targets" = "Trainingsdoel waardes";
 

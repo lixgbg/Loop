@@ -17,7 +17,7 @@
 "Predicted glucose at %1$@ is %2$@." = "Forespeilet blodsukker om %1$@ er %2$@.";
 
 /* Notice message when recommending bolus when BG is below the suspend threshold. (1: glucose value) */
-"Predicted glucose of %1$@ is below your suspend threshold setting." = "Predicted glucose of %1$@ is below your suspend threshold setting.";
+"Predicted glucose of %1$@ is below your suspend threshold setting." = "Forespeilet blodsukker  %1$@ er  under innstilling for stopp av tilførsel.";
 
 /* Format string for combining localized numeric value and unit. (1: numeric value)(2: unit) */
 "QUANTITY_VALUE_AND_UNIT" = "%1$@ %2$@";

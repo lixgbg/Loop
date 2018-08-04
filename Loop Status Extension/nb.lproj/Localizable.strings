@@ -41,7 +41,7 @@
 "Rapid-Acting – Children" = "Hurtigvirkende – barn";
 
 /* Subtitle description of Walsh insulin model setting */
-"The legacy model used by Loop, allowing customization of action duration." = "The legacy model used by Loop, allowing customization of action duration.";
+"The legacy model used by Loop, allowing customization of action duration." = "TDen gamle modellen brukt av Loop, tillater endring av action duration.";
 
 /* The short unit display string for international units of insulin */
 "U" = "E";

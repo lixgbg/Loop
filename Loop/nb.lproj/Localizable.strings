@@ -2,7 +2,7 @@
 " (pending: %@)" = "(Påvente: %@)";
 
 /* Formats absorbed carb value */
-"%@ absorbed" = "%@ asorbert";
+"%@ absorbed" = "%@ absorbert";
 
 /* The subtitle format describing total insulin. (1: localized insulin total) */
 "%@ U Total" = "%@ E Totalt";
@@ -18,10 +18,10 @@
 "%1$@ + %2$@" = "%1$@ + %2$@";
 
 /* Low reservoir alert format string. (1: Number of units remaining) */
-"%1$@ U left" = "%1$@ E som gjennstår";
+"%1$@ U left" = "%1$@ E gjenstår";
 
 /* Low reservoir alert with time remaining format string. (1: Number of units remaining)(2: approximate time remaining) */
-"%1$@ U left: %2$@" = "%1$@ E som gjennstår: %2$@";
+"%1$@ U left: %2$@" = "%1$@ E gjenstår: %2$@";
 
 /* The format for recommended temp basal rate and time. (1: localized rate number)(2: localized time) */
 "%1$@ U/hour @ %2$@" = "%1$@ E/timen @ %2$@";
@@ -39,7 +39,7 @@
 "15 min glucose regression coefficient (b₁), continued with decay over 30 min" = "15 minutters glukose-regresjonskoeffisient (b1), fortsatt med henfall over 30 minutter.";
 
 /* Description of the prediction input effect for retrospective correction */
-"30 min comparison of glucose prediction vs actual, continued with decay over 60 min" = "30 min prediksjon vs faktisk sammenligning av glukose, fortsatte med henfall over 60 min.";
+"30 min comparison of glucose prediction vs actual, continued with decay over 60 min" = "30 min prediksjon vs faktisk sammenligning av glukose, fortsatt med forfall over 60 min.";
 
 /* Subtitle of Fiasp preset */
 "A model based on the published absorption of Fiasp insulin." = "En modell basert på publiserte data for absorpsjon av Fiasp insulin.";
@@ -69,7 +69,7 @@
 "Add Meal" = "Legg Til Måltid";
 
 /* Title text for button to set up a new pump */
-"Add Pump" = "Add Pump";
+"Add Pump" = "Legg til Pumpe";
 
 /* The title of the section containing algorithm settings */
 "Algorithm Settings" = "Algoritmeinnstillinger";
@@ -87,7 +87,7 @@
 "API Secret" = "API Secret";
 
 /* Format fragment for a specific time */
-"at %@" = "at %@";
+"at %@" = "kl %@";
 
 /* The message displayed during a device authentication prompt for bolus specification */
 "Authenticate to Bolus %@ Units" = "Autentiser for å gi bolus %@ E";
@@ -108,10 +108,10 @@
 "Carb Ratios" = "Carb Ratios";
 
 /* Title of the prediction input effect for carbohydrates */
-"Carbohydrates" = "Karbbohydrater";
+"Carbohydrates" = "Karbohydrater";
 
 /* Description of the prediction input effect for carbohydrates. (1: The glucose unit string) */
-"Carbs Absorbed (g) ÷ Carb Ratio (g/U) × Insulin Sensitivity (%1$@/U)" = "Karbohydrater absorbert (g) ÷ Karbohydratforhold (g/E) × Insuøinfølsomhet (%1$@/E)";
+"Carbs Absorbed (g) ÷ Carb Ratio (g/U) × Insulin Sensitivity (%1$@/U)" = "Karbohydrater absorbert (g) ÷ Karbohydratforhold (g/E) × Insulinfølsomhet (%1$@/E)";
 
 /* The notification alert describing a low pump battery */
 "Change the pump battery immediately" = "Bytt batteri på pumpe snarest";
@@ -126,7 +126,7 @@
 "Configuration" = "Konfigurasjon";
 
 /* The error message displayed for configuration errors. (1: configuration error details) */
-"Configuration Error: %1$@" = "Knfigurasjonsfeil: %1$@";
+"Configuration Error: %1$@" = "Konfigurasjonsfeil: %1$@";
 
 /* The title of the continuous glucose monitor section in settings */
 "Continuous Glucose Monitor" = "Kontinuerlig glukosemonitor";
@@ -148,7 +148,7 @@
 "Delete Account" = "Slett Konto";
 
 /* Title text for delivery limits */
-"Delivery Limits" = "Delivery Limits";
+"Delivery Limits" = "Leveringsgrense";
 
 /* The title of the Dexcom Share service */
 "Dexcom Share" = "Dexcom Share";
@@ -163,7 +163,7 @@
 "Enables" = "Aktiverer";
 
 /* The placeholder text instructing users to enter a suspend treshold */
-"Enter suspend threshold" = "Enter suspend threshold";
+"Enter suspend threshold" = "Legg til grense for stopp av tilførsel";
 
 /* The placeholder text instructing users how to enter a transmitter ID */
 "Enter the 6-digit transmitter ID" = "Angi 6-sifret sender (CGM) ID";
@@ -199,10 +199,10 @@
 "Glucose Momentum" = "Glukosemomentum";
 
 /* The placeholder text for the nightscout site URL credential */
-"https://mysite.herokuapp.com" = "https://mysite.herokuapp.com";
+"https://mysite.azurewebsites.net" = "https://mysite.azurewebsites.net";
 
 /* The title of a target alert action specifying an indefinitely long workout targets duration */
-"Indefinitely" = "Uestemt Tid";
+"Indefinitely" = "Uendelig";
 
 /* Title of the prediction input effect for insulin */
 "Insulin" = "Insulin";
@@ -224,7 +224,7 @@
 "Invalid data: %1$@" = "Ugyldig data: %1$@";
 
 /* The title text for the issue report cell */
-"Issue Report" = "Send Rapport";
+"Issue Report" = "Problemrapport";
 
 /* Format string describing retrospective glucose prediction comparison. (1: Previous glucose)(2: Predicted glucose)(3: Actual glucose) */
 "Last comparison: %1$@ → %2$@ vs %3$@" = "Siste sammenligning: %1$@ → %2$@ vs %3$@";
@@ -281,7 +281,7 @@
 "Predicted glucose at %1$@ is %2$@." = "Forespeilet blodsukker om %1$@ er %2$@.";
 
 /* Notice message when recommending bolus when BG is below the suspend threshold. (1: glucose value) */
-"Predicted glucose of %1$@ is below your suspend threshold setting." = "Predicted glucose of %1$@ is below your suspend threshold setting.";
+"Predicted glucose of %1$@ is below your suspend threshold setting." = "Forespeilet blodsukker %1$@ er under innstilling for stopp av tilførsel";
 
 /* The title of the pump section in settings */
 "Pump" = "Pumpe";
@@ -365,19 +365,19 @@
 "Starting Bolus" = "Starter Bolus";
 
 /* The title text in settings */
-"Suspend Threshold" = "Suspend Threshold";
+"Suspend Threshold" = "Grense for stopp av tilførsel";
 
 /* Subtitle description of Walsh insulin model setting */
-"The legacy model used by Loop, allowing customization of action duration." = "The legacy model used by Loop, allowing customization of action duration.";
+"The legacy model used by Loop, allowing customization of action duration." = "Den gamle modellen brukt av Loop, tillater endring av action duration.";
 
 /* Body of the alert describing a maximum bolus validation error. (1: The localized max bolus value) */
 "The maximum bolus amount is %@ Units" = "Maks bolus er satt til %@ enheter";
 
 /* Instructions on where to find the transmitter ID */
-"The transmitter ID can be found printed on the back of the device, on the side of the box it came in, and from within the settings menus of the receiver and mobile app." = "The transmitter ID can be found printed on the back of the device, on the side of the box it came in, and from within the settings menus of the receiver and mobile app.";
+"The transmitter ID can be found printed on the back of the device, on the side of the box it came in, and from within the settings menus of the receiver and mobile app." = "Transmitter ID kan du finne på baksida av senderen, på side av eska, fra meny for innstillinger på avsenderen, eller i mobilappen.";
 
 /* The description of the switch which toggles retrospective correction effects */
-"This will more aggresively increase or decrease basal delivery when glucose movement doesn't match the carbohydrate and insulin-based model." = "This will more aggresively increase or decrease basal delivery when glucose movement doesn't match the carbohydrate and insulin-based model.";
+"This will more aggresively increase or decrease basal delivery when glucose movement doesn't match the carbohydrate and insulin-based model." = "Dette vil øke eller redusere basallevering mer aggressivt når glukosebevegelsen ikke samsvarer med karbohydrat- og insulinbasert modell.";
 
 /* The title text for the Dexcom G5/G6 transmitter ID config value */
 "Transmitter ID" = "Sender ID";
@@ -389,7 +389,7 @@
 "US" = "US";
 
 /* The title of the alert controller used to select a duration for workout targets */
-"Use Workout Glucose Targets" = "Use Workout Glucose Targets";
+"Use Workout Glucose Targets" = "Bruk Treningsmodus for Glukoseområde";
 
 /* The title of the Dexcom share username credential */
 "Username" = "Brukernavn";
@@ -401,8 +401,8 @@
 "Walsh" = "Walsh";
 
 /* Explanation of suspend threshold */
-"When current or forecasted glucose is below the suspend threshold, Loop will not recommend a bolus, and will always recommend a temporary basal rate of 0 units per hour." = "When current or forecasted glucose is below the suspend threshold, Loop will not recommend a bolus, and will always recommend a temporary basal rate of 0 units per hour.";
+"When current or forecasted glucose is below the suspend threshold, Loop will not recommend a bolus, and will always recommend a temporary basal rate of 0 units per hour." = "Når nåværende eller forespeilet blodsukker er under grensen for stopp av tilførsel, vil ikke Loop anbefale en bolus, og vil alltid anbefale en midlertidig basalrate på 0 enheter per time.";
 
 /* The label of the workout mode toggle button */
-"Workout Targets" = "Workout Targets";
+"Workout Targets" = "Treningsmål";
 
