@@ -5,7 +5,7 @@
 "CFBundleName" = "$(PRODUCT_NAME)";
 
 /* Privacy - Bluetooth Peripheral Usage Description */
-"NSBluetoothPeripheralUsageDescription" = "Il Bluetooth viene utilizzato per comunicare con la pompa e i dispositivi CGM.";
+"NSBluetoothPeripheralUsageDescription" = "Il Bluetooth viene utilizzato per comunicare con la microinfusore e i dispositivi CGM.";
 
 /* Privacy - Face ID Usage Description */
 "NSFaceIDUsageDescription" = "Face ID viene utilizzato per autenticare il bolo.";

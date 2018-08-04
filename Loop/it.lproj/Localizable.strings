@@ -114,10 +114,10 @@
 "Carbs Absorbed (g) ÷ Carb Ratio (g/U) × Insulin Sensitivity (%1$@/U)" = "Carbs Assorbiti (g) ÷ Carb Rapporti (g/U) × Sensibilità Insulinica (%1$@/U)";
 
 /* The notification alert describing a low pump battery */
-"Change the pump battery immediately" = "Cambiare immediatamente la batteria della pompa";
+"Change the pump battery immediately" = "Cambiare immediatamente la batteria della microinfusore";
 
 /* The notification alert describing an empty pump reservoir */
-"Change the pump reservoir now" = "Cambiare il serbatoio della pompa";
+"Change the pump reservoir now" = "Cambiare il serbatoio della microinfusore";
 
 /* The title text for the looping enabled switch cell */
 "Closed Loop" = "Loop Chiuso";
@@ -199,7 +199,7 @@
 "Glucose Momentum" = "Effetto Glicemico";
 
 /* The placeholder text for the nightscout site URL credential */
-"https://mysite.azurewebsites.net" = "https://mysite.azurewebsites.net";
+"https://mysite.herokuapp.com" = "https://mysite.herokuapp.com";
 
 /* The title of a target alert action specifying an indefinitely long workout targets duration */
 "Indefinitely" = "Indefinitivamente";
@@ -284,19 +284,19 @@
 "Predicted glucose of %1$@ is below your suspend threshold setting." = "La glicemia prevista %1$@ e’ inferiore al valore soglia per la sospensione dell’erogazione.";
 
 /* The title of the pump section in settings */
-"Pump" = "Pompa";
+"Pump" = "microinfusore";
 
 /* The notification title for a low pump battery */
-"Pump Battery Low" = "Batteria Pompa Bassa";
+"Pump Battery Low" = "Batteria microinfusore Bassa";
 
 /* The error message when pump data is too old to be used. (1: pump data age in minutes) */
-"Pump data is %1$@ old" = "I dati forniti dal pompa sono di %1$@ fa";
+"Pump data is %1$@ old" = "I dati forniti dal microinfusore sono di %1$@ fa";
 
 /* The notification title for an empty pump reservoir */
-"Pump Reservoir Empty" = "Serbatoio Pompa Vuoto";
+"Pump Reservoir Empty" = "Serbatoio microinfusore Vuoto";
 
 /* The notification title for a low pump reservoir */
-"Pump Reservoir Low" = "Serbatoio Pompa Basso";
+"Pump Reservoir Low" = "Serbatoio microinfusore Basso";
 
 /* Format string for combining localized numeric value and unit. (1: numeric value)(2: unit) */
 "QUANTITY_VALUE_AND_UNIT" = "%1$@ %2$@";
