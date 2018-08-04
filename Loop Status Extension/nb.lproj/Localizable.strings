@@ -2,19 +2,19 @@
 "%1$@ v%2$@" = "%1$@ v%2$@";
 
 /* Subtitle of Fiasp preset */
-"A model based on the published absorption of Fiasp insulin." = "A model based on the published absorption of Fiasp insulin.";
+"A model based on the published absorption of Fiasp insulin." = "En modell basert på publiserte data for absorpsjon av Fiasp insulin.";
 
 /* Subtitle of Rapid-Acting – Adult preset */
-"A model based on the published absorption of Humalog, Novolog, and Apidra insulin in adults." = "A model based on the published absorption of Humalog, Novolog, and Apidra insulin in adults.";
+"A model based on the published absorption of Humalog, Novolog, and Apidra insulin in adults." = "En modell basert på publiserte data for absorpsjon av Humalog, Novolog og Apidra insulin hos voksne.";
 
 /* Subtitle of Rapid-Acting – Children preset */
-"An adjustment to the adult model based on empirical effects in children." = "An adjustment to the adult model based on empirical effects in children.";
+"An adjustment to the adult model based on empirical effects in children." = "En justering til modellen tilpasset voksne, basert på empiriske effekter hos barn.";
 
 /* The short unit display string for decibles */
 "dB" = "dB";
 
 /* The subtitle format describing eventual glucose.  (1: localized glucose value description) (2: localized glucose units description) */
-"Eventually %1$@ %2$@" = "Eventually %1$@ %2$@";
+"Eventually %1$@ %2$@" = "Omsider %1$@ %2$@";
 
 /* Title of insulin model preset */
 "Fiasp" = "Fiasp";
@@ -23,7 +23,7 @@
 "g" = "g";
 
 /* The subtitle format describing units of active insulin. (1: localized insulin value description) */
-"IOB %1$@ U" = "IOB %1$@ U";
+"IOB %1$@ U" = "IOB %1$@ E";
 
 /* The short unit display string for milligrams of glucose per decilter */
 "mg/dL" = "mg/dL";
@@ -35,16 +35,16 @@
 "QUANTITY_VALUE_AND_UNIT" = "%1$@ %2$@";
 
 /* Title of insulin model preset */
-"Rapid-Acting – Adults" = "Rapid-Acting – Adults";
+"Rapid-Acting – Adults" = "Hurtigvirkende – voksen";
 
 /* Title of insulin model preset */
-"Rapid-Acting – Children" = "Rapid-Acting – Children";
+"Rapid-Acting – Children" = "Hurtigvirkende – barn";
 
 /* Subtitle description of Walsh insulin model setting */
 "The legacy model used by Loop, allowing customization of action duration." = "The legacy model used by Loop, allowing customization of action duration.";
 
 /* The short unit display string for international units of insulin */
-"U" = "U";
+"U" = "E";
 
 /* Title of insulin model setting */
 "Walsh" = "Walsh";
