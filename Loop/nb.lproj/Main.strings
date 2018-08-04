@@ -101,7 +101,7 @@
 "OFA-qT-ZAg.text" = "Etikett";
 
 /* Class = "UITableViewController"; title = "Predicted Glucose"; ObjectID = "PA3-sP-cWY"; */
-"PA3-sP-cWY.title" = "Predicted Glucose";
+"PA3-sP-cWY.title" = "Forespeilet Blodsukker";
 
 /* Class = "UITableViewController"; title = "Insulin Model"; ObjectID = "pi6-Dh-72V"; */
 "pi6-Dh-72V.title" = "Insulinmodell";
@@ -110,7 +110,7 @@
 "PJv-p9-cFe.text" = "An insulin activity model is used to estimate effects of insulin on glucose levels. An accurate model can help prevent insulin stacking and safely recommend corrective treatments.";
 
 /* Class = "UILabel"; text = "eventually 92 mg/dL"; ObjectID = "Rse-x8-amW"; */
-"Rse-x8-amW.text" = "eventually 92 mg/dL";
+"Rse-x8-amW.text" = "omsider 92 mg/dL";
 
 /* Class = "UILabel"; text = "g COB"; ObjectID = "SQx-au-ZcM"; */
 "SQx-au-ZcM.text" = "g KaB";
