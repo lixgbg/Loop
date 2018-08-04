@@ -1,5 +1,5 @@
 /* Format string describing the time interval since the last completion date. (1: The localized date components */
-"%@ ago" = "%@ ago";
+"%@ ago" = "%@ fa";
 
 /* The format string describing the basal rate. */
 "%@ U" = "%@ U";
@@ -8,16 +8,16 @@
 "%@U" = "%@U";
 
 /* Accessbility format value describing glucose: (1: glucose number)(2: glucose time) */
-"%1$@ at %2$@" = "%1$@ at %2$@";
+"%1$@ at %2$@" = "%1$@ a %2$@";
 
 /* Accessibility format string describing the basal rate. (1: localized basal rate value)(2: last updated time) */
-"%1$@ units per hour at %2$@" = "%1$@ units per hour at %2$@";
+"%1$@ units per hour at %2$@" = "%1$@ unità per ora a %2$@";
 
 /* Accessibility format string for (1: localized volume)(2: time) */
-"%1$@ units remaining at %2$@" = "%1$@ units remaining at %2$@";
+"%1$@ units remaining at %2$@" = "%1$@ unità residua a %2$@";
 
 /* Accessibility hint describing completion HUD for a closed loop */
-"Closed loop" = "Closed loop";
+"Closed loop" = "Loop Chiuso";
 
 /* The short unit display string for decibles */
 "dB" = "dB";
@@ -26,7 +26,7 @@
 "g" = "g";
 
 /* Accessbility format label describing the time interval since the last completion date. (1: The localized date components) */
-"Loop ran %@ ago" = "Loop ran %@ ago";
+"Loop ran %@ ago" = "Loop funziona %@ fa";
 
 /* The short unit display string for milligrams of glucose per decilter */
 "mg/dL" = "mg/dL";
@@ -35,10 +35,10 @@
 "mmol/L" = "mmol/L";
 
 /* Accessibility label component for glucose HUD describing an invalid state */
-"Needs attention" = "Needs attention";
+"Needs attention" = "Esige Attenzione";
 
 /* Accessbility hint describing completion HUD for an open loop */
-"Open loop" = "Open loop";
+"Open loop" = "Loop Aperto";
 
 /* Format string for combining localized numeric value and unit. (1: numeric value)(2: unit) */
 "QUANTITY_VALUE_AND_UNIT" = "%1$@ %2$@";
@@ -47,8 +47,8 @@
 "U" = "U";
 
 /* Accessibility value for an unknown value */
-"Unknown" = "Unknown";
+"Unknown" = "Sconosciuto";
 
 /* Acessibility label describing completion HUD waiting for first run */
-"Waiting for first run" = "Waiting for first run";
+"Waiting for first run" = "In attesa di prima esecuzione";
 

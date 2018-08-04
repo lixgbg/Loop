@@ -36,10 +36,10 @@
 "%1$@/min" = "%1$@/min";
 
 /* Description of the prediction input effect for glucose momentum */
-"15 min glucose regression coefficient (b₁), continued with decay over 30 min" = "15 min glucose regression coefficient (b₁), continued with decay over 30 min.";
+"15 min glucose regression coefficient (b₁), continued with decay over 30 min" = "15 min coefficiente di regressione del glucosio (b₁), prosegue con decadimento sopra 30 min.";
 
 /* Description of the prediction input effect for retrospective correction */
-"30 min comparison of glucose prediction vs actual, continued with decay over 60 min" = "30 min comparison of glucose prediction vs actual, continued with decay over 60 min.";
+"30 min comparison of glucose prediction vs actual, continued with decay over 60 min" = "30 min confronto di previsione del glucosio vs reale, prosegue con decadimento sopra 60 min.";
 
 /* Subtitle of Fiasp preset */
 "A model based on the published absorption of Fiasp insulin." = "A model based on the published absorption of Fiasp insulin.";
@@ -48,31 +48,31 @@
 "A model based on the published absorption of Humalog, Novolog, and Apidra insulin in adults." = "A model based on the published absorption of Humalog, Novolog, and Apidra insulin in adults.";
 
 /* Action to copy the recommended Bolus value to the actual Bolus Field */
-"AcceptRecommendedBolus" = "AceptarBoloRecomendado";
+"AcceptRecommendedBolus" = "AceptarBoloConsigliato";
 
 /* The title of the Carbs On-Board graph */
-"Active Carbohydrates" = "Active Carbohydrates";
+"Active Carbohydrates" = "Carboidrati Attivi";
 
 /* The string format describing active carbohydrates. (1: localized glucose value description) */
-"Active Carbohydrates: %@" = "Active Carbohydrates: %@";
+"Active Carbohydrates: %@" = "Carboidrati Attivi: %@";
 
 /* The title of the Insulin On-Board graph */
-"Active Insulin" = "Active Insulin";
+"Active Insulin" = "Insulina Attiva";
 
 /* The string format describing active insulin. (1: localized insulin value description) */
-"Active Insulin: %@" = "Active Insulin: %@";
+"Active Insulin: %@" = "Insulina Attiva: %@";
 
 /* The title of the button to add the credentials for a service */
-"Add Account" = "Add Account";
+"Add Account" = "Aggiungi Account";
 
 /* The label of the carb entry button */
-"Add Meal" = "Add Meal";
+"Add Meal" = "Aggiungi Pasto";
 
 /* Title text for button to set up a new pump */
 "Add Pump" = "Add Pump";
 
 /* The title of the section containing algorithm settings */
-"Algorithm Settings" = "Algorithm Settings";
+"Algorithm Settings" = "Impostazioni Algoritmo";
 
 /* The title of the Amplitude service */
 "Amplitude" = "Amplitude";
@@ -90,40 +90,40 @@
 "at %@" = "at %@";
 
 /* The message displayed during a device authentication prompt for bolus specification */
-"Authenticate to Bolus %@ Units" = "Authenticate to Bolus %@ Units";
+"Authenticate to Bolus %@ Units" = "Autenticazione dei Boli %@ Unità";
 
 /* The title of the basal rate profile screen
    The title text for the basal rate schedule */
-"Basal Rates" = "Basal Rates";
+"Basal Rates" = "Impostazione Basale";
 
 /* The label of the bolus entry button
    The notification title for a bolus failure */
-"Bolus" = "Bolus";
+"Bolus" = "Bolo";
 
 /* The title of the cancel action in an action sheet */
-"Cancel" = "Cancel";
+"Cancel" = "Cancella";
 
 /* The title of the carb ratios schedule screen
    The title text for the carb ratio schedule */
-"Carb Ratios" = "Carb Ratios";
+"Carb Ratios" = "Rapporti g/U";
 
 /* Title of the prediction input effect for carbohydrates */
-"Carbohydrates" = "Carbohydrates";
+"Carbohydrates" = "Carboidrati";
 
 /* Description of the prediction input effect for carbohydrates. (1: The glucose unit string) */
-"Carbs Absorbed (g) ÷ Carb Ratio (g/U) × Insulin Sensitivity (%1$@/U)" = "Carbs Absorbed (g) ÷ Carb Ratio (g/U) × Insulin Sensitivity (%1$@/U)";
+"Carbs Absorbed (g) ÷ Carb Ratio (g/U) × Insulin Sensitivity (%1$@/U)" = "Carbs Assorbiti (g) ÷ Carb Rapporti (g/U) × Sensibilità Insulinica (%1$@/U)";
 
 /* The notification alert describing a low pump battery */
-"Change the pump battery immediately" = "Change the pump battery immediately";
+"Change the pump battery immediately" = "Cambiare immediatamente la batteria della pompa";
 
 /* The notification alert describing an empty pump reservoir */
-"Change the pump reservoir now" = "Change the pump reservoir now";
+"Change the pump reservoir now" = "Cambiare il serbatoio della pompa";
 
 /* The title text for the looping enabled switch cell */
-"Closed Loop" = "Closed Loop";
+"Closed Loop" = "Loop Chiuso";
 
 /* The title of the configuration section in settings */
-"Configuration" = "Configuration";
+"Configuration" = "Configurazione";
 
 /* The error message displayed for configuration errors. (1: configuration error details) */
 "Configuration Error: %1$@" = "Configuration Error: %1$@";
@@ -133,7 +133,7 @@
 
 /* The title of the glucose target range schedule screen
    The title text for the glucose target range schedule */
-"Correction Range" = "Correction Range";
+"Correction Range" = "Intervallo Glicemico";
 
 /* Message when offering bolus recommendation even though bg is below range. (1: glucose value) */
 "Current glucose of %1$@ is below correction range." = "Current glucose of %1$@ is below correction range.";
@@ -145,7 +145,7 @@
 "dB" = "dB";
 
 /* The title of the button to remove the credentials for a service */
-"Delete Account" = "Delete Account";
+"Delete Account" = "Cancella Account";
 
 /* Title text for delivery limits */
 "Delivery Limits" = "Delivery Limits";
@@ -154,95 +154,95 @@
 "Dexcom Share" = "Dexcom Share";
 
 /* The action hint of the workout mode toggle button when enabled */
-"Disables" = "Disables";
+"Disables" = "Disabilitato";
 
 /* Title of the switch which toggles retrospective correction effects */
-"Enable Retrospective Correction" = "Enable Retrospective Correction";
+"Enable Retrospective Correction" = "Abilita Correzione Retrospettiva";
 
 /* The action hint of the workout mode toggle button when disabled */
-"Enables" = "Enables";
+"Enables" = "Abilita";
 
 /* The placeholder text instructing users to enter a suspend treshold */
 "Enter suspend threshold" = "Enter suspend threshold";
 
 /* The placeholder text instructing users how to enter a transmitter ID */
-"Enter the 6-digit transmitter ID" = "Enter the 6-digit transmitter ID";
+"Enter the 6-digit transmitter ID" = "Inserire 6-numeri ID trasmettitore";
 
 /* The subtitle format describing eventual glucose. (1: localized glucose value description) */
-"Eventually %@" = "Eventually %@";
+"Eventually %@" = "Probabile %@";
 
 /* The title of the alert describing a maximum bolus validation error */
-"Exceeds Maximum Bolus" = "Exceeds Maximum Bolus";
+"Exceeds Maximum Bolus" = "Superare Bolo Massimo";
 
 /* Title of insulin model preset */
 "Fiasp" = "Fiasp";
 
 /* The format string used to describe a finite workout targets duration */
-"For %1$@" = "For %1$@";
+"For %1$@" = "Per %1$@";
 
 /* The short unit display string for grams */
 "g" = "g";
 
 /* The title text for the G4 Share Receiver switch cell */
-"G4 Share Receiver" = "G4 Share Receiver";
+"G4 Share Receiver" = "G4 Ricevitore Share";
 
 /* The title text for the G5/G6 Transmitter switch cell */
-"G5/G6 Transmitter" = "G5/G6 Transmitter";
+"G5/G6 Transmitter" = "G5/G6 ID Trasmettitore";
 
 /* The title of the glucose and prediction graph */
-"Glucose" = "Glucose";
+"Glucose" = "Glicemie";
 
 /* The error message when glucose data is too old to be used. (1: glucose data age in minutes) */
 "Glucose data is %1$@ old" = "Glucose data is %1$@ old";
 
 /* Title of the prediction input effect for glucose momentum */
-"Glucose Momentum" = "Glucose Momentum";
+"Glucose Momentum" = "Glicemia Effetto";
 
 /* The placeholder text for the nightscout site URL credential */
 "https://mysite.azurewebsites.net" = "https://mysite.azurewebsites.net";
 
 /* The title of a target alert action specifying an indefinitely long workout targets duration */
-"Indefinitely" = "Indefinitely";
+"Indefinitely" = "Indefinitivamente";
 
 /* Title of the prediction input effect for insulin */
-"Insulin" = "Insulin";
+"Insulin" = "Insulina";
 
 /* Description of the prediction input effect for insulin */
-"Insulin Absorbed (U) × Insulin Sensitivity (%1$@/U)" = "Insulin Absorbed (U) × Insulin Sensitivity (%1$@/U)";
+"Insulin Absorbed (U) × Insulin Sensitivity (%1$@/U)" = "Assorbimento Insulinico (U) × Sensibilità Insulinica (%1$@/U)";
 
 /* The title of the insulin delivery graph */
-"Insulin Delivery" = "Insulin Delivery";
+"Insulin Delivery" = "Insulina Somministrata";
 
 /* The title text for the insulin model setting row */
 "Insulin Model" = "Insulin Model";
 
 /* The title of the insulin sensitivities schedule screen
    The title text for the insulin sensitivity schedule */
-"Insulin Sensitivities" = "Insulin Sensitivities";
+"Insulin Sensitivities" = "Sensibilità Insulinica";
 
 /* The error message when invalid data was encountered. (1: details of invalid data) */
 "Invalid data: %1$@" = "Invalid data: %1$@";
 
 /* The title text for the issue report cell */
-"Issue Report" = "Issue Report";
+"Issue Report" = "Segnalazione";
 
 /* Format string describing retrospective glucose prediction comparison. (1: Previous glucose)(2: Predicted glucose)(3: Actual glucose) */
 "Last comparison: %1$@ → %2$@ vs %3$@" = "Last comparison: %1$@ → %2$@ vs %3$@";
 
 /* Glucose HUD accessibility hint */
-"Launches CGM app" = "Launches CGM app";
+"Launches CGM app" = "Lancia CGM app";
 
 /* The loading message for the diagnostic report screen */
-"Loading..." = "Loading...";
+"Loading..." = "Carica...";
 
 /* The title of the loggly service */
 "Loggly" = "Loggly";
 
 /* The notification title for a loop failure */
-"Loop Failure" = "Loop Failure";
+"Loop Failure" = "Loop Fallito";
 
 /* The notification alert describing a long-lasting loop failure. The substitution parameter is the time interval since the last loop */
-"Loop has not completed successfully in %@" = "Loop has not completed successfully in %@";
+"Loop has not completed successfully in %@" = "Loop non completato con successo in %@";
 
 /* The description of a low G5/G6 transmitter battery with a leading space */
 "Low Battery" = "Low Battery";
@@ -257,7 +257,7 @@
 "mmol/L" = "mmol/L";
 
 /* Sensor state description for the non-valid state */
-"Needs Attention" = "Necesita Atención";
+"Needs Attention" = "Esige Attenzione";
 
 /* The title of the Nightscout service */
 "Nightscout" = "Nightscout";
@@ -284,19 +284,19 @@
 "Predicted glucose of %1$@ is below your suspend threshold setting." = "Predicted glucose of %1$@ is below your suspend threshold setting.";
 
 /* The title of the pump section in settings */
-"Pump" = "Pump";
+"Pump" = "Pompa";
 
 /* The notification title for a low pump battery */
-"Pump Battery Low" = "Pump Battery Low";
+"Pump Battery Low" = "Batteria Pompa Bassa";
 
 /* The error message when pump data is too old to be used. (1: pump data age in minutes) */
 "Pump data is %1$@ old" = "Pump data is %1$@ old";
 
 /* The notification title for an empty pump reservoir */
-"Pump Reservoir Empty" = "Pump Reservoir Empty";
+"Pump Reservoir Empty" = "Serbatoio Pompa Vuoto";
 
 /* The notification title for a low pump reservoir */
-"Pump Reservoir Low" = "Pump Reservoir Low";
+"Pump Reservoir Low" = "Serbatoio Pompa Basso";
 
 /* Format string for combining localized numeric value and unit. (1: numeric value)(2: unit) */
 "QUANTITY_VALUE_AND_UNIT" = "%1$@ %2$@";
@@ -311,19 +311,19 @@
 "Recommendation expired: %1$@ old" = "Recommendation expired: %1$@ old";
 
 /* The title of the cell displaying a recommended temp basal value */
-"Recommended Basal" = "Recommended Basal";
+"Recommended Basal" = "Basale Raccomandata";
 
 /* Accessibility hint describing recommended bolus units */
-"Recommended Bolus: %@ Units" = "Recommended Bolus: %@ Units";
+"Recommended Bolus: %@ Units" = "Bolo Consigliato: %@ Unità";
 
 /* The default placeholder string for a credential */
-"Required" = "Required";
+"Required" = "Necessario";
 
 /* Title of the prediction input effect for retrospective correction */
-"Retrospective Correction" = "Retrospective Correction";
+"Retrospective Correction" = "Correzione Retrospettiva";
 
 /* The title of the notification action to retry a bolus command */
-"Retry" = "Retry";
+"Retry" = "Riprovare";
 
 /* The description of sensor calibration state when sensor calibration is ok. */
 "Sensor calibration is OK" = "Sensor calibration is OK";
@@ -344,10 +344,10 @@
 "Server" = "Server";
 
 /* The title of the services section in settings */
-"Services" = "Services";
+"Services" = "Servizi";
 
 /* The label of the settings button */
-"Settings" = "Settings";
+"Settings" = "Impostazioni";
 
 /* Loop Completion HUD accessibility hint */
 "Shows last loop error" = "Shows last loop error";
@@ -356,7 +356,7 @@
 "since %@" = "since %@";
 
 /* The title of the nightscout site URL credential */
-"Site URL" = "Site URL";
+"Site URL" = "Sito URL";
 
 /* The title text for the Medtronic sensor switch cell */
 "Sof-Sensor / Enlite" = "Sof-Sensor / Enlite";
@@ -374,13 +374,13 @@
 "The maximum bolus amount is %@ Units" = "The maximum bolus amount is %@ Units";
 
 /* Instructions on where to find the transmitter ID */
-"The transmitter ID can be found printed on the back of the device, on the side of the box it came in, and from within the settings menus of the receiver and mobile app." = "The transmitter ID can be found printed on the back of the device, on the side of the box it came in, and from within the settings menus of the receiver and mobile app.";
+"The transmitter ID can be found printed on the back of the device, on the side of the box it came in, and from within the settings menus of the receiver and mobile app." = "L'ID trasmettitore può essere trovato stampato sul retro del dispositivo, sul lato della scatola, e all'interno del menu impostazione del ricevitore all'interno dell'applicazione mobile.";
 
 /* The description of the switch which toggles retrospective correction effects */
-"This will more aggresively increase or decrease basal delivery when glucose movement doesn't match the carbohydrate and insulin-based model." = "This will more aggresively increase or decrease basal delivery when glucose movement doesn't match the carbohydrate and insulin-based model.";
+"This will more aggresively increase or decrease basal delivery when glucose movement doesn't match the carbohydrate and insulin-based model." = "Questo sarà più aggressivo all'aumentare o al diminuire della basale quando il movimento di glucosio non corrisponde al modello di carboidrati e al modello insulino-basale.";
 
 /* The title text for the Dexcom G5/G6 transmitter ID config value */
-"Transmitter ID" = "Transmitter ID";
+"Transmitter ID" = "ID Trasmettitore";
 
 /* U.S. share server option title */
 "US" = "US";
@@ -389,10 +389,10 @@
 "Use Workout Glucose Targets" = "Use Workout Glucose Targets";
 
 /* The title of the Dexcom share username credential */
-"Username" = "Username";
+"Username" = "Nome Utente";
 
 /* Label indicating validation is occurring */
-"Verifying" = "Verifying";
+"Verifying" = "Verificare";
 
 /* Title of insulin model setting */
 "Walsh" = "Walsh";
