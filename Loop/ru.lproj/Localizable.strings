@@ -1,5 +1,5 @@
 /* The string format appended to active insulin that describes pending insulin. (1: pending insulin) */
-" (pending: %@)" = "(В ожидании: %@)";
+" (pending: %@)" = " (В ожидании: %@)";
 
 /* Formats absorbed carb value */
 "%@ absorbed" = "%@ усвоено";
@@ -11,7 +11,7 @@
 "%1$@ – %2$@ %3$@" = "%1$@ – %2$@ %3$@";
 
 /* Format string for carb ratio average. (1: value)(2: carb unit)
-   Format string for insulin sensitivity average (1: value)(2: glucose unit) */
+                Format string for insulin sensitivity average (1: value)(2: glucose unit) */
 "%1$@ %2$@/U" = "%1$@ %2$@/ед";
 
 /* Formats (1: carb start time) and (2: carb absorption duration) */
@@ -93,18 +93,18 @@
 "Authenticate to Bolus %@ Units" = "Подтверждение болюса %@ ед";
 
 /* The title of the basal rate profile screen
-   The title text for the basal rate schedule */
+                The title text for the basal rate schedule */
 "Basal Rates" = "Скорости базала";
 
 /* The label of the bolus entry button
-   The notification title for a bolus failure */
+                The notification title for a bolus failure */
 "Bolus" = "Болюс";
 
 /* The title of the cancel action in an action sheet */
 "Cancel" = "Отмена";
 
 /* The title of the carb ratios schedule screen
-   The title text for the carb ratio schedule */
+                The title text for the carb ratio schedule */
 "Carb Ratios" = "Соотношения углеводов";
 
 /* Title of the prediction input effect for carbohydrates */
@@ -132,7 +132,7 @@
 "Continuous Glucose Monitor" = "Непрерывный мониторинг гликемии";
 
 /* The title of the glucose target range schedule screen
-   The title text for the glucose target range schedule */
+                The title text for the glucose target range schedule */
 "Correction Range" = "Диапазон коррекции";
 
 /* Message when offering bolus recommendation even though bg is below range. (1: glucose value) */
@@ -217,7 +217,7 @@
 "Insulin Model" = "Модель инсулина";
 
 /* The title of the insulin sensitivities schedule screen
-   The title text for the insulin sensitivity schedule */
+                The title text for the insulin sensitivity schedule */
 "Insulin Sensitivities" = "Факторы чувствительности инсулина";
 
 /* The error message when invalid data was encountered. (1: details of invalid data) */

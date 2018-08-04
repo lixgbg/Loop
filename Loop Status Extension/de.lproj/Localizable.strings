@@ -23,7 +23,7 @@
 "g" = "g";
 
 /* The subtitle format describing units of active insulin. (1: localized insulin value description) */
-"IOB %1$@ U" = "IOB %1$@ U";
+"IOB %1$@ U" = "IOB %1$@ E";
 
 /* The short unit display string for milligrams of glucose per decilter */
 "mg/dL" = "mg/dL";
@@ -44,7 +44,7 @@
 "The legacy model used by Loop, allowing customization of action duration." = "Das Legacy-Modell, das von Loop verwendet wird und die Anpassung der Aktionsdauer ermöglicht.";
 
 /* The short unit display string for international units of insulin */
-"U" = "U";
+"U" = "E";
 
 /* Title of insulin model setting */
 "Walsh" = "Walsh";

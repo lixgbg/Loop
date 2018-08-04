@@ -11,8 +11,8 @@
 "g" = "gr";
 
 /* The recovery message displayed after a bolus attempt fails
-   The recovery message displayed after a carb entry send attempt fails
-   The recovery message displayed after a glucose range override send attempt fails */
+                The recovery message displayed after a carb entry send attempt fails
+                The recovery message displayed after a glucose range override send attempt fails */
 "Make sure your iPhone is nearby and try again" = "Zorg dat je iPhone in de buurt is en probeer opnieuw";
 
 /* The short unit display string for milligrams of glucose per decilter */
@@ -28,7 +28,7 @@
 "Rec: %@ U" = "Voorgesteld: %@ E";
 
 /* The title of the alert controller displayed after a carb entry send attempt fails
-   The title of the alert controller displayed after a glucose range override send attempt fails */
+                The title of the alert controller displayed after a glucose range override send attempt fails */
 "Send Failed" = "Versturen Mislukt";
 
 /* The short unit display string for international units of insulin */

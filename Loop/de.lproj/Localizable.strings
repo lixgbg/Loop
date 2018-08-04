@@ -11,7 +11,7 @@
 "%1$@ – %2$@ %3$@" = "%1$@ – %2$@ %3$@";
 
 /* Format string for carb ratio average. (1: value)(2: carb unit)
-   Format string for insulin sensitivity average (1: value)(2: glucose unit) */
+                Format string for insulin sensitivity average (1: value)(2: glucose unit) */
 "%1$@ %2$@/U" = "%1$@ %2$@/E";
 
 /* Formats (1: carb start time) and (2: carb absorption duration) */
@@ -93,18 +93,18 @@
 "Authenticate to Bolus %@ Units" = "Authentifizieren für Bolus %@ E";
 
 /* The title of the basal rate profile screen
-   The title text for the basal rate schedule */
+                The title text for the basal rate schedule */
 "Basal Rates" = "Basalraten";
 
 /* The label of the bolus entry button
-   The notification title for a bolus failure */
+                The notification title for a bolus failure */
 "Bolus" = "Bolus";
 
 /* The title of the cancel action in an action sheet */
 "Cancel" = "Abbrechen";
 
 /* The title of the carb ratios schedule screen
-   The title text for the carb ratio schedule */
+                The title text for the carb ratio schedule */
 "Carb Ratios" = "Kohlenhydrate Verhältnisse";
 
 /* Title of the prediction input effect for carbohydrates */
@@ -132,7 +132,7 @@
 "Continuous Glucose Monitor" = "Kontinuierlicher Glukosemonitor";
 
 /* The title of the glucose target range schedule screen
-   The title text for the glucose target range schedule */
+                The title text for the glucose target range schedule */
 "Correction Range" = "Korrekturbereich";
 
 /* Message when offering bolus recommendation even though bg is below range. (1: glucose value) */
@@ -217,7 +217,7 @@
 "Insulin Model" = "Insulin-Modell";
 
 /* The title of the insulin sensitivities schedule screen
-   The title text for the insulin sensitivity schedule */
+                The title text for the insulin sensitivity schedule */
 "Insulin Sensitivities" = "Insulinsensitivitäten";
 
 /* The error message when invalid data was encountered. (1: details of invalid data) */

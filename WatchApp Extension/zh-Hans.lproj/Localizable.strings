@@ -11,8 +11,8 @@
 "g" = "g";
 
 /* The recovery message displayed after a bolus attempt fails
-   The recovery message displayed after a carb entry send attempt fails
-   The recovery message displayed after a glucose range override send attempt fails */
+                The recovery message displayed after a carb entry send attempt fails
+                The recovery message displayed after a glucose range override send attempt fails */
 "Make sure your iPhone is nearby and try again" = "请确保苹果手机接近设备并重试";
 
 /* The short unit display string for milligrams of glucose per decilter */
@@ -28,7 +28,7 @@
 "Rec: %@ U" = "推荐: %@ U";
 
 /* The title of the alert controller displayed after a carb entry send attempt fails
-   The title of the alert controller displayed after a glucose range override send attempt fails */
+                The title of the alert controller displayed after a glucose range override send attempt fails */
 "Send Failed" = "发送失败";
 
 /* The short unit display string for international units of insulin */
