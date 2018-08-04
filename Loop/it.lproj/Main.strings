@@ -17,10 +17,10 @@
 "7LT-50-ZzK.placeholder" = "0.0";
 
 /* Class = "UILabel"; text = "Predicted"; ObjectID = "87H-N1-0vJ"; */
-"87H-N1-0vJ.text" = "Predicted";
+"87H-N1-0vJ.text" = "Predittivo";
 
 /* Class = "UILabel"; text = "Detail"; ObjectID = "aCb-Qs-bpu"; */
-"aCb-Qs-bpu.text" = "Detail";
+"aCb-Qs-bpu.text" = "Dettaglio";
 
 /* Class = "UINavigationItem"; title = "Bolus"; ObjectID = "aiu-ZA-zVa"; */
 "aiu-ZA-zVa.title" = "Bolo";
@@ -32,7 +32,7 @@
 "bIL-Ub-qYp.text" = "Etichetta";
 
 /* Class = "UILabel"; text = "Glucose Change"; ObjectID = "bq4-98-cQU"; */
-"bq4-98-cQU.text" = "Glucose Change";
+"bq4-98-cQU.text" = "Modifica del Glucosio";
 
 /* Class = "UILabel"; accessibilityLabel = "Units"; ObjectID = "BR0-dr-Fj2"; */
 "BR0-dr-Fj2.accessibilityLabel" = "Unità";
@@ -44,7 +44,7 @@
 "cpo-Po-gFM.text" = "Etichetta";
 
 /* Class = "UILabel"; text = "g Total"; ObjectID = "d3X-AN-tA5"; */
-"d3X-AN-tA5.text" = "g Total";
+"d3X-AN-tA5.text" = "g Totali";
 
 /* Class = "UILabel"; text = "Future glucose is predicted by combining the effects of multiple inputs. Use this tool to toggle various inputs to see how they compare to the final prediction."; ObjectID = "D4C-I2-dhA"; */
 "D4C-I2-dhA.text" = "La glicemia futura é predetta adottando una combinazione di multiple funzioni. Utilizzare questo strumento per attivare o meno le varie funzioni per valutare come esse influiscono sul valore glicemico predetto.";
@@ -59,25 +59,25 @@
 "DyC-Sv-qP8.text" = "DISPOSITIVI";
 
 /* Class = "UILabel"; text = "eventually 92 mg/dL"; ObjectID = "E41-FN-nkk"; */
-"E41-FN-nkk.text" = "probabile 92 mg/dL";
+"E41-FN-nkk.text" = "probabile glic. 92 mg/dL";
 
 /* Class = "UILabel"; text = "Observed"; ObjectID = "EAn-Ja-S1d"; */
-"EAn-Ja-S1d.text" = "Observed";
+"EAn-Ja-S1d.text" = "Osservato";
 
 /* Class = "UILabel"; text = "Active Carbohydrates: 40g"; ObjectID = "hHZ-uY-aKw"; */
-"hHZ-uY-aKw.text" = "Active Carbohydrates: 40g";
+"hHZ-uY-aKw.text" = "Carboidrati Attivi: 40g";
 
 /* Class = "UITableViewController"; title = "Carbohydrate Effects"; ObjectID = "hZZ-2S-lrd"; */
-"hZZ-2S-lrd.title" = "Carbohydrate Effects";
+"hZZ-2S-lrd.title" = "Effetti dei Carboidrati";
 
 /* Class = "UILabel"; text = "Observed changes in glucose, subtracting changes modeled from insulin delivery, can be used to estimate carbohydrate absorption."; ObjectID = "IxU-As-glo"; */
-"IxU-As-glo.text" = "Observed changes in glucose, subtracting changes modeled from insulin delivery, can be used to estimate carbohydrate absorption.";
+"IxU-As-glo.text" = "Per valutare l'assorbimento dei carboidrati, è possibile utilizzare i cambiamenti osservati nel glucosio, sottraendo i cambiamenti modellati dall'erogazione di insulina.";
 
 /* Class = "UILabel"; text = "Detail"; ObjectID = "J7x-W5-gwo"; */
-"J7x-W5-gwo.text" = "Detail";
+"J7x-W5-gwo.text" = "Dettaglio";
 
 /* Class = "UILabel"; text = "⚠ Glucose Predicted Below Range"; ObjectID = "k0g-P7-OVN"; */
-"k0g-P7-OVN.text" = "⚠ Glucose Predicted Below Range";
+"k0g-P7-OVN.text" = "⚠ Glicemie previste sotto il Range";
 
 /* Class = "UILabel"; text = "Recommended Basal"; ObjectID = "k3F-Na-7mn"; */
 "k3F-Na-7mn.text" = "Basale Raccomandata";
@@ -104,13 +104,13 @@
 "PA3-sP-cWY.title" = "Glicemia Predetta";
 
 /* Class = "UITableViewController"; title = "Insulin Model"; ObjectID = "pi6-Dh-72V"; */
-"pi6-Dh-72V.title" = "Insulin Model";
+"pi6-Dh-72V.title" = "Modello Insulina";
 
 /* Class = "UILabel"; text = "An insulin activity model is used to estimate effects of insulin on glucose levels. An accurate model can help prevent insulin stacking and safely recommend corrective treatments."; ObjectID = "PJv-p9-cFe"; */
-"PJv-p9-cFe.text" = "An insulin activity model is used to estimate effects of insulin on glucose levels. An accurate model can help prevent insulin stacking and safely recommend corrective treatments.";
+"PJv-p9-cFe.text" = "Un modello di attività insulinica viene utilizzato per stimare gli effetti dell'insulina sui livelli di glucosio. Un modello accurato può aiutare a prevenire l'accumulo di insulina e consigliare in modo sicuro trattamenti correttivi.";
 
 /* Class = "UILabel"; text = "eventually 92 mg/dL"; ObjectID = "Rse-x8-amW"; */
-"Rse-x8-amW.text" = "probabile 92 mg/dL";
+"Rse-x8-amW.text" = "probabile glic. 92 mg/dL";
 
 /* Class = "UILabel"; text = "g COB"; ObjectID = "SQx-au-ZcM"; */
 "SQx-au-ZcM.text" = "g COB";
@@ -122,13 +122,13 @@
 "ufi-Kj-33k.text" = "Etichetta";
 
 /* Class = "UILabel"; text = "Active Insulin: 1.5U"; ObjectID = "viU-7a-kbI"; */
-"viU-7a-kbI.text" = "Active Insulin: 1.5U";
+"viU-7a-kbI.text" = "Insulina Attiva: 1.5U";
 
 /* Class = "UINavigationItem"; title = "Carbohydrates"; ObjectID = "Vpi-5b-bY5"; */
-"Vpi-5b-bY5.title" = "Carbohydrates";
+"Vpi-5b-bY5.title" = "Carboidrati";
 
 /* Class = "UITextField"; text = "4 hour"; ObjectID = "Wk3-xv-IM5"; */
-"Wk3-xv-IM5.text" = "4 hour";
+"Wk3-xv-IM5.text" = "4 ore";
 
 /* Class = "UIButton"; normalTitle = "Deliver"; ObjectID = "Ya0-9b-ZAS"; */
 "Ya0-9b-ZAS.normalTitle" = "Invia";
@@ -137,7 +137,7 @@
 "yn7-2M-jZz.text" = "0";
 
 /* Class = "UILabel"; text = "Recommended"; ObjectID = "ywT-OR-NnU"; */
-"ywT-OR-NnU.text" = "Recommended";
+"ywT-OR-NnU.text" = "Consigliato";
 
 /* Class = "UILabel"; text = "Title"; ObjectID = "zbc-87-wxZ"; */
 "zbc-87-wxZ.text" = "Titolo";

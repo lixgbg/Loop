@@ -2,19 +2,19 @@
 "%1$@ v%2$@" = "%1$@ v%2$@";
 
 /* Subtitle of Fiasp preset */
-"A model based on the published absorption of Fiasp insulin." = "A model based on the published absorption of Fiasp insulin.";
+"A model based on the published absorption of Fiasp insulin." = "Modello basato sull'assorbimento dell’insulina Fiasp.";
 
 /* Subtitle of Rapid-Acting – Adult preset */
-"A model based on the published absorption of Humalog, Novolog, and Apidra insulin in adults." = "A model based on the published absorption of Humalog, Novolog, and Apidra insulin in adults.";
+"A model based on the published absorption of Humalog, Novolog, and Apidra insulin in adults." = "Modello basato sull'assorbimento negli adulti dell’insulina Humalog, Novolog ed Apidra.";
 
 /* Subtitle of Rapid-Acting – Children preset */
-"An adjustment to the adult model based on empirical effects in children." = "An adjustment to the adult model based on empirical effects in children.";
+"An adjustment to the adult model based on empirical effects in children." = "Un adattamento al modello adulto basato su effetti empirici nei bambini.";
 
 /* The short unit display string for decibles */
 "dB" = "dB";
 
 /* The subtitle format describing eventual glucose.  (1: localized glucose value description) (2: localized glucose units description) */
-"Eventually %1$@ %2$@" = "Eventually %1$@ %2$@";
+"Eventually %1$@ %2$@" = "Probabile Glic. %1$@ %2$@";
 
 /* Title of insulin model preset */
 "Fiasp" = "Fiasp";
@@ -35,13 +35,13 @@
 "QUANTITY_VALUE_AND_UNIT" = "%1$@ %2$@";
 
 /* Title of insulin model preset */
-"Rapid-Acting – Adults" = "Rapid-Acting – Adults";
+"Rapid-Acting – Adults" = "Insulina ultrarapida – Adulti";
 
 /* Title of insulin model preset */
-"Rapid-Acting – Children" = "Rapid-Acting – Children";
+"Rapid-Acting – Children" = "Insulina ultrarapida – Bambini";
 
 /* Subtitle description of Walsh insulin model setting */
-"The legacy model used by Loop, allowing customization of action duration." = "The legacy model used by Loop, allowing customization of action duration.";
+"The legacy model used by Loop, allowing customization of action duration." = "ll modello legacy utilizzato da Loop, che consente la personalizzazione della durata dell'azione.";
 
 /* The short unit display string for international units of insulin */
 "U" = "U";
