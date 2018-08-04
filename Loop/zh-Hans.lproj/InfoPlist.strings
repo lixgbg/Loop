@@ -8,7 +8,7 @@
 "NSBluetoothPeripheralUsageDescription" = "蓝牙用于与胰岛素泵和连续血糖监测设备进行通信";
 
 /* Privacy - Face ID Usage Description */
-"NSFaceIDUsageDescription" = "Face ID is used to authenticate insulin bolus.";
+"NSFaceIDUsageDescription" = "使用面部识别技术来鉴别胰岛素剂量";
 
 /* Privacy - Health Share Usage Description */
 "NSHealthShareUsageDescription" = "数据库中的膳食数据用于确定葡萄糖影响。健康数据库中的葡萄糖数据用于绘图和动量计算。";

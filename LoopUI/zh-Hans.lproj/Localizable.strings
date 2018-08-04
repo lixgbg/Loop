@@ -23,16 +23,16 @@
 "dB" = "dB";
 
 /* The short unit display string for grams */
-"g" = "g";
+"g" = "克";
 
 /* Accessbility format label describing the time interval since the last completion date. (1: The localized date components) */
 "Loop ran %@ ago" = "闭环已停止运行%@";
 
 /* The short unit display string for milligrams of glucose per decilter */
-"mg/dL" = "mg/dL";
+"mg/dL" = "毫克/分升";
 
 /* The short unit display string for millimoles of glucose per liter */
-"mmol/L" = "mmol/L";
+"mmol/L" = "摩尔/升";
 
 /* Accessibility label component for glucose HUD describing an invalid state */
 "Needs attention" = "请注意";

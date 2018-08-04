@@ -5,10 +5,10 @@
 "dB" = "dB";
 
 /* The action button title to dismiss an error message */
-"Dismiss" = "Dismiss";
+"Dismiss" = "发送";
 
 /* The short unit display string for grams */
-"g" = "g";
+"g" = "克";
 
 /* The recovery message displayed after a bolus attempt fails
                 The recovery message displayed after a carb entry send attempt fails
@@ -16,10 +16,10 @@
 "Make sure your iPhone is nearby and try again" = "请确保苹果手机接近设备并重试";
 
 /* The short unit display string for milligrams of glucose per decilter */
-"mg/dL" = "mg/dL";
+"mg/dL" = "毫克/分升";
 
 /* The short unit display string for millimoles of glucose per liter */
-"mmol/L" = "mmol/L";
+"mmol/L" = "摩尔/升";
 
 /* Format string for combining localized numeric value and unit. (1: numeric value)(2: unit) */
 "QUANTITY_VALUE_AND_UNIT" = "%1$@ %2$@";

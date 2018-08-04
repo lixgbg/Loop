@@ -69,7 +69,7 @@
 "Add Meal" = "添加用餐信息";
 
 /* Title text for button to set up a new pump */
-"Add Pump" = "Add Pump";
+"Add Pump" = "添加泵";
 
 /* The title of the section containing algorithm settings */
 "Algorithm Settings" = "算法设置";
@@ -81,7 +81,7 @@
 "An adjustment to the adult model based on empirical effects in children." = "在成人胰岛素模型基础上专为儿童修改的胰岛素代谢模型";
 
 /* The title of the amplitude API key credential */
-"API Key" = "API Key";
+"API Key" = "API钥匙";
 
 /* The title of the nightscout API secret credential */
 "API Secret" = "API密码";
@@ -148,7 +148,7 @@
 "Delete Account" = "删除账户";
 
 /* Title text for delivery limits */
-"Delivery Limits" = "Delivery Limits";
+"Delivery Limits" = "传送限制";
 
 /* The title of the Dexcom Share service */
 "Dexcom Share" = "德康远程";
@@ -181,7 +181,7 @@
 "For %1$@" = "对于 %1$@";
 
 /* The short unit display string for grams */
-"g" = "g";
+"g" = "克";
 
 /* The title text for the G4 Share Receiver switch cell */
 "G4 Share Receiver" = "带有蓝牙功能G4接收器";
@@ -248,13 +248,13 @@
 "Low Battery" = "电量低";
 
 /* The short unit display string for milligrams of glucose per decilter */
-"mg/dL" = "mg/dL";
+"mg/dL" = "毫克/分升";
 
 /* The error message for missing data. (1: missing data details) */
 "Missing data: %1$@" = "数据缺失: %1$@";
 
 /* The short unit display string for millimoles of glucose per liter */
-"mmol/L" = "mmol/L";
+"mmol/L" = "摩尔/升";
 
 /* Sensor state description for the non-valid state */
 "Needs Attention" = "请注意";
@@ -374,7 +374,7 @@
 "The maximum bolus amount is %@ Units" = "大剂量输注最大限制为%@单位";
 
 /* Instructions on where to find the transmitter ID */
-"The transmitter ID can be found printed on the back of the device, on the side of the box it came in, and from within the settings menus of the receiver and mobile app." = "G5发射器编号可以在发射器背部，或者发射器包盒、以及接收器找找到";
+"The transmitter ID can be found printed on the back of the device, on the side of the box it came in, and from within the settings menus of the receiver and mobile app." = "发射器ID打印在设备背面，盒子侧面，有接收器和移动应用的设置菜单";
 
 /* The description of the switch which toggles retrospective correction effects */
 "This will more aggresively increase or decrease basal delivery when glucose movement doesn't match the carbohydrate and insulin-based model." = "当葡萄糖与碳水化合物和基于胰岛素的模型不匹配时，这将更积极地增加或减少基础递送。";

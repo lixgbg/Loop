@@ -2,13 +2,13 @@
 "0fo-Z3-hTi.title" = "🌮";
 
 /* Class = "WKInterfaceButton"; title = "Add Carbs"; ObjectID = "b6f-3I-jki"; */
-"b6f-3I-jki.title" = "Add Carbs";
+"b6f-3I-jki.title" = "添加碳水化合物";
 
 /* Class = "WKInterfaceLabel"; text = "15"; ObjectID = "CWt-7U-cnK"; */
 "CWt-7U-cnK.text" = "15";
 
 /* Class = "WKInterfaceButton"; accessibilityLabel = "Subtract"; ObjectID = "Dh9-HV-fXy"; */
-"Dh9-HV-fXy.accessibilityLabel" = "Subtract";
+"Dh9-HV-fXy.accessibilityLabel" = "减去";
 
 /* Class = "WKInterfaceButton"; title = "−"; ObjectID = "Dh9-HV-fXy"; */
 "Dh9-HV-fXy.title" = "−";
@@ -17,13 +17,13 @@
 "dPF-QZ-sh6.title" = "🍕";
 
 /* Class = "WKInterfaceButton"; accessibilityLabel = "Add"; ObjectID = "DZc-Gn-RLu"; */
-"DZc-Gn-RLu.accessibilityLabel" = "Add";
+"DZc-Gn-RLu.accessibilityLabel" = "添加";
 
 /* Class = "WKInterfaceButton"; title = "+"; ObjectID = "DZc-Gn-RLu"; */
 "DZc-Gn-RLu.title" = "+";
 
 /* Class = "WKInterfaceButton"; accessibilityLabel = "Add"; ObjectID = "eu3-pj-GH3"; */
-"eu3-pj-GH3.accessibilityLabel" = "Add";
+"eu3-pj-GH3.accessibilityLabel" = "添加";
 
 /* Class = "WKInterfaceButton"; title = "+"; ObjectID = "eu3-pj-GH3"; */
 "eu3-pj-GH3.title" = "+";
@@ -35,7 +35,7 @@
 "gAn-qe-OvX.title" = "🍭";
 
 /* Class = "WKInterfaceButton"; accessibilityLabel = "Subtract"; ObjectID = "hjF-xr-cwO"; */
-"hjF-xr-cwO.accessibilityLabel" = "Subtract";
+"hjF-xr-cwO.accessibilityLabel" = "减去";
 
 /* Class = "WKInterfaceButton"; title = "−"; ObjectID = "hjF-xr-cwO"; */
 "hjF-xr-cwO.title" = "−";

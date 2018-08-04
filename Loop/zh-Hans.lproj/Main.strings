@@ -44,7 +44,7 @@
 "cpo-Po-gFM.text" = "标签";
 
 /* Class = "UILabel"; text = "g Total"; ObjectID = "d3X-AN-tA5"; */
-"d3X-AN-tA5.text" = "g 总计";
+"d3X-AN-tA5.text" = "克 总计";
 
 /* Class = "UILabel"; text = "Future glucose is predicted by combining the effects of multiple inputs. Use this tool to toggle various inputs to see how they compare to the final prediction."; ObjectID = "D4C-I2-dhA"; */
 "D4C-I2-dhA.text" = "未来血糖根据您输入的多种参数计算，选中不同选项可以观察不同输入对最终血糖预测的影响";
@@ -83,7 +83,7 @@
 "k3F-Na-7mn.text" = "推荐基础率";
 
 /* Class = "UILabel"; text = "Label"; ObjectID = "Krd-Aa-ret"; */
-"Krd-Aa-ret.text" = "Label";
+"Krd-Aa-ret.text" = "标签";
 
 /* Class = "UILabel"; text = "Label"; ObjectID = "l7l-mw-Oc9"; */
 "l7l-mw-Oc9.text" = "标签";

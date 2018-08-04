@@ -5,13 +5,13 @@
 "dB" = "dB";
 
 /* The short unit display string for grams */
-"g" = "g";
+"g" = "克";
 
 /* The short unit display string for milligrams of glucose per decilter */
-"mg/dL" = "mgdL";
+"mg/dL" = "毫克/分升";
 
 /* The short unit display string for millimoles of glucose per liter */
-"mmol/L" = "mmol/L";
+"mmol/L" = "摩尔/升";
 
 /* Message when offering bolus recommendation even though bg is below range and minBG is in future. (1: glucose time)(2: glucose number) */
 "Predicted glucose at %1$@ is %2$@." = "未来%1$@时间的血糖为%2$@.";
